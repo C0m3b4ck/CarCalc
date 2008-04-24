@@ -123,11 +123,15 @@ Function {make_window()} {open
         xywh {5 305 130 75} labelsize 26
       }
       Fl_Choice cbo_class_selectcar {
-        label {Class:} open
+        label {Class:}
+        callback {cbobox_cb(cbo_class_selectcar, 0)}
+        comment {Number 0 in cbobox_cb} open selected
         xywh {55 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
       Fl_Choice cbo_fuel_selectcar {
-        label {Fuel:} open
+        label {Fuel:}
+        callback {cbobox_cb(cbo_fuel_selectcar, 1)}
+        comment {Number 1 in cbobox_cb} open
         xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
       Fl_Output lbl_fuel_usage {
@@ -601,7 +605,9 @@ Function {populate_car_models()} {open
   for (size_t i = 0; i < brands.size(); i++)
   {
     lst_car_models->add(brands[i].c_str());
-  }} {}
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
 }
 
 Function {populate_car_engines()} {open
@@ -616,7 +622,9 @@ Function {populate_car_engines()} {open
     {
       lst_car_engines->add(models[i].c_str());
     }
-  }} {}
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
 }
 
 Function {populate_car_gearboxes()} {open
@@ -633,7 +641,9 @@ Function {populate_car_gearboxes()} {open
     {
       lst_car_gearboxes->add(gearboxes[i].c_str());
     }
-  }} {}
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
 }
 
 Function {search_car_models()} {open
@@ -641,9 +651,12 @@ Function {search_car_models()} {open
   code {// return car models based on user search
 std::string search_query = txt_search_car_models->value();
 // pass as arg to sql
+// that function will sort based on search term match
+
 // populate listboxes
 
-// make sure it is done through business layer} {}
+// populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
 }
 
 Function {search_car_engines()} {open
@@ -651,8 +664,12 @@ Function {search_car_engines()} {open
   code {// return car engines based on user search
 std::string search_term = txt_search_car_engines->value();
 // pass as parameter to sql function (through BL obviously)
+// that function will sort based on search term match
+
 // populate listboxes
-populate_car_engines();} {}
+populate_car_engines();
+// populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
 }
 
 Function {search_car_gearboxes()} {open
@@ -660,10 +677,12 @@ Function {search_car_gearboxes()} {open
   code {// return car models based on user search
 std::string search_term = txt_search_car_gearboxes->value();
 // call sql function with search term as parameter (through BL obviously)
+// that function will sort based on search term match
 
 // populate listboxes
 populate_car_gearboxes();
-// populate cboBoxes - search is done} {}
+// populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
 }
 
 Function {browser_cb(Fl_Widget *w, short browser_type)} {
@@ -694,5 +713,37 @@ if (index > 0)
 Function {populate_cboboxes_selectcar()} {
   comment {Populate fuel type, class and fuel usage} open
 } {
-  code {printf("Hello, World!\\n");} {}
+  code {lst_car_gearboxes->clear();
+  short idx = lst_car_models->value();
+  short idx2 = lst_car_engines->value();
+  if (idx > 0 && idx2 > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
+    for (size_t i = 0; i < gearboxes.size(); i++)
+    {
+      lst_car_gearboxes->add(gearboxes[i].c_str());
+    }
+  }} {}
+}
+
+Function {cbobox_cb(Fl_Widget *o, short which_cbobox)} {
+  comment {Callback for cboBoxes (needs cboBox name and cboBox number as args)} open
+} {
+  code {Fl_Choice *c = (Fl_Choice*)o;
+int idx = c->value();
+if (idx > 0)
+{
+	std::string selected_str = c->text(idx);
+	// update DTO data based on which cboBox this is
+	if (which_cbobox == 0) // vehicle class
+	{
+		
+	}
+	else if (which_cbobox == 1) // fuel type
+	{
+	
+	}
+}} {}
 }

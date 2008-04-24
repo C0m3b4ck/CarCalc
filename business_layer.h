@@ -16,6 +16,8 @@ extern CarInfo car_info;
 void update_model_name(std::string new_model_name); // called by lstBox
 void update_engine_name(std::string new_engine_name); // called by lstBox
 void update_gearbox_name(std::string new_gearbox_name); // called by lstBox
+void update_fuel_type(std::string new_fuel_type); // called by cboBox
+void update_vehicle_class(std::string new_vehicle_class); // called by cboBox
 
 void receive_car_info(std::string get_model_name, std::string get_engine_name, std::string get_gearbox_name, std::string get_vehicle_class, std::string get_fuel_type);
 float get_from_calculated(std::string what_to_get);

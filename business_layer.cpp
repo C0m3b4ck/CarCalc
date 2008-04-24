@@ -107,6 +107,15 @@ void update_gearbox_name(std::string new_gearbox_name) // called by lstBox
 	car_info.gearbox_name = new_gearbox_name;
 }
 
+void update_fuel_type(std::string new_fuel_type); // called by cboBox
+{
+		car_info.fuel_type = new_fuel_type;
+}
+void update_vehicle_class(std::string new_vehicle_class); // called by cboBox
+{
+		car_info.vehicle_class = new_vehicle_class;
+}
+
 // SQL layer functions
 void load_car_data_from_db()
 {
