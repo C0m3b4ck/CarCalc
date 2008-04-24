@@ -75,6 +75,7 @@ struct CarCalculated
 	float distance_driven = 0.0000;
 };
 
+/*
 struct CarInfo
 {
 	std::string model_name = "";
@@ -83,6 +84,7 @@ struct CarInfo
 	std::string vehicle_class = "";
 	std::string fuel_type = "";
 };
+*/
 
 CarValues car_values;
 CarCalculated car_calculated;
@@ -90,7 +92,7 @@ CarInfo car_info;
 
 
 // ======== DTO FUNCTIONS =========
-void update_car_model(std::string new_model_name) // called by lstBox
+void update_model_name(std::string new_model_name) // called by lstBox
 {
 	car_info.model_name = new_model_name;
 }

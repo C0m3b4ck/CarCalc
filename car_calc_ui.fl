@@ -60,7 +60,7 @@ Function {make_window()} {open
       Fl_Browser lst_car_models {
         callback {browser_cb(lst_car_models, 0)}
         comment {Clicking on it updates DTO, number 0}
-        xywh {5 45 485 60}
+        xywh {5 45 485 60} type Hold
       }
       Fl_Text_Display {} {
         label {Select Car Engine}
@@ -68,8 +68,8 @@ Function {make_window()} {open
       }
       Fl_Browser lst_car_engines {
         callback {browser_cb(lst_car_engines, 1)}
-        comment {Clicking on it updated DTO, number 1} selected
-        xywh {0 135 490 60}
+        comment {Clicking on it updated DTO, number 1}
+        xywh {0 135 490 60} type Hold
       }
       Fl_Input txt_search_car_models {
         callback browser_cb
@@ -96,8 +96,8 @@ Function {make_window()} {open
       }
       Fl_Browser lst_car_gearboxes {
         callback {browser_cb(lst_car_gearboxes, 2)}
-        comment {Clicking on it updates DTO, number 2}
-        xywh {0 220 490 55}
+        comment {Clicking on it updates DTO, number 2} selected
+        xywh {0 220 490 55} type Hold
       }
       Fl_Input txt_search_car_gearboxes {
         xywh {195 194 225 26}
@@ -701,15 +701,15 @@ if (index > 0)
 	// decide which value (model, gearbox, engine) to update
 	if (browser_type == 0) // model browser
 	{
-		update_car_model(s); // updated car model in struct in BL
+		update_model_name(s); // updated car model in struct in BL
 	}
 	else if (browser_type == 1) // engine browser
 	{
-		update_car_engine(s);	
+		update_engine_name(s);	
 	}
 	else if (browser_type == 2) // gearbox browser
 	{
-		update_car_gearbox(s);	
+		update_gearbox_name(s);	
 	}
 }} {}
 }

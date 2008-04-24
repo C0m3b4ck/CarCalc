@@ -126,6 +126,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Text_Display* o
       { // Clicking on it updates DTO, number 0
         lst_car_models = new Fl_Browser(5, 45, 485, 60);
+        lst_car_models->type(2);
         lst_car_models->callback((Fl_Callback*)cb_lst_car_models);
       } // Fl_Browser* lst_car_models
       { Fl_Text_Display* o = new Fl_Text_Display(60, 135, 50, 10, "Select Car Engine");
@@ -134,6 +135,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Text_Display* o
       { // Clicking on it updated DTO, number 1
         lst_car_engines = new Fl_Browser(0, 135, 490, 60);
+        lst_car_engines->type(2);
         lst_car_engines->callback((Fl_Callback*)cb_lst_car_engines);
       } // Fl_Browser* lst_car_engines
       { txt_search_car_models = new Fl_Input(175, 19, 245, 26);
@@ -155,6 +157,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Text_Display* o
       { // Clicking on it updates DTO, number 2
         lst_car_gearboxes = new Fl_Browser(0, 220, 490, 55);
+        lst_car_gearboxes->type(2);
         lst_car_gearboxes->callback((Fl_Callback*)cb_lst_car_gearboxes);
       } // Fl_Browser* lst_car_gearboxes
       { txt_search_car_gearboxes = new Fl_Input(195, 194, 225, 26);
@@ -955,15 +958,15 @@ void browser_cb(Fl_Widget *w, short browser_type) {
   	// decide which value (model, gearbox, engine) to update
   	if (browser_type == 0) // model browser
   	{
-  		update_car_model(s); // updated car model in struct in BL
+  		update_model_name(s); // updated car model in struct in BL
   	}
   	else if (browser_type == 1) // engine browser
   	{
-  		update_car_engine(s);	
+  		update_engine_name(s);	
   	}
   	else if (browser_type == 2) // gearbox browser
   	{
-  		update_car_gearbox(s);	
+  		update_gearbox_name(s);	
   	}
   }
 }

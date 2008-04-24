@@ -3,14 +3,19 @@
 #include <string>
 #include <vector>
 
-struct CarInfoBL {
+struct CarInfo {
 	std::string model_name;
 	std::string engine_name;
 	std::string gearbox_name;
 	std::string vehicle_class;
 	std::string fuel_type;
 };
-extern CarInfoBL car_info;
+extern CarInfo car_info;
+
+// DTO-related
+void update_model_name(std::string new_model_name); // called by lstBox
+void update_engine_name(std::string new_engine_name); // called by lstBox
+void update_gearbox_name(std::string new_gearbox_name); // called by lstBox
 
 void receive_car_info(std::string get_model_name, std::string get_engine_name, std::string get_gearbox_name, std::string get_vehicle_class, std::string get_fuel_type);
 float get_from_calculated(std::string what_to_get);
