@@ -22,7 +22,15 @@ Fl_Group *grp_selectcar=(Fl_Group *)0;
 
 Fl_Browser *lst_car_models=(Fl_Browser *)0;
 
+static void cb_lst_car_models(Fl_Browser*, void*) {
+  browser_cb(lst_car_models, 0);
+}
+
 Fl_Browser *lst_car_engines=(Fl_Browser *)0;
+
+static void cb_lst_car_engines(Fl_Browser*, void*) {
+  browser_cb(lst_car_engines, 1);
+}
 
 Fl_Input *txt_search_car_models=(Fl_Input *)0;
 
@@ -33,6 +41,10 @@ Fl_Input *txt_search_car_engines=(Fl_Input *)0;
 Fl_Button *btn_search_car_engines=(Fl_Button *)0;
 
 Fl_Browser *lst_car_gearboxes=(Fl_Browser *)0;
+
+static void cb_lst_car_gearboxes(Fl_Browser*, void*) {
+  browser_cb(lst_car_gearboxes, 2);
+}
 
 Fl_Input *txt_search_car_gearboxes=(Fl_Input *)0;
 
@@ -112,13 +124,17 @@ Fl_Double_Window* make_window() {
         o->labelsize(21);
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
-      { lst_car_models = new Fl_Browser(5, 45, 485, 60);
+      { // Clicking on it updates DTO, number 0
+        lst_car_models = new Fl_Browser(5, 45, 485, 60);
+        lst_car_models->callback((Fl_Callback*)cb_lst_car_models);
       } // Fl_Browser* lst_car_models
       { Fl_Text_Display* o = new Fl_Text_Display(60, 135, 50, 10, "Select Car Engine");
         o->labelsize(21);
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
-      { lst_car_engines = new Fl_Browser(0, 135, 490, 60);
+      { // Clicking on it updated DTO, number 1
+        lst_car_engines = new Fl_Browser(0, 135, 490, 60);
+        lst_car_engines->callback((Fl_Callback*)cb_lst_car_engines);
       } // Fl_Browser* lst_car_engines
       { txt_search_car_models = new Fl_Input(175, 19, 245, 26);
         txt_search_car_models->callback((Fl_Callback*)browser_cb);
@@ -137,7 +153,9 @@ Fl_Double_Window* make_window() {
         o->labelsize(21);
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
-      { lst_car_gearboxes = new Fl_Browser(0, 220, 490, 55);
+      { // Clicking on it updates DTO, number 2
+        lst_car_gearboxes = new Fl_Browser(0, 220, 490, 55);
+        lst_car_gearboxes->callback((Fl_Callback*)cb_lst_car_gearboxes);
       } // Fl_Browser* lst_car_gearboxes
       { txt_search_car_gearboxes = new Fl_Input(195, 194, 225, 26);
       } // Fl_Input* txt_search_car_gearboxes
