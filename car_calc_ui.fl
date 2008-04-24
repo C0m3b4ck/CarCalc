@@ -50,15 +50,14 @@ Function {make_window()} {open
         xywh {30 30 34 24}
       }
     }
-    Fl_Group grp_selectcar {
-      xywh {0 19 490 341} hide
+    Fl_Group grp_selectcar {open
+      xywh {0 19 490 362}
     } {
       Fl_Text_Display {} {
         label {Select Car Model}
         xywh {60 50 50 5} labelsize 21 align 513
       }
       Fl_Browser lst_car_models {
-        callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER1_CLICK val=" << b->value() << std::endl;}
         xywh {5 45 485 60}
       }
       Fl_Text_Display {} {
@@ -66,10 +65,10 @@ Function {make_window()} {open
         xywh {60 135 50 10} labelsize 21 align 513
       }
       Fl_Browser lst_car_engines {
-        callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER2_CLICK val=" << b->value() << std::endl;}
         xywh {0 135 490 60}
       }
       Fl_Input txt_search_car_models {
+        callback browser_cb
         xywh {175 19 245 26}
       }
       Fl_Button btn_search_car_models {
@@ -91,8 +90,7 @@ Function {make_window()} {open
         label {Select Car Gearbox}
         xywh {70 220 50 10} labelsize 21 align 513
       }
-      Fl_Browser lst_car_gearboxes {
-        callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER3_CLICK val=" << b->value() << std::endl;}
+      Fl_Browser lst_car_gearboxes {selected
         xywh {0 220 490 55}
       }
       Fl_Input txt_search_car_gearboxes {
@@ -108,15 +106,15 @@ Function {make_window()} {open
         label {Proceed with Car ->}
         user_data {"proceed_car"}
         callback action_cb
-        xywh {310 305 179 50} labelsize 18
+        xywh {310 305 180 75} labelsize 18
       }
       Fl_Button btn_help_selectcar {
         label HELP
-        xywh {140 305 165 50} labelsize 21
+        xywh {140 305 165 75} labelsize 26
       }
       Fl_Button btn_clear_car {
         label {Clear Car}
-        xywh {5 305 130 50} labelsize 21
+        xywh {5 305 130 75} labelsize 26
       }
       Fl_Choice cbo_class_selectcar {
         label {Class:} open
@@ -127,8 +125,8 @@ Function {make_window()} {open
         xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
     }
-    Fl_Group grp_calculate {open
-      xywh {0 20 595 360}
+    Fl_Group grp_calculate {
+      xywh {0 20 595 360} hide
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
@@ -493,8 +491,7 @@ Function {calculate()} {open
   tmp = calculated_values[7];
   lbl_mixed_price_calculate->value(tmp.c_str());
   tmp = calculated_values[8]; 
-  lbl_distance_calculate->value(tmp.c_str());} {selected
-  }
+  lbl_distance_calculate->value(tmp.c_str());} {}
 }
 
 Function {proceed_car()} {
@@ -583,7 +580,6 @@ Function {wake_grp_selectcar()} {
   
   // load car values from DTO if there are any
   // = get_from_dto(char which_dto, std::string what_to_get)
-  populate_car_models();
   // populate lists from database
   populate_car_models();} {}
 }
@@ -685,4 +681,29 @@ Function {on_select_car_gearbox()} {
   comment {Update car gearbox in DTO and UI} open
 } {
   code {// on listbox clicked - adjust DTO and other listboxes} {}
+}
+
+Function {browser_cb(Fl_Widget *w, short browser_type)} {
+  comment {Callback for listboxes to get selected element} open
+} {
+  code {Fl_Browser *b = (Fl_Browser *)w;
+int index = b->value(); // 0 is none
+if (index > 0)
+{
+	const char *s = b->text(index);
+	printf("Selected element from listbox with text: %s\\n", s);
+	// decide which value (model, gearbox, engine) to update
+	if (browser_type == 0) // model browser
+	{
+		update_car_model(s); // updated car model in struct in BL
+	}
+	else if (browser_type == 1) // engine browser
+	{
+		update_car_engine(s);	
+	}
+	else if (browser_type == 2) // gearbox browser
+	{
+		update_car_gearbox(s);	
+	}
+}} {}
 }

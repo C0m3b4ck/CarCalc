@@ -5,8 +5,6 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Menu_Bar.H>
-#include <string>
-#include <FL/Fl_Output.H>
 extern Fl_Menu_Bar *mnu_bar;
 #include <FL/Fl_Group.H>
 extern Fl_Group *grp_selectcar;
@@ -80,4 +78,5 @@ void search_car_gearboxes();
 void on_select_car_model();
 void on_select_car_engine();
 void on_select_car_gearbox();
+void browser_cb(Fl_Widget *w, short browser_type);
 #endif

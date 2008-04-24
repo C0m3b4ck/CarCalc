@@ -86,10 +86,25 @@ struct CarInfo
 
 CarValues car_values;
 CarCalculated car_calculated;
-CarInfoBL car_info;
+CarInfo car_info;
 
 
 // ======== DTO FUNCTIONS =========
+void update_car_model(std::string new_model_name) // called by lstBox
+{
+	car_info.model_name = new_model_name;
+}
+
+void update_engine_name(std::string new_engine_name) // called by lstBox
+{
+	car_info.engine_name = new_engine_name;
+}
+
+void update_gearbox_name(std::string new_gearbox_name) // called by lstBox
+{
+	car_info.gearbox_name = new_gearbox_name;
+}
+
 // SQL layer functions
 void load_car_data_from_db()
 {
