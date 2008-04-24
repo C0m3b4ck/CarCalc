@@ -130,6 +130,10 @@ Function {make_window()} {open
         label {Fuel:} open
         xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
+      Fl_Output lbl_fuel_usage {
+        label {Fuel usage:} selected
+        xywh {390 277 95 28}
+      }
     }
     Fl_Group grp_calculate {
       xywh {0 20 595 360} hide
@@ -619,16 +623,17 @@ Function {populate_car_gearboxes()} {open
 } {
   code {lst_car_gearboxes->clear();
   short idx = lst_car_models->value();
-  if (idx > 0)
+  short idx2 = lst_car_engines->value();
+  if (idx > 0 && idx2 > 0)
   {
     std::string brand = lst_car_models->text(idx);
-    std::vector<std::string> models = business_get_gearboxes_by_brand(brand);
-    for (size_t i = 0; i < models.size(); i++)
+    std::string engine = lst_car_engines->text(idx2);
+    std::vector<std::string> greaboxes = business_get_gearboxes_by_brand_model(brand, model);
+    for (size_t i = 0; i < gearboxes.size(); i++)
     {
-      lst_car_gearboxes->add(models[i].c_str());
+      lst_car_gearboxes->add(gearboxes[i].c_str());
     }
-  }} {selected
-  }
+  }} {}
 }
 
 Function {search_car_models()} {open

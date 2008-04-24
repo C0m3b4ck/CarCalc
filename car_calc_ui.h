@@ -5,8 +5,6 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Menu_Bar.H>
-#include <string>
-#include <FL/Fl_Output.H>
 extern Fl_Menu_Bar *mnu_bar;
 #include <FL/Fl_Group.H>
 extern Fl_Group *grp_selectcar;
@@ -29,6 +27,8 @@ extern Fl_Button *btn_clear_car;
 #include <FL/Fl_Choice.H>
 extern Fl_Choice *cbo_class_selectcar;
 extern Fl_Choice *cbo_fuel_selectcar;
+#include <FL/Fl_Output.H>
+extern Fl_Output *lbl_fuel_usage;
 extern Fl_Group *grp_calculate;
 extern Fl_Button *btn_select_car;
 extern Fl_Button *btn_help_calculate;
