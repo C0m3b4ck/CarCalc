@@ -1,3 +1,2 @@
-* finish calculation logic
 * finish UI interaction in select car
 * make sure variables are cleared between uses

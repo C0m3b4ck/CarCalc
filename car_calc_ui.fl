@@ -96,7 +96,7 @@ Function {make_window()} {open
       }
       Fl_Browser lst_car_gearboxes {
         callback {browser_cb(lst_car_gearboxes, 2)}
-        comment {Clicking on it updates DTO, number 2} selected
+        comment {Clicking on it updates DTO, number 2}
         xywh {0 220 490 55} type Hold
       }
       Fl_Input txt_search_car_gearboxes {
@@ -647,7 +647,8 @@ Function {populate_car_gearboxes()} {open
 Function {search_car_models()} {open
 } {
   code {// return car models based on user search
-
+std::string search_query = txt_search_car_models->value();
+// pass as arg to sql
 // populate listboxes
 
 // make sure it is done through business layer} {}
@@ -655,11 +656,12 @@ Function {search_car_models()} {open
 
 Function {search_car_engines()} {open
 } {
-  code {// return car models based on user search
-
+  code {// return car engines based on user search
+std::string search_term = txt_search_car_engines->value();
+// pass as parameter to sql function (through BL obviously)
 // populate listboxes
-
-// make sure it is done through business layer} {}
+populate_car_engines();} {selected
+  }
 }
 
 Function {search_car_gearboxes()} {open
