@@ -1,1 +1,8 @@
+in the .cxx file:
 #include <cstring>
+#include "business_layer.h"
+#include <iostream>
+#include <FL/fl_ask.H>
+
+in the .h file:
+#include <string>

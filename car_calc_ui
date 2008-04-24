@@ -50,8 +50,8 @@ Function {make_window()} {open
         xywh {30 30 34 24}
       }
     }
-    Fl_Group grp_selectcar {
-      xywh {0 19 490 341} hide
+    Fl_Group grp_selectcar {open
+      xywh {0 19 490 341}
     } {
       Fl_Text_Display {} {
         label {Select Car Model}
@@ -97,6 +97,8 @@ Function {make_window()} {open
       }
       Fl_Button btn_proceedwithcar {
         label {Proceed with Car ->}
+        user_data {"proceed_car"}
+        callback action_cb
         xywh {310 305 179 50} labelsize 18
       }
       Fl_Button btn_help_selectcar {
@@ -117,7 +119,7 @@ Function {make_window()} {open
       } {}
     }
     Fl_Group grp_calculate {
-      xywh {0 20 490 340} hide
+      xywh {0 20 595 340} hide
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
@@ -133,6 +135,9 @@ Function {make_window()} {open
       }
       Fl_Button btn_calculate {
         label {Calculate!}
+        user_data {"calculate"}
+        callback action_cb
+        comment {Passes DTO, calls calculation functions}
         xywh {335 310 155 50} labelsize 25
       }
       Fl_Input txt_urban_usage {
@@ -156,52 +161,105 @@ Function {make_window()} {open
         xywh {225 77 80 28}
       }
       Fl_Input txt_distance_driven {
-        label {Distance driven:}
-        xywh {425 77 60 28}
+        label {Trip distance:}
+        xywh {410 77 75 28}
       }
       Fl_Text_Display {} {
         label {Car Info}
-        xywh {220 155 50 0} labelsize 21
+        xywh {220 140 50 0} labelsize 21
       }
       Fl_Text_Display {} {
         label {Model name:}
-        xywh {35 175 50 0} labelsize 19
+        xywh {35 160 50 0} labelsize 19
       }
       Fl_Text_Display {} {
         label {Engine:}
-        xywh {5 200 60 0} labelsize 19
+        xywh {5 185 60 0} labelsize 19
       }
       Fl_Text_Display {} {
         label {Gearbox:}
-        xywh {10 225 60 0} labelsize 19
+        xywh {10 210 60 0} labelsize 19
       }
       Fl_Text_Display {} {
         label {Class:}
-        xywh {0 245 55 0} labelsize 19
-      }
-      Fl_Text_Display {} {
-        label {Fuel:}
-        xywh {0 270 55 0} labelsize 19
+        xywh {0 230 55 0} labelsize 19
       }
       Fl_Text_Display lbl_modelname_calculate {
-        xywh {120 150 365 20}
+        xywh {120 135 365 20}
       }
       Fl_Text_Display lbl_engine_calculate {
-        xywh {70 175 415 20}
+        xywh {70 160 415 20}
       }
       Fl_Text_Display lbl_gearbox_calculate {
-        xywh {85 200 400 20}
+        xywh {85 185 400 20}
       }
       Fl_Text_Display lbl_class_calculate {
-        xywh {55 225 50 20}
-      }
-      Fl_Text_Display lbl_fuel_calculate {
-        xywh {55 250 430 20}
+        xywh {55 210 50 20}
       }
       Fl_Choice {} {
         label {Units: } open
         xywh {60 110 120 20} down_box BORDER_BOX labelsize 16
       } {}
+      Fl_Text_Display {} {
+        label {Fuel type:}
+        xywh {110 230 90 0} labelsize 19
+      }
+      Fl_Text_Display lbl_fueltype_calculate {
+        xywh {200 210 70 20}
+      }
+      Fl_Text_Display {} {
+        label {Urban:}
+        xywh {0 285 90 0} labelsize 19
+      }
+      Fl_Text_Display lbl_urban_calculate {
+        xywh {80 265 80 20}
+      }
+      Fl_Text_Display {} {
+        label {Exurban:}
+        xywh {165 285 90 0} labelsize 19
+      }
+      Fl_Text_Display lbl_exurban_calculate {
+        xywh {250 265 70 20}
+      }
+      Fl_Text_Display {} {
+        label {Mixed:}
+        xywh {330 285 90 0} labelsize 19
+      }
+      Fl_Text_Display lbl_mixed_calculate {
+        xywh {405 265 70 20}
+      }
+      Fl_Text_Display {} {
+        label {Price:}
+        xywh {165 310 90 0} labelsize 19
+      }
+      Fl_Text_Display lbl_price_calculate {
+        xywh {235 290 90 20}
+      }
+      Fl_Text_Display {} {
+        label {Units:}
+        xywh {330 310 90 0} labelsize 19
+      }
+      Fl_Text_Display lbl_units_calculate {
+        xywh {405 290 85 20}
+      }
+      Fl_Text_Display {} {
+        label {Trip distance:}
+        xywh {270 265 110 0}
+      }
+      Fl_Text_Display lbl_distance_calculate {
+        xywh {375 245 100 20}
+      }
+      Fl_Text_Display {} {
+        label {Co2 emission:}
+        xywh {5 310 90 0}
+      }
+      Fl_Text_Display lbl_co2emission_calculate {
+        xywh {95 290 70 20}
+      }
+      Fl_Text_Display {} {
+        label {Trip Info}
+        xywh {200 265 45 0} labelsize 21
+      }
     }
   }
 }
@@ -227,6 +285,15 @@ else if (std::strcmp(action, "group_selectcar") == 0)
 	hide_all_groups();
 	// switch group to grp_selectcar
 	grp_selectcar->show();
+}
+else if (std::strcmp(action, "calculate") == 0) // calculate button pressed
+{
+	// call calculate function
+	calculate();
+}
+else if (std::strcmp(action, "proceed_car") == 0) // call proceed_car func
+{
+	proceed_car();
 }} {}
 }
 
@@ -234,6 +301,85 @@ Function {hide_all_groups()} {
   comment {Hides all groups} open
 } {
   code {grp_selectcar->hide();
-grp_calculate->hide();} {selected
+grp_calculate->hide();} {}
+}
+
+Function {pass_dto(std::string dto_type)} {
+  comment {Passes DTOs like "db car info" and "fuel-related" to business layer} open
+} {
+  code {if (dto_type == "car_info") // in select car
+{
+	// checks if everything is selected will be before this func, if they succeed - this func is called
+	short idx = lst_car_models->value();
+	std::string car_model = ""; std::string car_engine = ""; std::string car_gearbox = "";
+	std::string car_class = ""; std::string car_fuel = "";
+	// get car model
+	if (idx > 0) //0 means argument not selected
+	{
+		car_model = lst_car_models->text(idx);
+	}
+	// get car engine
+	idx = lst_car_engines->value();
+	if (idx > 0) //0 means argument not selected
+	{
+		car_engine = lst_car_engines->text(idx);
+	}
+	// select car gearbox
+	idx = lst_car_gearboxes->value();
+	if (idx > 0) // 0 means nothing selected
+	{
+		car_gearbox = lst_car_gearboxes->text(idx);
+	}
+	// get class and fuel from cboBoxes
+	idx = cbo_class_selectcar->value();
+	if (idx >= 0) // -1 is nothing selected 
+	{
+		car_class = cbo_class_selectcar->text(idx);
+	}
+	idx = cbo_fuel_selectcar->value();
+	if (idx >= 0) // -1 means nothing selected
+	{
+		car_fuel = cbo_fuel_selectcar->text(idx);	
+	}
+	std::cout << "Done!\\n"; //make it actually output the data
+	// call function from business layer	
+}} {}
+}
+
+Function {calculate()} {open
+} {
+  code {// pass DTO to business layer
+// call calculation functions
+// get their returns
+// show them in GUI} {}
+}
+
+Function {proceed_car()} {
+  comment {Checks if all selected, if not - warns user, then passes DTO if user confirms} open
+} {
+  code {if (lst_car_models->value() == 0 || lst_car_engines->value() == 0 || lst_car_gearboxes->value() == 0 || cbo_class_selectcar->value() == -1 || cbo_fuel_selectcar->value() == -1)
+{ // if any option is not selected
+	// ask user if they want to proceed anyway
+	int c = fl_choice("Some options are not selected. Do you want to continue anyway?",
+	"Go back and select", // button 0
+	"This is fine", // button 1
+	NULL);
+	if (c == 0) // go back button pressed
+	{
+		// if yes, pass DTO and show grp_calculate
+		pass_dto("car_info");
+		wake_grp_calculate(); // clearing txtboxes, filling info etc.
+		hide_all_groups();
+		grp_calculate->show();
+	}
+}} {}
+}
+
+Function {wake_grp_calculate()} {
+  comment {Prepare grp_calculate for being shown to user} open
+} {
+  code {// clear text fields
+
+// populate text fields such as car info} {selected
   }
 }

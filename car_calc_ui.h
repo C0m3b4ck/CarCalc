@@ -5,6 +5,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Menu_Bar.H>
+#include <string>
 extern Fl_Menu_Bar *mnu_bar;
 #include <FL/Fl_Group.H>
 extern Fl_Group *grp_selectcar;
@@ -41,7 +42,14 @@ extern Fl_Text_Display *lbl_modelname_calculate;
 extern Fl_Text_Display *lbl_engine_calculate;
 extern Fl_Text_Display *lbl_gearbox_calculate;
 extern Fl_Text_Display *lbl_class_calculate;
-extern Fl_Text_Display *lbl_fuel_calculate;
+extern Fl_Text_Display *lbl_fueltype_calculate;
+extern Fl_Text_Display *lbl_urban_calculate;
+extern Fl_Text_Display *lbl_exurban_calculate;
+extern Fl_Text_Display *lbl_mixed_calculate;
+extern Fl_Text_Display *lbl_price_calculate;
+extern Fl_Text_Display *lbl_units_calculate;
+extern Fl_Text_Display *lbl_distance_calculate;
+extern Fl_Text_Display *lbl_co2emission_calculate;
 Fl_Double_Window* make_window();
 extern Fl_Menu_Item menu_mnu_bar[];
 #define sbmnu_calculate (menu_mnu_bar+0)
@@ -53,4 +61,8 @@ extern Fl_Menu_Item menu_mnu_bar[];
 #define mnu_btn_exit (menu_mnu_bar+8)
 void action_cb(Fl_Widget*, void *data);
 void hide_all_groups();
+void pass_dto(std::string dto_type);
+void calculate();
+void proceed_car();
+void wake_grp_calculate();
 #endif
