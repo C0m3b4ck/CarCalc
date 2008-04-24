@@ -42,6 +42,7 @@ extern Fl_Text_Display *lbl_modelname_calculate;
 extern Fl_Text_Display *lbl_engine_calculate;
 extern Fl_Text_Display *lbl_gearbox_calculate;
 extern Fl_Text_Display *lbl_class_calculate;
+extern Fl_Choice *cbo_units_calculate;
 extern Fl_Text_Display *lbl_fueltype_calculate;
 extern Fl_Text_Display *lbl_urban_calculate;
 extern Fl_Text_Display *lbl_exurban_calculate;

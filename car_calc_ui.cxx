@@ -2,8 +2,8 @@
 
 #include "car_calc_ui.h"
 #include <iostream>
-#include <cstring>
 #include <string>
+#include <cstring>
 #include <FL/fl_ask.H>
 
 Fl_Menu_Bar *mnu_bar=(Fl_Menu_Bar *)0;
@@ -79,6 +79,8 @@ Fl_Text_Display *lbl_engine_calculate=(Fl_Text_Display *)0;
 Fl_Text_Display *lbl_gearbox_calculate=(Fl_Text_Display *)0;
 
 Fl_Text_Display *lbl_class_calculate=(Fl_Text_Display *)0;
+
+Fl_Choice *cbo_units_calculate=(Fl_Choice *)0;
 
 Fl_Text_Display *lbl_fueltype_calculate=(Fl_Text_Display *)0;
 
@@ -209,10 +211,10 @@ Fl_Double_Window* make_window() {
       } // Fl_Text_Display* lbl_gearbox_calculate
       { lbl_class_calculate = new Fl_Text_Display(55, 210, 50, 20);
       } // Fl_Text_Display* lbl_class_calculate
-      { Fl_Choice* o = new Fl_Choice(60, 110, 120, 20, "Units: ");
-        o->down_box(FL_BORDER_BOX);
-        o->labelsize(16);
-      } // Fl_Choice* o
+      { cbo_units_calculate = new Fl_Choice(60, 110, 120, 20, "Units: ");
+        cbo_units_calculate->down_box(FL_BORDER_BOX);
+        cbo_units_calculate->labelsize(16);
+      } // Fl_Choice* cbo_units_calculate
       { Fl_Text_Display* o = new Fl_Text_Display(110, 230, 90, 0, "Fuel type:");
         o->labelsize(19);
       } // Fl_Text_Display* o
@@ -391,9 +393,31 @@ void proceed_car() {
  Prepare grp_calculate for being shown to user
 */
 void wake_grp_calculate() {
-  // clear text fields
+  // clear text fields, labels and cboboxes
+  txt_urban_usage->value("");
+  txt_exurban_usage->value("");
+  txt_mixed_usage->value("");
+  txt_co2_emission->value("");
+  txt_price->value("");
+  txt_distance_driven->value("");
+  
+  lbl_modelname_calculate->buffer()->text("");
+  lbl_engine_calculate->buffer()->text("");
+  lbl_gearbox_calculate->buffer()->text("");
+  lbl_class_calculate->buffer()->text("");
+  lbl_fueltype_calculate->buffer()->text("");
+  lbl_urban_calculate->buffer()->text("");
+  lbl_exurban_calculate->buffer()->text("");
+  lbl_mixed_calculate->buffer()->text("");
+  lbl_price_calculate->buffer()->text("");
+  lbl_units_calculate->buffer()->text("");
+  lbl_distance_calculate->buffer()->text("");
+  lbl_co2emission_calculate->buffer()->text("");
   
   // populate text fields such as car info
+  cbo_units_calculate->add("SI");
+  cbo_units_calculate->add("Imperial");
+  // get_from_dto, then set
 }
 
 /**
@@ -401,6 +425,18 @@ void wake_grp_calculate() {
 */
 void wake_grp_selectcar() {
   // clear lst, txt and cboboxes
+  lst_car_models->clear();
+  lst_car_engines->clear();
+  lst_car_gearboxes->clear();
+  
+  cbo_class_selectcar->clear();
+  cbo_fuel_selectcar->clear();
+  
+  txt_search_car_models->value("");
+  txt_search_car_engines->value("");
+  txt_search_car_gearboxes->value("");
   
   // load car values from DTO if there are any
+  // = get_from_dto(char which_dto, std::string what_to_get)
+  lst_car_models->add("some text");
 }

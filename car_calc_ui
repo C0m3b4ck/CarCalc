@@ -6,9 +6,9 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {214 100 490 360} type Double resizable visible
+    xywh {214 100 490 360} type Double hide resizable
   } {
-    Fl_Menu_Bar mnu_bar {open
+    Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
     } {
       Submenu sbmnu_calculate {
@@ -118,7 +118,7 @@ Function {make_window()} {open
         xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
     }
-    Fl_Group grp_calculate {open
+    Fl_Group grp_calculate {
       xywh {0 20 595 340}
     } {
       Fl_Text_Display {} {
@@ -128,7 +128,7 @@ Function {make_window()} {open
       Fl_Button btn_select_car {
         label {<- Select Car}
         user_data {"group_selectcar"}
-        callback action_cb selected
+        callback action_cb
         xywh {0 310 160 50} labelsize 24
       }
       Fl_Button btn_help_calculate {
@@ -198,7 +198,7 @@ Function {make_window()} {open
       Fl_Text_Display lbl_class_calculate {
         xywh {55 210 50 20}
       }
-      Fl_Choice {} {
+      Fl_Choice cbo_units_calculate {
         label {Units: } open
         xywh {60 110 120 20} down_box BORDER_BOX labelsize 16
       } {}
@@ -391,15 +391,50 @@ else // if all are selected - just do it
 Function {wake_grp_calculate()} {
   comment {Prepare grp_calculate for being shown to user} open
 } {
-  code {// clear text fields
+  code {// clear text fields, labels and cboboxes
+txt_urban_usage->value("");
+txt_exurban_usage->value("");
+txt_mixed_usage->value("");
+txt_co2_emission->value("");
+txt_price->value("");
+txt_distance_driven->value("");
 
-// populate text fields such as car info} {}
+lbl_modelname_calculate->buffer()->text("");
+lbl_engine_calculate->buffer()->text("");
+lbl_gearbox_calculate->buffer()->text("");
+lbl_class_calculate->buffer()->text("");
+lbl_fueltype_calculate->buffer()->text("");
+lbl_urban_calculate->buffer()->text("");
+lbl_exurban_calculate->buffer()->text("");
+lbl_mixed_calculate->buffer()->text("");
+lbl_price_calculate->buffer()->text("");
+lbl_units_calculate->buffer()->text("");
+lbl_distance_calculate->buffer()->text("");
+lbl_co2emission_calculate->buffer()->text("");
+
+// populate text fields such as car info
+cbo_units_calculate->add("SI");
+cbo_units_calculate->add("Imperial");
+// get_from_dto, then set} {selected
+  }
 }
 
 Function {wake_grp_selectcar()} {
   comment {Prepare select car group for being shown to user} open
 } {
   code {// clear lst, txt and cboboxes
+lst_car_models->clear();
+lst_car_engines->clear();
+lst_car_gearboxes->clear();
 
-// load car values from DTO if there are any} {}
+cbo_class_selectcar->clear();
+cbo_fuel_selectcar->clear();
+
+txt_search_car_models->value("");
+txt_search_car_engines->value("");
+txt_search_car_gearboxes->value("");
+
+// load car values from DTO if there are any
+// = get_from_dto(char which_dto, std::string what_to_get)
+lst_car_models->add("some text");} {}
 }
