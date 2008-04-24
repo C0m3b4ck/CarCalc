@@ -662,26 +662,8 @@ std::string search_term = txt_search_car_gearboxes->value();
 // call sql function with search term as parameter (through BL obviously)
 
 // populate listboxes
-populate_car_gearboxes();} {selected
-  }
-}
-
-Function {on_select_car_model()} {
-  comment {Update car model in DTO and UI} open
-} {
-  code {// on listbox clicked - adjust DTO and other listboxes} {}
-}
-
-Function {on_select_car_engine()} {
-  comment {Update car engine in DTO and UI} open
-} {
-  code {// on listbox clicked - adjust DTO and other listboxes} {}
-}
-
-Function {on_select_car_gearbox()} {
-  comment {Update car gearbox in DTO and UI} open
-} {
-  code {// on listbox clicked - adjust DTO and other listboxes} {}
+populate_car_gearboxes();
+// populate cboBoxes - search is done} {}
 }
 
 Function {browser_cb(Fl_Widget *w, short browser_type)} {
@@ -707,4 +689,10 @@ if (index > 0)
 		update_gearbox_name(s);	
 	}
 }} {}
+}
+
+Function {populate_cboboxes_selectcar()} {
+  comment {Populate fuel type, class and fuel usage} open
+} {
+  code {printf("Hello, World!\\n");} {}
 }

@@ -1,2 +1,3 @@
-* finish UI interaction in select car
+* finish UI interaction in select car (cboBoxes and output)
+* finish search functionality (searches all available ones and select the closest one, sorts the other ones based on search term matching)
 * make sure variables are cleared between uses
