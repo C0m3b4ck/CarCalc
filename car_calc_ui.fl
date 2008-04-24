@@ -125,7 +125,7 @@ Function {make_window()} {open
       Fl_Choice cbo_class_selectcar {
         label {Class:}
         callback {cbobox_cb(cbo_class_selectcar, 0)}
-        comment {Number 0 in cbobox_cb} open selected
+        comment {Number 0 in cbobox_cb} open
         xywh {55 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
       Fl_Choice cbo_fuel_selectcar {
@@ -521,7 +521,7 @@ Function {proceed_car()} {
 	if (c == 0) // this is fine button pressed
 	{
 		// if yes, pass DTO and show grp_calculate
-		get_dto_selectcar();
+		get_dto_selectcar(); // should resolve fuel usage if not already
 		wake_grp_calculate(); // clearing txtboxes, filling info etc.
 		hide_all_groups();
 		grp_calculate->show();
@@ -529,7 +529,7 @@ Function {proceed_car()} {
 }
 else // if all are selected - just do it
 {
-		get_dto_selectcar();
+		get_dto_selectcar(); // should resolve fuel usage if not alread
 		wake_grp_calculate(); // clearing txtboxes, filling info etc.
 		hide_all_groups();
 		grp_calculate->show();
@@ -713,19 +713,33 @@ if (index > 0)
 Function {populate_cboboxes_selectcar()} {
   comment {Populate fuel type, class and fuel usage} open
 } {
-  code {lst_car_gearboxes->clear();
+  code {cbo_fuel_selectcar->clear();
+cbo_class_selectcar->clear();
+  // fill fuel type first
   short idx = lst_car_models->value();
   short idx2 = lst_car_engines->value();
   if (idx > 0 && idx2 > 0)
   {
     std::string brand = lst_car_models->text(idx);
     std::string model = lst_car_engines->text(idx2);
-    std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
-    for (size_t i = 0; i < gearboxes.size(); i++)
+    std::vector<std::string> fuel_types = business_get_fuel_types_by_brand_model(brand, model);
+    for (size_t i = 0; i < fuel_types.size(); i++)
     {
-      lst_car_gearboxes->add(gearboxes[i].c_str());
+    	cbo_fuel_selectcar->add(fuel_types[i].c_str());
     }
-  }} {}
+  }
+  // then fill vehicle class
+  if (idx > 0 && idx2 > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> vehicle_classes = business_get_vehicle_classes_by_brand_model(brand, model);
+    for (size_t i = 0; i < vehicle_classes.size(); i++)
+    {
+    	cbo_fuel_selectcar->add(vehicle_classes[i].c_str());
+    }
+  }} {selected
+  }
 }
 
 Function {cbobox_cb(Fl_Widget *o, short which_cbobox)} {
@@ -739,11 +753,11 @@ if (idx > 0)
 	// update DTO data based on which cboBox this is
 	if (which_cbobox == 0) // vehicle class
 	{
-		
+		update_vehicle_class(selected_str);
 	}
 	else if (which_cbobox == 1) // fuel type
 	{
-	
+		update_fuel_type(selected_str);
 	}
 }} {}
 }
