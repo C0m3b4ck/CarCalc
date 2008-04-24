@@ -4,6 +4,27 @@
 #include "io_layer.h" //for file operations
 #include <string>
 
+// DTOs - car values, calculated car values, car info
+struct car_values
+{
+	float urban_usage = 0.0000;
+	float exurban_usage = 0.0000;
+	float mixed_usage = 0.0000;
+	float co2_emission = 0.0000;
+	float fuel_price = 0.0000;
+	float trip_distance = 0.0000;
+	std::string units = "lkmg"; //litres, kilometers, grams (for Co2)
+}
+
+struct car_calculated
+{
+	float urban_burned = 0.0000;
+	float exurban_burned = 0.0000;
+	float mixed_usage = 0.0000;
+	float co2_emitted = 0.0000;
+	float price_paid = 0.0000;
+	float distance_driven = 0.0000;
+}
 // function to get string into telemetry buffer, then save it
 bool get_telemetry_str(std::string telemetry_str)
 {

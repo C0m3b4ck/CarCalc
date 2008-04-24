@@ -6,7 +6,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {269 126 490 360} type Double resizable visible
+    xywh {214 100 490 360} type Double resizable visible
   } {
     Fl_Menu_Bar mnu_bar {open
       xywh {0 0 490 20}
@@ -50,8 +50,8 @@ Function {make_window()} {open
         xywh {30 30 34 24}
       }
     }
-    Fl_Group grp_selectcar {open
-      xywh {0 19 490 341}
+    Fl_Group grp_selectcar {
+      xywh {0 19 490 341} hide
     } {
       Fl_Text_Display {} {
         label {Select Car Model}
@@ -118,8 +118,8 @@ Function {make_window()} {open
         xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
     }
-    Fl_Group grp_calculate {
-      xywh {0 20 595 340} hide
+    Fl_Group grp_calculate {open
+      xywh {0 20 595 340}
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
@@ -127,6 +127,8 @@ Function {make_window()} {open
       }
       Fl_Button btn_select_car {
         label {<- Select Car}
+        user_data {"group_selectcar"}
+        callback action_cb selected
         xywh {0 310 160 50} labelsize 24
       }
       Fl_Button btn_help_calculate {
@@ -274,6 +276,8 @@ Function {action_cb(Fl_Widget*, void *data)} {
 // switch group to grp_calc
 if (std::strcmp(action, "group_calculate") == 0)
 {
+	// prepare calculate group
+	wake_grp_calculate();
 	// hide all other groups
 	hide_all_groups();
 	// switch group to grp_calculate
@@ -281,6 +285,8 @@ if (std::strcmp(action, "group_calculate") == 0)
 }
 else if (std::strcmp(action, "group_selectcar") == 0)
 {
+	// prepare select function
+	wake_grp_selectcar();
 	// hide all other groups
 	hide_all_groups();
 	// switch group to grp_selectcar
@@ -343,8 +349,7 @@ Function {pass_dto(std::string dto_type)} {
 	}
 	std::cout << "Car info being passed to DTO: " << car_model << " " << car_engine << " " << car_gearbox << " " << car_class << " " << car_fuel << "\\n"; //make it actually output the data
 	// call function from business layer	
-}} {selected
-  }
+}} {}
 }
 
 Function {calculate()} {open
@@ -389,4 +394,12 @@ Function {wake_grp_calculate()} {
   code {// clear text fields
 
 // populate text fields such as car info} {}
+}
+
+Function {wake_grp_selectcar()} {
+  comment {Prepare select car group for being shown to user} open
+} {
+  code {// clear lst, txt and cboboxes
+
+// load car values from DTO if there are any} {}
 }

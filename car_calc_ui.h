@@ -65,4 +65,5 @@ void pass_dto(std::string dto_type);
 void calculate();
 void proceed_car();
 void wake_grp_calculate();
+void wake_grp_selectcar();
 #endif

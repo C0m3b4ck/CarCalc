@@ -104,6 +104,7 @@ Fl_Double_Window* make_window() {
       mnu_bar->menu(menu_mnu_bar);
     } // Fl_Menu_Bar* mnu_bar
     { grp_selectcar = new Fl_Group(0, 19, 490, 341);
+      grp_selectcar->hide();
       { Fl_Text_Display* o = new Fl_Text_Display(60, 50, 50, 5, "Select Car Model");
         o->labelsize(21);
         o->align(Fl_Align(513));
@@ -158,12 +159,12 @@ Fl_Double_Window* make_window() {
       grp_selectcar->end();
     } // Fl_Group* grp_selectcar
     { grp_calculate = new Fl_Group(0, 20, 595, 340);
-      grp_calculate->hide();
       { Fl_Text_Display* o = new Fl_Text_Display(220, 50, 50, 5, "Calculate Fuel-Related");
         o->labelsize(21);
       } // Fl_Text_Display* o
       { btn_select_car = new Fl_Button(0, 310, 160, 50, "<- Select Car");
         btn_select_car->labelsize(24);
+        btn_select_car->callback((Fl_Callback*)action_cb, (void*)("group_selectcar"));
       } // Fl_Button* btn_select_car
       { btn_help_calculate = new Fl_Button(165, 310, 165, 50, "HELP");
         btn_help_calculate->labelsize(23);
@@ -272,6 +273,8 @@ void action_cb(Fl_Widget*, void *data) {
   // switch group to grp_calc
   if (std::strcmp(action, "group_calculate") == 0)
   {
+  	// prepare calculate group
+  	wake_grp_calculate();
   	// hide all other groups
   	hide_all_groups();
   	// switch group to grp_calculate
@@ -279,6 +282,8 @@ void action_cb(Fl_Widget*, void *data) {
   }
   else if (std::strcmp(action, "group_selectcar") == 0)
   {
+  	// prepare select function
+  	wake_grp_selectcar();
   	// hide all other groups
   	hide_all_groups();
   	// switch group to grp_selectcar
@@ -389,4 +394,13 @@ void wake_grp_calculate() {
   // clear text fields
   
   // populate text fields such as car info
+}
+
+/**
+ Prepare select car group for being shown to user
+*/
+void wake_grp_selectcar() {
+  // clear lst, txt and cboboxes
+  
+  // load car values from DTO if there are any
 }
