@@ -131,7 +131,7 @@ Function {make_window()} {open
         xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
       Fl_Output lbl_fuel_usage {
-        label {Fuel usage:} selected
+        label {Fuel usage:}
         xywh {390 277 95 28}
       }
     }
@@ -627,8 +627,8 @@ Function {populate_car_gearboxes()} {open
   if (idx > 0 && idx2 > 0)
   {
     std::string brand = lst_car_models->text(idx);
-    std::string engine = lst_car_engines->text(idx2);
-    std::vector<std::string> greaboxes = business_get_gearboxes_by_brand_model(brand, model);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
     for (size_t i = 0; i < gearboxes.size(); i++)
     {
       lst_car_gearboxes->add(gearboxes[i].c_str());
@@ -662,7 +662,8 @@ std::string search_term = txt_search_car_gearboxes->value();
 // call sql function with search term as parameter (through BL obviously)
 
 // populate listboxes
-populate_car_engines();} {}
+populate_car_gearboxes();} {selected
+  }
 }
 
 Function {on_select_car_model()} {
