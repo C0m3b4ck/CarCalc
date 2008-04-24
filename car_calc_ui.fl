@@ -345,61 +345,50 @@ Function {action_cb(Fl_Widget*, void *data)} {
   comment {Button callback, calls functions based on the userdata it gets (which button was pressed)} open
 } {
   code {const char *action = static_cast<const char*>(data); // get to a useable format (char)
-
-// based on what action is, call different function
-
-// switch group to grp_calc
-if (std::strcmp(action, "group_calculate") == 0)
-{
-	// prepare calculate group
-	wake_grp_calculate();
-	// hide all other groups
-	hide_all_groups();
-	// switch group to grp_calculate
-	grp_calculate->show();
-}
-else if (std::strcmp(action, "group_selectcar") == 0)
-{
-	// prepare select function
-	wake_grp_selectcar();
-	// hide all other groups
-	hide_all_groups();
-	// switch group to grp_selectcar
-	grp_selectcar->show();
-}
-else if (std::strcmp(action, "calculate") == 0) // calculate button pressed
-{
-	// call calculate function
-	calculate();
-}
-else if (std::strcmp(action, "proceed_car") == 0) // call proceed_car func
-{
-	proceed_car();
-}
-else if (std::strcmp(action, "search_car_models") == 0)
-{
-	search_car_models();
-}
-else if (std::strcmp(action, "search_car_engines") == 0)
-{
-	search_car_engines();
-}
-else if (std::strcmp(action, "search_car_gearboxes") == 0)
-{
-	search_car_gearboxes();
-}
-else if (std::strcmp(action, "select_car_model") == 0)
-{
-	on_select_car_model();
-}
-else if (std::strcmp(action, "select_car_engine") == 0)
-{
-	on_select_car_engine();
-}
-else if (std::strcmp(action, "select_car_gearbox") == 0)
-{
-	on_select_car_gearbox();
-}} {}
+  
+  // based on what action is, call different function
+  
+  // switch group to grp_calc
+  if (std::strcmp(action, "group_calculate") == 0)
+  {
+  	// prepare calculate group
+  	wake_grp_calculate();
+  	// hide all other groups
+  	hide_all_groups();
+  	// switch group to grp_calculate
+  	grp_calculate->show();
+  }
+  else if (std::strcmp(action, "group_selectcar") == 0)
+  {
+  	// prepare select function
+  	wake_grp_selectcar();
+  	// hide all other groups
+  	hide_all_groups();
+  	// switch group to grp_selectcar
+  	grp_selectcar->show();
+  }
+  else if (std::strcmp(action, "calculate") == 0) // calculate button pressed
+  {
+  	// call calculate function
+  	calculate();
+  }
+  else if (std::strcmp(action, "proceed_car") == 0) // call proceed_car func
+  {
+  	proceed_car();
+  }
+  else if (std::strcmp(action, "search_car_models") == 0)
+  {
+  	search_car_models();
+  }
+  else if (std::strcmp(action, "search_car_engines") == 0)
+  {
+  	search_car_engines();
+  }
+  else if (std::strcmp(action, "search_car_gearboxes") == 0)
+  {
+  	search_car_gearboxes();
+  }} {selected
+  }
 }
 
 Function {hide_all_groups()} {
@@ -738,8 +727,7 @@ cbo_class_selectcar->clear();
     {
     	cbo_fuel_selectcar->add(vehicle_classes[i].c_str());
     }
-  }} {selected
-  }
+  }} {}
 }
 
 Function {cbobox_cb(Fl_Widget *o, short which_cbobox)} {
