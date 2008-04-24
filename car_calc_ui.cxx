@@ -2,8 +2,8 @@
 
 #include "car_calc_ui.h"
 #include <iostream>
-#include <string>
 #include <cstring>
+#include <string>
 #include <FL/fl_ask.H>
 
 Fl_Menu_Bar *mnu_bar=(Fl_Menu_Bar *)0;
@@ -341,7 +341,7 @@ void pass_dto(std::string dto_type) {
   	{
   		car_fuel = cbo_fuel_selectcar->text(idx);	
   	}
-  	std::cout << "Done!\n"; //make it actually output the data
+  	std::cout << "Car info being passed to DTO: " << car_model << " " << car_engine << " " << car_gearbox << " " << car_class << " " << car_fuel << "\n"; //make it actually output the data
   	// call function from business layer	
   }
 }
@@ -361,10 +361,10 @@ void proceed_car() {
   { // if any option is not selected
   	// ask user if they want to proceed anyway
   	int c = fl_choice("Some options are not selected. Do you want to continue anyway?",
-  	"Go back and select", // button 0
-  	"This is fine", // button 1
+  	"This is fine", // button 0
+  	"Go back and select", // button 1 (default selection)
   	NULL);
-  	if (c == 0) // go back button pressed
+  	if (c == 0) // this is fine button pressed
   	{
   		// if yes, pass DTO and show grp_calculate
   		pass_dto("car_info");
@@ -372,6 +372,13 @@ void proceed_car() {
   		hide_all_groups();
   		grp_calculate->show();
   	}
+  }
+  else // if all are selected - just do it
+  {
+  		pass_dto("car_info");
+  		wake_grp_calculate(); // clearing txtboxes, filling info etc.
+  		hide_all_groups();
+  		grp_calculate->show();
   }
 }
 
