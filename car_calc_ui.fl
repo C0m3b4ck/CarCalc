@@ -618,30 +618,17 @@ Function {populate_car_engines()} {open
 Function {populate_car_gearboxes()} {open
 } {
   code {lst_car_gearboxes->clear();
-  short idx_model = lst_car_engines->value();
-  short idx_brand = lst_car_models->value();
-  if (idx_brand > 0 && idx_model > 0)
+  short idx = lst_car_models->value();
+  if (idx > 0)
   {
-    std::string brand = lst_car_models->text(idx_brand);
-    std::string model = lst_car_engines->text(idx_model);
-    std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
-    for (size_t i = 0; i < gearboxes.size(); i++)
+    std::string brand = lst_car_models->text(idx);
+    std::vector<std::string> models = business_get_gearboxes_by_brand(brand);
+    for (size_t i = 0; i < models.size(); i++)
     {
-      lst_car_gearboxes->add(gearboxes[i].c_str());
+      lst_car_gearboxes->add(models[i].c_str());
     }
-    std::vector<std::string> fuels = business_get_fuel_types_by_brand_model(brand, model);
-    cbo_fuel_selectcar->clear();
-    for (size_t i = 0; i < fuels.size(); i++)
-    {
-      cbo_fuel_selectcar->add(fuels[i].c_str());
-    }
-    std::vector<std::string> classes = business_get_vehicle_classes_by_brand_model(brand, model);
-    cbo_class_selectcar->clear();
-    for (size_t i = 0; i < classes.size(); i++)
-    {
-      cbo_class_selectcar->add(classes[i].c_str());
-    }
-  }} {}
+  }} {selected
+  }
 }
 
 Function {search_car_models()} {open
@@ -660,17 +647,17 @@ Function {search_car_engines()} {open
 std::string search_term = txt_search_car_engines->value();
 // pass as parameter to sql function (through BL obviously)
 // populate listboxes
-populate_car_engines();} {selected
-  }
+populate_car_engines();} {}
 }
 
 Function {search_car_gearboxes()} {open
 } {
   code {// return car models based on user search
+std::string search_term = txt_search_car_gearboxes->value();
+// call sql function with search term as parameter (through BL obviously)
 
 // populate listboxes
-
-// make sure it is done through business layer} {}
+populate_car_engines();} {}
 }
 
 Function {on_select_car_model()} {

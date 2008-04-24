@@ -926,10 +926,11 @@ void search_car_engines() {
 
 void search_car_gearboxes() {
   // return car models based on user search
+  std::string search_term = txt_search_car_gearboxes->value();
+  // call sql function with search term as parameter (through BL obviously)
   
   // populate listboxes
-  
-  // make sure it is done through business layer
+  populate_car_engines();
 }
 
 /**
