@@ -1,0 +1,239 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0311
+header_name {.h}
+code_name {.cxx}
+Function {make_window()} {open
+} {
+  Fl_Window {} {
+    label CarCalc open
+    xywh {269 126 490 360} type Double resizable visible
+  } {
+    Fl_Menu_Bar mnu_bar {open
+      xywh {0 0 490 20}
+    } {
+      Submenu sbmnu_calculate {
+        label Calculate open
+        xywh {15 15 68 24}
+      } {
+        MenuItem sbmnu_btn_selectcar {
+          label {Select Car}
+          user_data {"group_selectcar"}
+          callback action_cb
+          xywh {15 15 34 24}
+        }
+        MenuItem sbmnu_btn_calculate {
+          label Calculate
+          user_data {"group_calculate"}
+          callback action_cb
+          comment {Switches to calculate group}
+          xywh {15 15 34 24}
+        }
+      }
+      MenuItem {} {
+        label Settings
+        xywh {5 5 34 24}
+      }
+      MenuItem mnu_btn_file {
+        label File
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_help {
+        label Help
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_about {
+        label About
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_exit {
+        label Exit
+        xywh {30 30 34 24}
+      }
+    }
+    Fl_Group grp_selectcar {
+      xywh {0 19 490 341} hide
+    } {
+      Fl_Text_Display {} {
+        label {Select Car Model}
+        xywh {60 50 50 5} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_models {
+        xywh {5 45 485 60}
+      }
+      Fl_Text_Display {} {
+        label {Select Car Engine}
+        xywh {60 135 50 10} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_engines {
+        xywh {0 135 490 60}
+      }
+      Fl_Input txt_search_car_models {
+        xywh {175 19 245 26}
+      }
+      Fl_Button btn_search_car_models {
+        label SEARCH
+        xywh {420 20 69 25} labelsize 17
+      }
+      Fl_Input txt_search_car_engines {
+        xywh {175 109 245 26}
+      }
+      Fl_Button btn_search_car_engines {
+        label SEARCH
+        xywh {420 110 69 25} labelsize 17
+      }
+      Fl_Text_Display {} {
+        label {Select Car Gearbox}
+        xywh {70 220 50 10} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_gearboxes {
+        xywh {0 220 490 55}
+      }
+      Fl_Input txt_search_car_gearboxes {
+        xywh {195 194 225 26}
+      }
+      Fl_Button btn_search_car_gearboxes {
+        label SEARCH
+        xywh {420 195 69 25} labelsize 17
+      }
+      Fl_Button btn_proceedwithcar {
+        label {Proceed with Car ->}
+        xywh {310 305 179 50} labelsize 18
+      }
+      Fl_Button btn_help_selectcar {
+        label HELP
+        xywh {140 305 165 50} labelsize 21
+      }
+      Fl_Button btn_clear_car {
+        label {Clear Car}
+        xywh {5 305 130 50} labelsize 21
+      }
+      Fl_Choice cbo_class_selectcar {
+        label {Class:} open
+        xywh {55 280 100 20} down_box BORDER_BOX labelsize 17
+      } {}
+      Fl_Choice cbo_fuel_selectcar {
+        label {Fuel:} open
+        xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
+      } {}
+    }
+    Fl_Group grp_calculate {
+      xywh {0 20 490 340} hide
+    } {
+      Fl_Text_Display {} {
+        label {Calculate Fuel-Related}
+        xywh {220 50 50 5} labelsize 21
+      }
+      Fl_Button btn_select_car {
+        label {<- Select Car}
+        xywh {0 310 160 50} labelsize 24
+      }
+      Fl_Button btn_help_calculate {
+        label HELP
+        xywh {165 310 165 50} labelsize 23
+      }
+      Fl_Button btn_calculate {
+        label {Calculate!}
+        xywh {335 310 155 50} labelsize 25
+      }
+      Fl_Input txt_urban_usage {
+        label {Urban:}
+        xywh {55 47 80 28}
+      }
+      Fl_Input txt_exurban_usage {
+        label {Exurban:}
+        xywh {215 47 80 28}
+      }
+      Fl_Input txt_mixed_usage {
+        label {Mixed:}
+        xywh {360 47 80 28}
+      }
+      Fl_Input txt_co2_emission {
+        label {Co2 emission:}
+        xywh {100 77 80 28}
+      }
+      Fl_Input txt_price {
+        label {Price:}
+        xywh {225 77 80 28}
+      }
+      Fl_Input txt_distance_driven {
+        label {Distance driven:}
+        xywh {425 77 60 28}
+      }
+      Fl_Text_Display {} {
+        label {Car Info}
+        xywh {220 155 50 0} labelsize 21
+      }
+      Fl_Text_Display {} {
+        label {Model name:}
+        xywh {35 175 50 0} labelsize 19
+      }
+      Fl_Text_Display {} {
+        label {Engine:}
+        xywh {5 200 60 0} labelsize 19
+      }
+      Fl_Text_Display {} {
+        label {Gearbox:}
+        xywh {10 225 60 0} labelsize 19
+      }
+      Fl_Text_Display {} {
+        label {Class:}
+        xywh {0 245 55 0} labelsize 19
+      }
+      Fl_Text_Display {} {
+        label {Fuel:}
+        xywh {0 270 55 0} labelsize 19
+      }
+      Fl_Text_Display lbl_modelname_calculate {
+        xywh {120 150 365 20}
+      }
+      Fl_Text_Display lbl_engine_calculate {
+        xywh {70 175 415 20}
+      }
+      Fl_Text_Display lbl_gearbox_calculate {
+        xywh {85 200 400 20}
+      }
+      Fl_Text_Display lbl_class_calculate {
+        xywh {55 225 50 20}
+      }
+      Fl_Text_Display lbl_fuel_calculate {
+        xywh {55 250 430 20}
+      }
+      Fl_Choice {} {
+        label {Units: } open
+        xywh {60 110 120 20} down_box BORDER_BOX labelsize 16
+      } {}
+    }
+  }
+}
+
+Function {action_cb(Fl_Widget*, void *data)} {
+  comment {Button callback, calls functions based on the userdata it gets (which button was pressed)} open
+} {
+  code {const char *action = static_cast<const char*>(data); // get to a useable format (char)
+
+// based on what action is, call different function
+
+// switch group to grp_calc
+if (std::strcmp(action, "group_calculate") == 0)
+{
+	// hide all other groups
+	hide_all_groups();
+	// switch group to grp_calculate
+	grp_calculate->show();
+}
+else if (std::strcmp(action, "group_selectcar") == 0)
+{
+	// hide all other groups
+	hide_all_groups();
+	// switch group to grp_selectcar
+	grp_selectcar->show();
+}} {}
+}
+
+Function {hide_all_groups()} {
+  comment {Hides all groups} open
+} {
+  code {grp_selectcar->hide();
+grp_calculate->hide();} {selected
+  }
+}

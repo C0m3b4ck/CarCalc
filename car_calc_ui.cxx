@@ -7,7 +7,7 @@ Fl_Menu_Bar *mnu_bar=(Fl_Menu_Bar *)0;
 
 Fl_Menu_Item menu_mnu_bar[] = {
  {"Calculate", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
- {"Select Car", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"Select Car", 0,  (Fl_Callback*)action_cb, (void*)("group_selectcar"), 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  // Switches to calculate group
  {"Calculate", 0,  (Fl_Callback*)action_cb, (void*)("group_calculate"), 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
@@ -19,7 +19,7 @@ Fl_Menu_Item menu_mnu_bar[] = {
  {0,0,0,0,0,0,0,0,0}
 };
 
-Fl_Group *grp_select_car=(Fl_Group *)0;
+Fl_Group *grp_selectcar=(Fl_Group *)0;
 
 Fl_Browser *lst_car_models=(Fl_Browser *)0;
 
@@ -86,8 +86,8 @@ Fl_Double_Window* make_window() {
     { mnu_bar = new Fl_Menu_Bar(0, 0, 490, 20);
       mnu_bar->menu(menu_mnu_bar);
     } // Fl_Menu_Bar* mnu_bar
-    { grp_select_car = new Fl_Group(0, 19, 490, 341);
-      grp_select_car->hide();
+    { grp_selectcar = new Fl_Group(0, 19, 490, 341);
+      grp_selectcar->hide();
       { Fl_Text_Display* o = new Fl_Text_Display(60, 50, 50, 5, "Select Car Model");
         o->labelsize(21);
         o->align(Fl_Align(513));
@@ -138,8 +138,8 @@ Fl_Double_Window* make_window() {
         cbo_fuel_selectcar->down_box(FL_BORDER_BOX);
         cbo_fuel_selectcar->labelsize(17);
       } // Fl_Choice* cbo_fuel_selectcar
-      grp_select_car->end();
-    } // Fl_Group* grp_select_car
+      grp_selectcar->end();
+    } // Fl_Group* grp_selectcar
     { grp_calculate = new Fl_Group(0, 20, 490, 340);
       grp_calculate->hide();
       { Fl_Text_Display* o = new Fl_Text_Display(220, 50, 50, 5, "Calculate Fuel-Related");
@@ -213,11 +213,28 @@ void action_cb(Fl_Widget*, void *data) {
   const char *action = static_cast<const char*>(data); // get to a useable format (char)
   
   // based on what action is, call different function
+  
+  // switch group to grp_calc
   if (std::strcmp(action, "group_calculate") == 0)
   {
   	// hide all other groups
-  	//hide_all_groups();
+  	hide_all_groups();
   	// switch group to grp_calculate
   	grp_calculate->show();
   }
+  else if (std::strcmp(action, "group_selectcar") == 0)
+  {
+  	// hide all other groups
+  	hide_all_groups();
+  	// switch group to grp_selectcar
+  	grp_selectcar->show();
+  }
+}
+
+/**
+ Hides all groups
+*/
+void hide_all_groups() {
+  grp_selectcar->hide();
+  grp_calculate->hide();
 }

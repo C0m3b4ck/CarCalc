@@ -7,7 +7,7 @@
 #include <FL/Fl_Menu_Bar.H>
 extern Fl_Menu_Bar *mnu_bar;
 #include <FL/Fl_Group.H>
-extern Fl_Group *grp_select_car;
+extern Fl_Group *grp_selectcar;
 #include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Browser.H>
 extern Fl_Browser *lst_car_models;
@@ -45,11 +45,12 @@ extern Fl_Text_Display *lbl_fuel_calculate;
 Fl_Double_Window* make_window();
 extern Fl_Menu_Item menu_mnu_bar[];
 #define sbmnu_calculate (menu_mnu_bar+0)
-#define sbmnu_btn_select_car (menu_mnu_bar+1)
+#define sbmnu_btn_selectcar (menu_mnu_bar+1)
 #define sbmnu_btn_calculate (menu_mnu_bar+2)
 #define mnu_btn_file (menu_mnu_bar+5)
 #define mnu_btn_help (menu_mnu_bar+6)
 #define mnu_btn_about (menu_mnu_bar+7)
 #define mnu_btn_exit (menu_mnu_bar+8)
 void action_cb(Fl_Widget*, void *data);
+void hide_all_groups();
 #endif
