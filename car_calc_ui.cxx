@@ -202,6 +202,7 @@ Fl_Double_Window* make_window() {
     o->end();
     o->resizable(o);
   } // Fl_Double_Window* o
+  #include <cstring>
   return w;
 }
 
@@ -209,11 +210,10 @@ Fl_Double_Window* make_window() {
  Button callback, calls functions based on the userdata it gets (which button was pressed)
 */
 void action_cb(Fl_Widget*, void *data) {
-  # include <cstring>
   const char *action = static_cast<const char*>(data); // get to a useable format (char)
   
   // based on what action is, call different function
-  if (action.compare("group_calculate") == 0)
+  if (std::strcmp(action, "group_calculate") == 0)
   {
   	// hide all other groups
   	//hide_all_groups();

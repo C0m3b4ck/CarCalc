@@ -202,16 +202,16 @@ Function {make_window()} {open
       } {}
     }
   }
+  code {\#include <cstring>} {}
 }
 
 Function {action_cb(Fl_Widget*, void *data)} {
   comment {Button callback, calls functions based on the userdata it gets (which button was pressed)} open
 } {
-  code {\# include <cstring>
-const char *action = static_cast<const char*>(data); // get to a useable format (char)
+  code {const char *action = static_cast<const char*>(data); // get to a useable format (char)
 
 // based on what action is, call different function
-if (action.compare("group_calculate") == 0)
+if (std::strcmp(action, "group_calculate") == 0)
 {
 	// hide all other groups
 	//hide_all_groups();
