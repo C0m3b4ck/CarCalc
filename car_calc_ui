@@ -12,7 +12,7 @@ Function {make_window()} {open
       xywh {0 0 490 20}
     } {
       Submenu sbmnu_calculate {
-        label Calculate
+        label Calculate open
         xywh {15 15 68 24}
       } {
         MenuItem sbmnu_btn_select_car {
@@ -21,7 +21,7 @@ Function {make_window()} {open
         }
         MenuItem sbmnu_btn_calculate {
           label Calculate
-          user_data group_calculate
+          user_data {"group_calculate"}
           callback action_cb
           comment {Switches to calculate group}
           xywh {15 15 34 24}
@@ -115,7 +115,7 @@ Function {make_window()} {open
       } {}
     }
     Fl_Group grp_calculate {
-      xywh {0 20 490 340}
+      xywh {0 20 490 340} hide
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
@@ -137,23 +137,23 @@ Function {make_window()} {open
         label {Urban:}
         xywh {55 47 80 28}
       }
-      Fl_Input txt_urban_usage {
+      Fl_Input txt_exurban_usage {
         label {Exurban:}
         xywh {215 47 80 28}
       }
-      Fl_Input txt_urban_usage {
+      Fl_Input txt_mixed_usage {
         label {Mixed:}
         xywh {360 47 80 28}
       }
-      Fl_Input txt_urban_usage {
+      Fl_Input txt_co2_emission {
         label {Co2 emission:}
         xywh {100 77 80 28}
       }
-      Fl_Input txt_urban_usage {
+      Fl_Input txt_price {
         label {Price:}
         xywh {225 77 80 28}
       }
-      Fl_Input txt_urban_usage {
+      Fl_Input txt_distance_driven {
         label {Distance driven:}
         xywh {425 77 60 28}
       }
@@ -207,10 +207,11 @@ Function {make_window()} {open
 Function {action_cb(Fl_Widget*, void *data)} {
   comment {Button callback, calls functions based on the userdata it gets (which button was pressed)} open
 } {
-  code {const char *action = static_cast<const char*>(data); // get to a useable format (char)
+  code {\# include <cstring>
+const char *action = static_cast<const char*>(data); // get to a useable format (char)
 
 // based on what action is, call different function
-if (std::strcmp(action, "group_calculate") == 0)
+if (action.compare("group_calculate") == 0)
 {
 	// hide all other groups
 	//hide_all_groups();
