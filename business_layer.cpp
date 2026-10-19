@@ -6,6 +6,8 @@
 
 // variables
 int car_id = 0; // used for sql lookup, gotten from car name
+std::string units = "lkmg"; //litres, kilometers, grams (for Co2)
+
 // DTOs - car values, calculated car values, car info
 struct car_values
 {
@@ -15,7 +17,6 @@ struct car_values
 	float co2_emission = 0.0000;
 	float fuel_price = 0.0000;
 	float trip_distance = 0.0000;
-	std::string units = "lkmg"; //litres, kilometers, grams (for Co2)
 }
 
 struct car_calculated
@@ -25,7 +26,6 @@ struct car_calculated
 	float mixed_usage = 0.0000;
 	float co2_emitted = 0.0000;
 	float price_paid = 0.0000;
-	float distance_driven = 0.0000;
 }
 
 struct car_info
@@ -37,6 +37,95 @@ struct car_info
 	std::string vehicle_class = "";
 }
 
+// ======== DTO FUNCTIONS =========
+// receive car_info DTO 
+void receive_car_info(std::string get_model_name, std::string get_engine_name, std::string get_gearbox_name, std::string get_fuel_type, std::string get_vehicle_class)
+{
+		
+}
+// function called externally to get data from car_calculated struct
+float get_from_calculated(std::string what_to_get)
+{
+	if (what_to_get == "urban_burned")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.urban_burned << "\n";}
+		return car_calculated.urban_burned;
+	}
+	else if (what_to_get == "exurban_burned")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.exurban_burned << "\n";}
+		return car_calculated.exurban_burned;
+	}
+	else if (what_to_get == "mixed_burned")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.mixed_burned << "\n";}
+		return car_calculated.mixed_burned;
+	}
+	else if (what_to_get == "co2_emitted")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.co2_emitted << "\n";}
+		return car_calculated.co2_emitted;
+	}
+	else if (what_to_get == "price_paid")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.price_paid << "\n";}
+		return car_calculated.price_paid;
+	}
+	else if (what_to_get == "distance_driven")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.distance_driven << "\n";}
+		return car_calculated.distance_driven;
+	}
+
+	else
+	{
+		if (DEBUG_PRINT) {std::cout << "Programmer error - invalid argument passed to get_from_calculated function \n";}
+		if (DEBUG_PRINT) {std::cout << "Please report this \n";}
+		return "";
+	}
+}
+
+// function called externally to get data from car_values struct
+float get_from_values(std::string what_to_get)
+{
+	if (what_to_get == "urban_usage")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_values.urban_usage << "\n";}
+		return car_values.urban_usage;
+	}
+	else if (what_to_get == "exurban_usage")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_values.exurban_usage << "\n";}
+		return car_values.exurban_usage;
+	}
+	else if (what_to_get == "mixed_usage")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_values.mixed_usage << "\n";}
+		return car_values.mixed_usage;
+	}
+	else if (what_to_get == "co2_emission")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_values.co2_emission << "\n";}
+		return car_values.co2_emission;
+	}
+	else if (what_to_get == "fuel_price")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_values.fuel_price << "\n";}
+		return car_values.fuel_price;
+	}
+	else if (what_to_get == "trip_distance")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_values.trip_distance << "\n";}
+		return car_values.trip_distance;
+	}
+
+	else
+	{
+		if (DEBUG_PRINT) {std::cout << "Programmer error - invalid argument passed to get_from_values function \n";}
+		if (DEBUG_PRINT) {std::cout << "Please report this \n";}
+		return "";
+	}
+}
 // function called externally to get data from car_info struct
 std::string get_from_info(std::string what_to_get)
 {
