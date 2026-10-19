@@ -63,7 +63,7 @@ extern Fl_Menu_Item menu_mnu_bar[];
 #define mnu_btn_exit (menu_mnu_bar+8)
 void action_cb(Fl_Widget*, void *data);
 void hide_all_groups();
-void pass_dto(std::string dto_type);
+void get_dto_selectcar();
 void calculate();
 void proceed_car();
 void wake_grp_calculate();

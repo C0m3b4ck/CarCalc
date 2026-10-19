@@ -337,11 +337,10 @@ Function {hide_all_groups()} {
 grp_calculate->hide();} {}
 }
 
-Function {pass_dto(std::string dto_type)} {
-  comment {Passes DTOs like "db car info" and "fuel-related" to business layer} open
+Function {get_dto_selectcar()} {
+  comment {Gets values from user, then passes them into DTO in business layer} open
 } {
-  code {if (dto_type == "car_info") // in select car
-{
+  code {// in select car
 	// checks if everything is selected will be before this func, if they succeed - this func is called
 	short idx = lst_car_models->value();
 	std::string car_model = ""; std::string car_engine = ""; std::string car_gearbox = "";
@@ -375,8 +374,8 @@ Function {pass_dto(std::string dto_type)} {
 		car_fuel = cbo_fuel_selectcar->text(idx);	
 	}
 	std::cout << "Car info being passed to DTO: " << car_model << " " << car_engine << " " << car_gearbox << " " << car_class << " " << car_fuel << "\\n"; //make it actually output the data
-	// call function from business layer	
-}} {}
+	// call function from business layer
+	receive_car_info(car_model, car_engine, car_gearbox, car_class, car_fuel);} {}
 }
 
 Function {calculate()} {open
@@ -400,7 +399,7 @@ Function {proceed_car()} {
 	if (c == 0) // this is fine button pressed
 	{
 		// if yes, pass DTO and show grp_calculate
-		pass_dto("car_info");
+		get_dto_selectcar();
 		wake_grp_calculate(); // clearing txtboxes, filling info etc.
 		hide_all_groups();
 		grp_calculate->show();
@@ -408,11 +407,12 @@ Function {proceed_car()} {
 }
 else // if all are selected - just do it
 {
-		pass_dto("car_info");
+		get_dto_selectcar();
 		wake_grp_calculate(); // clearing txtboxes, filling info etc.
 		hide_all_groups();
 		grp_calculate->show();
-}} {}
+}} {selected
+  }
 }
 
 Function {wake_grp_calculate()} {
@@ -450,8 +450,7 @@ lbl_co2emission_calculate->value("");
 // populate text fields such as car info
 cbo_units_calculate->add("SI");
 cbo_units_calculate->add("Imperial");
-// get_from_dto, then set} {selected
-  }
+// get_from_dto, then set} {}
 }
 
 Function {wake_grp_selectcar()} {

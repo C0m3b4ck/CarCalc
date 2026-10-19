@@ -9,7 +9,7 @@ int car_id = 0; // used for sql lookup, gotten from car name
 std::string units = "lkmg"; //litres, kilometers, grams (for Co2)
 
 // DTOs - car values, calculated car values, car info
-struct car_values
+struct CarValues
 {
 	float urban_usage = 0.0000;
 	float exurban_usage = 0.0000;
@@ -17,31 +17,41 @@ struct car_values
 	float co2_emission = 0.0000;
 	float fuel_price = 0.0000;
 	float trip_distance = 0.0000;
-}
+};
 
-struct car_calculated
+struct CarCalculated
 {
 	float urban_burned = 0.0000;
 	float exurban_burned = 0.0000;
-	float mixed_usage = 0.0000;
+	float mixed_burned = 0.0000;
 	float co2_emitted = 0.0000;
 	float price_paid = 0.0000;
-}
+	float distance_driven = 0.0000;
+};
 
-struct car_info
+struct CarInfo
 {
 	std::string model_name = "";
 	std::string engine_name = "";
 	std::string gearbox_name = "";
-	std::string fuel_type = "":
 	std::string vehicle_class = "";
-}
+	std::string fuel_type = "";
+};
+
+CarValues car_values;
+CarCalculated car_calculated;
+CarInfo car_info;
 
 // ======== DTO FUNCTIONS =========
-// receive car_info DTO 
-void receive_car_info(std::string get_model_name, std::string get_engine_name, std::string get_gearbox_name, std::string get_fuel_type, std::string get_vehicle_class)
+// receive car_info DTO values
+void receive_car_info(std::string get_model_name, std::string get_engine_name, std::string get_gearbox_name, std::string get_vehicle_class, std::string get_fuel_type)
 {
-		
+		car_info.model_name = get_model_name;
+		car_info.engine_name = get_engine_name;
+		car_info.gearbox_name = get_gearbox_name;
+		car_info.fuel_type = get_fuel_type;
+		car_info.vehicle_class = get_vehicle_class;
+		if (DEBUG_PRINT) {std::cout << "Received car_info DTO: " << get_model_name << " " << get_engine_name << " " << get_gearbox_name << " " << get_fuel_type << " " << get_vehicle_class << "\n";}
 }
 // function called externally to get data from car_calculated struct
 float get_from_calculated(std::string what_to_get)
@@ -81,7 +91,7 @@ float get_from_calculated(std::string what_to_get)
 	{
 		if (DEBUG_PRINT) {std::cout << "Programmer error - invalid argument passed to get_from_calculated function \n";}
 		if (DEBUG_PRINT) {std::cout << "Please report this \n";}
-		return "";
+		return -1.000;
 	}
 }
 
@@ -123,7 +133,7 @@ float get_from_values(std::string what_to_get)
 	{
 		if (DEBUG_PRINT) {std::cout << "Programmer error - invalid argument passed to get_from_values function \n";}
 		if (DEBUG_PRINT) {std::cout << "Please report this \n";}
-		return "";
+		return -1.000;
 	}
 }
 // function called externally to get data from car_info struct
