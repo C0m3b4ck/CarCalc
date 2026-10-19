@@ -5,6 +5,7 @@
 #include <string>
 #include <cstring>
 #include <FL/fl_ask.H>
+#include <FL/Fl_Output.H>
 
 Fl_Menu_Bar *mnu_bar=(Fl_Menu_Bar *)0;
 
@@ -72,31 +73,31 @@ Fl_Input *txt_price=(Fl_Input *)0;
 
 Fl_Input *txt_distance_driven=(Fl_Input *)0;
 
-Fl_Text_Display *lbl_modelname_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_modelname_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_engine_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_engine_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_gearbox_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_gearbox_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_class_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_class_calculate=(Fl_Output *)0;
 
 Fl_Choice *cbo_units_calculate=(Fl_Choice *)0;
 
-Fl_Text_Display *lbl_fueltype_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_fueltype_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_urban_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_urban_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_exurban_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_exurban_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_mixed_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_mixed_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_price_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_price_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_units_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_units_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_distance_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_distance_calculate=(Fl_Output *)0;
 
-Fl_Text_Display *lbl_co2emission_calculate=(Fl_Text_Display *)0;
+Fl_Output *lbl_co2emission_calculate=(Fl_Output *)0;
 
 Fl_Double_Window* make_window() {
   Fl_Double_Window* w;
@@ -161,9 +162,17 @@ Fl_Double_Window* make_window() {
       grp_selectcar->end();
     } // Fl_Group* grp_selectcar
     { grp_calculate = new Fl_Group(0, 20, 595, 340);
-      { Fl_Text_Display* o = new Fl_Text_Display(220, 50, 50, 5, "Calculate Fuel-Related");
+      { Fl_Output* o = new Fl_Output(220, 50, 50, 5, "Calculate Fuel-Related");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(21);
-      } // Fl_Text_Display* o
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
       { btn_select_car = new Fl_Button(0, 310, 160, 50, "<- Select Car");
         btn_select_car->labelsize(24);
         btn_select_car->callback((Fl_Callback*)action_cb, (void*)("group_selectcar"));
@@ -188,74 +197,296 @@ Fl_Double_Window* make_window() {
       } // Fl_Input* txt_price
       { txt_distance_driven = new Fl_Input(410, 77, 75, 28, "Trip distance:");
       } // Fl_Input* txt_distance_driven
-      { Fl_Text_Display* o = new Fl_Text_Display(220, 140, 50, 0, "Car Info");
+      { Fl_Output* o = new Fl_Output(220, 140, 50, 0, "Car Info");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(21);
-      } // Fl_Text_Display* o
-      { Fl_Text_Display* o = new Fl_Text_Display(35, 160, 50, 0, "Model name:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { Fl_Output* o = new Fl_Output(35, 160, 50, 0, "Model name:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { Fl_Text_Display* o = new Fl_Text_Display(5, 185, 60, 0, "Engine:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { Fl_Output* o = new Fl_Output(5, 185, 60, 0, "Engine:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { Fl_Text_Display* o = new Fl_Text_Display(10, 210, 60, 0, "Gearbox:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { Fl_Output* o = new Fl_Output(10, 210, 60, 0, "Gearbox:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { Fl_Text_Display* o = new Fl_Text_Display(0, 230, 55, 0, "Class:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { Fl_Output* o = new Fl_Output(0, 230, 55, 0, "Class:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { lbl_modelname_calculate = new Fl_Text_Display(120, 135, 365, 20);
-      } // Fl_Text_Display* lbl_modelname_calculate
-      { lbl_engine_calculate = new Fl_Text_Display(70, 160, 415, 20);
-      } // Fl_Text_Display* lbl_engine_calculate
-      { lbl_gearbox_calculate = new Fl_Text_Display(85, 185, 400, 20);
-      } // Fl_Text_Display* lbl_gearbox_calculate
-      { lbl_class_calculate = new Fl_Text_Display(55, 210, 50, 20);
-      } // Fl_Text_Display* lbl_class_calculate
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_modelname_calculate = new Fl_Output(120, 135, 365, 20);
+        lbl_modelname_calculate->box(FL_DOWN_FRAME);
+        lbl_modelname_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_modelname_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_modelname_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_modelname_calculate->labelfont(0);
+        lbl_modelname_calculate->labelsize(14);
+        lbl_modelname_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_modelname_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_modelname_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_modelname_calculate
+      { lbl_engine_calculate = new Fl_Output(70, 160, 415, 20);
+        lbl_engine_calculate->box(FL_DOWN_FRAME);
+        lbl_engine_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_engine_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_engine_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_engine_calculate->labelfont(0);
+        lbl_engine_calculate->labelsize(14);
+        lbl_engine_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_engine_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_engine_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_engine_calculate
+      { lbl_gearbox_calculate = new Fl_Output(85, 185, 400, 20);
+        lbl_gearbox_calculate->box(FL_DOWN_FRAME);
+        lbl_gearbox_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_gearbox_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_gearbox_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_gearbox_calculate->labelfont(0);
+        lbl_gearbox_calculate->labelsize(14);
+        lbl_gearbox_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_gearbox_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_gearbox_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_gearbox_calculate
+      { lbl_class_calculate = new Fl_Output(55, 210, 50, 20);
+        lbl_class_calculate->box(FL_DOWN_FRAME);
+        lbl_class_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_class_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_class_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_class_calculate->labelfont(0);
+        lbl_class_calculate->labelsize(14);
+        lbl_class_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_class_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_class_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_class_calculate
       { cbo_units_calculate = new Fl_Choice(60, 110, 120, 20, "Units: ");
         cbo_units_calculate->down_box(FL_BORDER_BOX);
         cbo_units_calculate->labelsize(16);
       } // Fl_Choice* cbo_units_calculate
-      { Fl_Text_Display* o = new Fl_Text_Display(110, 230, 90, 0, "Fuel type:");
+      { Fl_Output* o = new Fl_Output(110, 230, 90, 0, "Fuel type:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { lbl_fueltype_calculate = new Fl_Text_Display(200, 210, 70, 20);
-      } // Fl_Text_Display* lbl_fueltype_calculate
-      { Fl_Text_Display* o = new Fl_Text_Display(0, 285, 90, 0, "Urban:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_fueltype_calculate = new Fl_Output(200, 210, 70, 20);
+        lbl_fueltype_calculate->box(FL_DOWN_FRAME);
+        lbl_fueltype_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_fueltype_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_fueltype_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_fueltype_calculate->labelfont(0);
+        lbl_fueltype_calculate->labelsize(14);
+        lbl_fueltype_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_fueltype_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_fueltype_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_fueltype_calculate
+      { Fl_Output* o = new Fl_Output(0, 285, 90, 0, "Urban:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { lbl_urban_calculate = new Fl_Text_Display(80, 265, 80, 20);
-      } // Fl_Text_Display* lbl_urban_calculate
-      { Fl_Text_Display* o = new Fl_Text_Display(165, 285, 90, 0, "Exurban:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_urban_calculate = new Fl_Output(80, 265, 80, 20);
+        lbl_urban_calculate->box(FL_DOWN_FRAME);
+        lbl_urban_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_urban_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_urban_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_urban_calculate->labelfont(0);
+        lbl_urban_calculate->labelsize(14);
+        lbl_urban_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_urban_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_urban_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_urban_calculate
+      { Fl_Output* o = new Fl_Output(165, 285, 90, 0, "Exurban:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { lbl_exurban_calculate = new Fl_Text_Display(250, 265, 70, 20);
-      } // Fl_Text_Display* lbl_exurban_calculate
-      { Fl_Text_Display* o = new Fl_Text_Display(330, 285, 90, 0, "Mixed:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_exurban_calculate = new Fl_Output(250, 265, 70, 20);
+        lbl_exurban_calculate->box(FL_DOWN_FRAME);
+        lbl_exurban_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_exurban_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_exurban_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_exurban_calculate->labelfont(0);
+        lbl_exurban_calculate->labelsize(14);
+        lbl_exurban_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_exurban_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_exurban_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_exurban_calculate
+      { Fl_Output* o = new Fl_Output(330, 285, 90, 0, "Mixed:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { lbl_mixed_calculate = new Fl_Text_Display(405, 265, 70, 20);
-      } // Fl_Text_Display* lbl_mixed_calculate
-      { Fl_Text_Display* o = new Fl_Text_Display(165, 310, 90, 0, "Price:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_mixed_calculate = new Fl_Output(405, 265, 70, 20);
+        lbl_mixed_calculate->box(FL_DOWN_FRAME);
+        lbl_mixed_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_mixed_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_mixed_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_mixed_calculate->labelfont(0);
+        lbl_mixed_calculate->labelsize(14);
+        lbl_mixed_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_mixed_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_mixed_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_mixed_calculate
+      { Fl_Output* o = new Fl_Output(165, 310, 90, 0, "Price:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { lbl_price_calculate = new Fl_Text_Display(235, 290, 90, 20);
-      } // Fl_Text_Display* lbl_price_calculate
-      { Fl_Text_Display* o = new Fl_Text_Display(330, 310, 90, 0, "Units:");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_price_calculate = new Fl_Output(235, 290, 90, 20);
+        lbl_price_calculate->box(FL_DOWN_FRAME);
+        lbl_price_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_price_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_price_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_price_calculate->labelfont(0);
+        lbl_price_calculate->labelsize(14);
+        lbl_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_price_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_price_calculate
+      { Fl_Output* o = new Fl_Output(330, 310, 90, 0, "Units:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(19);
-      } // Fl_Text_Display* o
-      { lbl_units_calculate = new Fl_Text_Display(405, 290, 85, 20);
-      } // Fl_Text_Display* lbl_units_calculate
-      { new Fl_Text_Display(270, 265, 110, 0, "Trip distance:");
-      } // Fl_Text_Display* o
-      { lbl_distance_calculate = new Fl_Text_Display(375, 245, 100, 20);
-      } // Fl_Text_Display* lbl_distance_calculate
-      { new Fl_Text_Display(5, 310, 90, 0, "Co2 emission:");
-      } // Fl_Text_Display* o
-      { lbl_co2emission_calculate = new Fl_Text_Display(95, 290, 70, 20);
-      } // Fl_Text_Display* lbl_co2emission_calculate
-      { Fl_Text_Display* o = new Fl_Text_Display(200, 265, 45, 0, "Trip Info");
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_units_calculate = new Fl_Output(405, 290, 85, 20);
+        lbl_units_calculate->box(FL_DOWN_FRAME);
+        lbl_units_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_units_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_units_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_units_calculate->labelfont(0);
+        lbl_units_calculate->labelsize(14);
+        lbl_units_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_units_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_units_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_units_calculate
+      { Fl_Output* o = new Fl_Output(270, 265, 110, 0, "Trip distance:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
+        o->labelsize(14);
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_distance_calculate = new Fl_Output(375, 245, 100, 20);
+        lbl_distance_calculate->box(FL_DOWN_FRAME);
+        lbl_distance_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_distance_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_distance_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_distance_calculate->labelfont(0);
+        lbl_distance_calculate->labelsize(14);
+        lbl_distance_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_distance_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_distance_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_distance_calculate
+      { Fl_Output* o = new Fl_Output(5, 310, 90, 0, "Co2 emission:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
+        o->labelsize(14);
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_co2emission_calculate = new Fl_Output(95, 290, 70, 20);
+        lbl_co2emission_calculate->box(FL_DOWN_FRAME);
+        lbl_co2emission_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_co2emission_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_co2emission_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_co2emission_calculate->labelfont(0);
+        lbl_co2emission_calculate->labelsize(14);
+        lbl_co2emission_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_co2emission_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_co2emission_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_co2emission_calculate
+      { Fl_Output* o = new Fl_Output(200, 265, 45, 0, "Trip Info");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
         o->labelsize(21);
-      } // Fl_Text_Display* o
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
       grp_calculate->end();
     } // Fl_Group* grp_calculate
     o->end();
@@ -401,18 +632,26 @@ void wake_grp_calculate() {
   txt_price->value("");
   txt_distance_driven->value("");
   
-  lbl_modelname_calculate->buffer()->text("");
-  lbl_engine_calculate->buffer()->text("");
-  lbl_gearbox_calculate->buffer()->text("");
-  lbl_class_calculate->buffer()->text("");
-  lbl_fueltype_calculate->buffer()->text("");
-  lbl_urban_calculate->buffer()->text("");
-  lbl_exurban_calculate->buffer()->text("");
-  lbl_mixed_calculate->buffer()->text("");
-  lbl_price_calculate->buffer()->text("");
-  lbl_units_calculate->buffer()->text("");
-  lbl_distance_calculate->buffer()->text("");
-  lbl_co2emission_calculate->buffer()->text("");
+    // pointer debug
+    /*
+    fprintf(stderr, "ptr = %p\n", (void *) lbl_modelname_calculate);
+    if (!lbl_modelname_calculate) {fprintf(stderr, "NULL\n"); return; }
+    fprintf(stderr, "windows = %p\n", (void*)lbl_modelname_calculate->window());
+    fprintf(stderr, "buffer = %p\n", (void*)lbl_modelname_calculate->buffer());
+    */
+
+  lbl_modelname_calculate->value("");
+  lbl_engine_calculate->value("");
+  lbl_gearbox_calculate->value("");
+  lbl_class_calculate->value("");
+  lbl_fueltype_calculate->value("");
+  lbl_urban_calculate->value("");
+  lbl_exurban_calculate->value("");
+  lbl_mixed_calculate->value("");
+  lbl_price_calculate->value("");
+  lbl_units_calculate->value("");
+  lbl_distance_calculate->value("");
+  lbl_co2emission_calculate->value("");
   
   // populate text fields such as car info
   cbo_units_calculate->add("SI");

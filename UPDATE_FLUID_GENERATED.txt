@@ -6,3 +6,4 @@ in the .cxx file:
 
 in the .h file:
 #include <string>
+#include <FL/Fl_Output.H>

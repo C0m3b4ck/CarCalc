@@ -6,6 +6,7 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <string>
+#include <FL/Fl_Output.H>
 extern Fl_Menu_Bar *mnu_bar;
 #include <FL/Fl_Group.H>
 extern Fl_Group *grp_selectcar;
@@ -38,19 +39,19 @@ extern Fl_Input *txt_mixed_usage;
 extern Fl_Input *txt_co2_emission;
 extern Fl_Input *txt_price;
 extern Fl_Input *txt_distance_driven;
-extern Fl_Text_Display *lbl_modelname_calculate;
-extern Fl_Text_Display *lbl_engine_calculate;
-extern Fl_Text_Display *lbl_gearbox_calculate;
-extern Fl_Text_Display *lbl_class_calculate;
+extern Fl_Output *lbl_modelname_calculate;
+extern Fl_Output *lbl_engine_calculate;
+extern Fl_Output *lbl_gearbox_calculate;
+extern Fl_Output *lbl_class_calculate;
 extern Fl_Choice *cbo_units_calculate;
-extern Fl_Text_Display *lbl_fueltype_calculate;
-extern Fl_Text_Display *lbl_urban_calculate;
-extern Fl_Text_Display *lbl_exurban_calculate;
-extern Fl_Text_Display *lbl_mixed_calculate;
-extern Fl_Text_Display *lbl_price_calculate;
-extern Fl_Text_Display *lbl_units_calculate;
-extern Fl_Text_Display *lbl_distance_calculate;
-extern Fl_Text_Display *lbl_co2emission_calculate;
+extern Fl_Output *lbl_fueltype_calculate;
+extern Fl_Output *lbl_urban_calculate;
+extern Fl_Output *lbl_exurban_calculate;
+extern Fl_Output *lbl_mixed_calculate;
+extern Fl_Output *lbl_price_calculate;
+extern Fl_Output *lbl_units_calculate;
+extern Fl_Output *lbl_distance_calculate;
+extern Fl_Output *lbl_co2emission_calculate;
 Fl_Double_Window* make_window();
 extern Fl_Menu_Item menu_mnu_bar[];
 #define sbmnu_calculate (menu_mnu_bar+0)

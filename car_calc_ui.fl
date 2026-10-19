@@ -124,6 +124,7 @@ Function {make_window()} {open
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
         xywh {220 50 50 5} labelsize 21
+        class Fl_Output
       }
       Fl_Button btn_select_car {
         label {<- Select Car}
@@ -169,34 +170,43 @@ Function {make_window()} {open
       Fl_Text_Display {} {
         label {Car Info}
         xywh {220 140 50 0} labelsize 21
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Model name:}
         xywh {35 160 50 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Engine:}
         xywh {5 185 60 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Gearbox:}
         xywh {10 210 60 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Class:}
         xywh {0 230 55 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display lbl_modelname_calculate {
         xywh {120 135 365 20}
+        class Fl_Output
       }
       Fl_Text_Display lbl_engine_calculate {
         xywh {70 160 415 20}
+        class Fl_Output
       }
       Fl_Text_Display lbl_gearbox_calculate {
         xywh {85 185 400 20}
+        class Fl_Output
       }
       Fl_Text_Display lbl_class_calculate {
         xywh {55 210 50 20}
+        class Fl_Output
       }
       Fl_Choice cbo_units_calculate {
         label {Units: } open
@@ -205,62 +215,79 @@ Function {make_window()} {open
       Fl_Text_Display {} {
         label {Fuel type:}
         xywh {110 230 90 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display lbl_fueltype_calculate {
         xywh {200 210 70 20}
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Urban:}
         xywh {0 285 90 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display lbl_urban_calculate {
         xywh {80 265 80 20}
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Exurban:}
         xywh {165 285 90 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display lbl_exurban_calculate {
         xywh {250 265 70 20}
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Mixed:}
         xywh {330 285 90 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display lbl_mixed_calculate {
         xywh {405 265 70 20}
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Price:}
         xywh {165 310 90 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display lbl_price_calculate {
         xywh {235 290 90 20}
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Units:}
         xywh {330 310 90 0} labelsize 19
+        class Fl_Output
       }
       Fl_Text_Display lbl_units_calculate {
         xywh {405 290 85 20}
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Trip distance:}
         xywh {270 265 110 0}
+        class Fl_Output
       }
       Fl_Text_Display lbl_distance_calculate {
         xywh {375 245 100 20}
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Co2 emission:}
         xywh {5 310 90 0}
+        class Fl_Output
       }
       Fl_Text_Display lbl_co2emission_calculate {
         xywh {95 290 70 20}
+        class Fl_Output
       }
       Fl_Text_Display {} {
         label {Trip Info}
         xywh {200 265 45 0} labelsize 21
+        class Fl_Output
       }
     }
   }
@@ -399,18 +426,26 @@ txt_co2_emission->value("");
 txt_price->value("");
 txt_distance_driven->value("");
 
-lbl_modelname_calculate->buffer()->text("");
-lbl_engine_calculate->buffer()->text("");
-lbl_gearbox_calculate->buffer()->text("");
-lbl_class_calculate->buffer()->text("");
-lbl_fueltype_calculate->buffer()->text("");
-lbl_urban_calculate->buffer()->text("");
-lbl_exurban_calculate->buffer()->text("");
-lbl_mixed_calculate->buffer()->text("");
-lbl_price_calculate->buffer()->text("");
-lbl_units_calculate->buffer()->text("");
-lbl_distance_calculate->buffer()->text("");
-lbl_co2emission_calculate->buffer()->text("");
+  // pointer debug
+  /*
+  fprintf(stderr, "ptr = %p\\n", (void *) lbl_modelname_calculate);
+  if (!lbl_modelname_calculate) {fprintf(stderr, "NULL\\n"); return; }
+  fprintf(stderr, "windows = %p\\n", (void*)lbl_modelname_calculate->window());
+  fprintf(stderr, "buffer = %p\\n", (void*)lbl_modelname_calculate->buffer());
+  */
+  
+lbl_modelname_calculate->value("");
+lbl_engine_calculate->value("");
+lbl_gearbox_calculate->value("");
+lbl_class_calculate->value("");
+lbl_fueltype_calculate->value("");
+lbl_urban_calculate->value("");
+lbl_exurban_calculate->value("");
+lbl_mixed_calculate->value("");
+lbl_price_calculate->value("");
+lbl_units_calculate->value("");
+lbl_distance_calculate->value("");
+lbl_co2emission_calculate->value("");
 
 // populate text fields such as car info
 cbo_units_calculate->add("SI");
