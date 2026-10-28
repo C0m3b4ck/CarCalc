@@ -3,6 +3,9 @@ A program for calculating different car-related values, such as fuel consumption
 
 # Features
 
+# Database
+This calculator uses the French car database from [ADEME Car Labelling](https://www.data.gouv.fr/datasets/ademe-car-labelling/) (data.gouv.fr). The database contains official French vehicle certification data including fuel consumption, CO2 emissions, and vehicle specifications for cars marketed in France.
+
 # Download
 SourceForge and releases link here
 

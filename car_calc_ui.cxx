@@ -2,9 +2,11 @@
 
 #include "car_calc_ui.h"
 #include "business_layer.h"
+#include "sql_layer.h"
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <vector>
 #include <FL/Fl_Output.H>
 #include <FL/fl_ask.H>
 
@@ -677,5 +679,60 @@ void wake_grp_selectcar() {
   
   // load car values from DTO if there are any
   // = get_from_dto(char which_dto, std::string what_to_get)
-  lst_car_models->add("some text");
+  // populate lists from database
+  populate_car_models();
+}
+
+void populate_car_models()
+{
+  lst_car_models->clear();
+  std::vector<std::string> brands = get_all_brands();
+  for (size_t i = 0; i < brands.size(); i++)
+  {
+    lst_car_models->add(brands[i].c_str());
+  }
+}
+
+void populate_car_engines()
+{
+  lst_car_engines->clear();
+  short idx = lst_car_models->value();
+  if (idx > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::vector<std::string> models = get_models_by_brand(brand);
+    for (size_t i = 0; i < models.size(); i++)
+    {
+      lst_car_engines->add(models[i].c_str());
+    }
+  }
+}
+
+void populate_car_gearboxes()
+{
+  lst_car_gearboxes->clear();
+  short idx_model = lst_car_engines->value();
+  short idx_brand = lst_car_models->value();
+  if (idx_brand > 0 && idx_model > 0)
+  {
+    std::string brand = lst_car_models->text(idx_brand);
+    std::string model = lst_car_engines->text(idx_model);
+    std::vector<std::string> gearboxes = get_gearboxes_by_brand_model(brand, model);
+    for (size_t i = 0; i < gearboxes.size(); i++)
+    {
+      lst_car_gearboxes->add(gearboxes[i].c_str());
+    }
+    std::vector<std::string> fuels = get_fuel_types_by_brand_model(brand, model);
+    cbo_fuel_selectcar->clear();
+    for (size_t i = 0; i < fuels.size(); i++)
+    {
+      cbo_fuel_selectcar->add(fuels[i].c_str());
+    }
+    std::vector<std::string> classes = get_vehicle_classes_by_brand_model(brand, model);
+    cbo_class_selectcar->clear();
+    for (size_t i = 0; i < classes.size(); i++)
+    {
+      cbo_class_selectcar->add(classes[i].c_str());
+    }
+  }
 }

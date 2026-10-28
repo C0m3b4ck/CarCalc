@@ -2,6 +2,7 @@
 #include <iostream> //iostream for debug prints
 #include "globals.h" //for values such as if debug mode is enabled
 #include "io_layer.h" //for file operations
+#include "sql_layer.h"
 #include <string>
 
 // variables
@@ -43,6 +44,33 @@ CarCalculated car_calculated;
 CarInfo car_info;
 
 // ======== DTO FUNCTIONS =========
+// SQL layer functions
+void load_car_data_from_db()
+{
+	if (DEBUG_PRINT) {std::cout << "Loading car data from SQL database for: " << car_info.model_name << " / " << car_info.engine_name << "\n";}
+	if (get_car_consumption_data(car_info.model_name, car_info.engine_name, car_info.engine_name, car_info.gearbox_name, 
+	                             car_values.urban_usage, car_values.exurban_usage, car_values.mixed_usage, car_values.co2_emission))
+	{
+		if (DEBUG_PRINT) {std::cout << "Loaded from DB - urban:" << car_values.urban_usage << " mixed:" << car_values.mixed_usage << " co2:" << car_values.co2_emission << "\n";}
+	}
+	else
+	{
+		if (DEBUG_PRINT) {std::cout << "Failed to load from DB, using defaults\n";}
+		car_values.urban_usage = 0.0;
+		car_values.exurban_usage = 0.0;
+		car_values.mixed_usage = 0.0;
+		car_values.co2_emission = 0.0;
+	}
+}
+
+void set_car_data(float urban_u, float exurban_u, float mixed_u, float co2_e)
+{
+	car_values.urban_usage = urban_u;
+	car_values.exurban_usage = exurban_u;
+	car_values.mixed_usage = mixed_u;
+	car_values.co2_emission = co2_e;
+}
+
 // receive car_info DTO values
 void receive_car_info(std::string get_model_name, std::string get_engine_name, std::string get_gearbox_name, std::string get_vehicle_class, std::string get_fuel_type)
 {
@@ -52,6 +80,7 @@ void receive_car_info(std::string get_model_name, std::string get_engine_name, s
 		car_info.fuel_type = get_fuel_type;
 		car_info.vehicle_class = get_vehicle_class;
 		if (DEBUG_PRINT) {std::cout << "Received car_info DTO: " << get_model_name << " " << get_engine_name << " " << get_gearbox_name << " " << get_fuel_type << " " << get_vehicle_class << "\n";}
+		load_car_data_from_db();
 }
 // function called externally to get data from car_calculated struct
 float get_from_calculated(std::string what_to_get)

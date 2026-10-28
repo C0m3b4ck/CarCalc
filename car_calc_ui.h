@@ -68,4 +68,7 @@ void calculate();
 void proceed_car();
 void wake_grp_calculate();
 void wake_grp_selectcar();
+void populate_car_models();
+void populate_car_engines();
+void populate_car_gearboxes();
 #endif
