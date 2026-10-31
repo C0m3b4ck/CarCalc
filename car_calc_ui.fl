@@ -72,6 +72,7 @@ Function {make_window()} {open
       }
       Fl_Button btn_search_car_models {
         label SEARCH
+        callback action_cb user_data {"search_car_models"}
         xywh {420 20 69 25} labelsize 17
       }
       Fl_Input txt_search_car_engines {
@@ -79,6 +80,7 @@ Function {make_window()} {open
       }
       Fl_Button btn_search_car_engines {
         label SEARCH
+        callback action_cb user_data {"search_car_engines"}
         xywh {420 110 69 25} labelsize 17
       }
       Fl_Text_Display {} {
@@ -93,6 +95,7 @@ Function {make_window()} {open
       }
       Fl_Button btn_search_car_gearboxes {
         label SEARCH
+        callback action_cb user_data {"search_car_gearboxes"}
         xywh {420 195 69 25} labelsize 17
       }
       Fl_Button btn_proceedwithcar {
@@ -327,6 +330,18 @@ else if (std::strcmp(action, "calculate") == 0) // calculate button pressed
 else if (std::strcmp(action, "proceed_car") == 0) // call proceed_car func
 {
 	proceed_car();
+}
+else if (std::strcmp(action, "search_car_models") == 0)
+{
+	search_car_models_cb();
+}
+else if (std::strcmp(action, "search_car_engines") == 0)
+{
+	search_car_engines_cb();
+}
+else if (std::strcmp(action, "search_car_gearboxes") == 0)
+{
+	search_car_gearboxes_cb();
 }} {}
 }
 

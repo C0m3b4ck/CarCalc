@@ -8,6 +8,8 @@
 // variables
 int car_id = 0; // used for sql lookup, gotten from car name
 std::string units = "lkmg"; //litres, kilometers, grams (for Co2)
+// forward declarations
+struct CarInfo;
 
 // mediation between business and data layers
 std::vector<std::string> business_get_all_brands()
@@ -15,34 +17,36 @@ std::vector<std::string> business_get_all_brands()
 	return get_all_brands();
 }
 
-std::vector<std::string> business_get_models_by_brand()
+std::vector<std::string> business_get_models_by_brand(const std::string &brand)
 {
-	return get_models_by_brand();
+	return get_models_by_brand(brand);
 }
 
-std::vector<std::string> business_get_engines_by_brand_model()
+std::vector<std::string> business_get_engines_by_brand_model(const std::string &brand, const std::string &model)
 {
-	return get_engines_by_brand_model();
+	return get_engines_by_brand_model(brand, model);
 }
 
-std::vector<std::string> business_get_gearboxes_by_brand_model()
+std::vector<std::string> business_get_gearboxes_by_brand_model(const std::string &brand, const std::string &model)
 {
-	return get_gearboxes_by_brand_model();
+	return get_gearboxes_by_brand_model(brand, model);
 }
 
-std::vector<std::string> business_get_fuel_types_by_brand_model()
+std::vector<std::string> business_get_fuel_types_by_brand_model(const std::string &brand, const std::string &model)
 {
-	return get_fuel_types_by_brand_model();
+	return get_fuel_types_by_brand_model(brand, model);
 }
 
-std::vector<std::string> business_get_vehicle_classes_by_brand_model()
+std::vector<std::string> business_get_vehicle_classes_by_brand_model(const std::string &brand, const std::string &model)
 {
-	return get_vehicle_classes_by_brand_model();
+	return get_vehicle_classes_by_brand_model(brand, model);
 }
 
+extern struct CarInfo { std::string model_name; std::string engine_name; std::string gearbox_name; std::string vehicle_class; std::string fuel_type; } car_info;
 bool business_get_car_consumption_data()
 {
-	return get_car_consumption_data();
+	float urban_u = 0, exurban_u = 0, mixed_u = 0, co2_e = 0;
+	return ::get_car_consumption_data(car_info.model_name, car_info.engine_name, car_info.engine_name, car_info.gearbox_name, urban_u, exurban_u, mixed_u, co2_e);
 }
 
 // DTOs - car values, calculated car values, car info
@@ -78,6 +82,7 @@ struct CarInfo
 CarValues car_values;
 CarCalculated car_calculated;
 CarInfo car_info;
+
 
 // ======== DTO FUNCTIONS =========
 // SQL layer functions
@@ -237,6 +242,58 @@ std::string get_from_info(std::string what_to_get)
 	}
 }
 
+#include <cstdlib>
+#include <sstream>
+
+// Calculation functions
+void business_calculate(const std::string &urban_str, const std::string &exurban_str, const std::string &mixed_str, const std::string &co2_emission_str, const std::string &price_str, const std::string &distance_str)
+{
+	float urban_usage_val = car_values.urban_usage;
+	float exurban_usage_val = car_values.exurban_usage;
+	float mixed_usage_val = car_values.mixed_usage;
+	float co2_emission_val = car_values.co2_emission;
+	float fuel_price_val = car_values.fuel_price;
+	float trip_distance_val = car_values.trip_distance;
+	
+	if (!urban_str.empty()) urban_usage_val = atof(urban_str.c_str());
+	if (!exurban_str.empty()) exurban_usage_val = atof(exurban_str.c_str());
+	if (!mixed_str.empty()) mixed_usage_val = atof(mixed_str.c_str());
+	if (!co2_emission_str.empty()) co2_emission_val = atof(co2_emission_str.c_str());
+	if (!price_str.empty()) fuel_price_val = atof(price_str.c_str());
+	if (!distance_str.empty()) trip_distance_val = atof(distance_str.c_str());
+	
+	car_values.urban_usage = urban_usage_val;
+	car_values.exurban_usage = exurban_usage_val;
+	car_values.mixed_usage = mixed_usage_val;
+	car_values.co2_emission = co2_emission_val;
+	car_values.fuel_price = fuel_price_val;
+	car_values.trip_distance = trip_distance_val;
+	
+	// Calculate burned fuel and costs
+	car_calculated.urban_burned = urban_usage_val * trip_distance_val / 100.0f;
+	car_calculated.exurban_burned = exurban_usage_val * trip_distance_val / 100.0f;
+	car_calculated.mixed_burned = mixed_usage_val * trip_distance_val / 100.0f;
+	car_calculated.co2_emitted = co2_emission_val * trip_distance_val / 1000.0f;
+	car_calculated.price_paid = (car_calculated.urban_burned + car_calculated.exurban_burned + car_calculated.mixed_burned) / 3.0f * fuel_price_val;
+	if (car_calculated.price_paid == 0 && mixed_usage_val > 0)
+	{
+		car_calculated.price_paid = mixed_usage_val * trip_distance_val / 100.0f * fuel_price_val;
+	}
+	car_calculated.distance_driven = trip_distance_val;
+}
+
+std::vector<std::string> business_return_calculate()
+{
+	std::vector<std::string> result;
+	std::stringstream ss1; ss1 << car_calculated.urban_burned; result.push_back(ss1.str());
+	std::stringstream ss2; ss2 << car_calculated.exurban_burned; result.push_back(ss2.str());
+	std::stringstream ss3; ss3 << car_calculated.mixed_burned; result.push_back(ss3.str());
+	std::stringstream ss4; ss4 << car_calculated.co2_emitted; result.push_back(ss4.str());
+	std::stringstream ss5; ss5 << car_calculated.price_paid; result.push_back(ss5.str());
+	std::stringstream ss6; ss6 << car_calculated.distance_driven; result.push_back(ss6.str());
+	return result;
+}
+
 // function to get string into telemetry buffer, then save it
 bool get_telemetry_str(std::string telemetry_str)
 {
@@ -258,4 +315,5 @@ bool get_telemetry_str(std::string telemetry_str)
         }
         return false;
     }
+    return true;
 }
