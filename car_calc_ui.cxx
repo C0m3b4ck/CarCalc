@@ -114,12 +114,14 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_models = new Fl_Browser(5, 45, 485, 60);
+        lst_car_models->callback((Fl_Callback*)action_cb, (void*)("select_car_model"));
       } // Fl_Browser* lst_car_models
       { Fl_Text_Display* o = new Fl_Text_Display(60, 135, 50, 10, "Select Car Engine");
         o->labelsize(21);
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_engines = new Fl_Browser(0, 135, 490, 60);
+        lst_car_engines->callback((Fl_Callback*)action_cb, (void*)("select_car_engine"));
       } // Fl_Browser* lst_car_engines
       { txt_search_car_models = new Fl_Input(175, 19, 245, 26);
       } // Fl_Input* txt_search_car_models
@@ -138,6 +140,7 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_gearboxes = new Fl_Browser(0, 220, 490, 55);
+        lst_car_gearboxes->callback((Fl_Callback*)action_cb, (void*)("select_car_gearbox"));
       } // Fl_Browser* lst_car_gearboxes
       { txt_search_car_gearboxes = new Fl_Input(195, 194, 225, 26);
       } // Fl_Input* txt_search_car_gearboxes
@@ -547,6 +550,72 @@ void action_cb(Fl_Widget*, void *data) {
   {
   	search_car_gearboxes_cb();
   }
+  else if (std::strcmp(action, "select_car_model") == 0)
+  {
+  	on_select_car_model();
+  }
+  else if (std::strcmp(action, "select_car_engine") == 0)
+  {
+  	on_select_car_engine();
+  }
+  else if (std::strcmp(action, "select_car_gearbox") == 0)
+  {
+  	on_select_car_gearbox();
+  }
+}
+
+void on_select_car_model()
+{
+  lst_car_engines->clear();
+  cbo_class_selectcar->clear();
+  cbo_fuel_selectcar->clear();
+  lst_car_gearboxes->clear();
+  short idx = lst_car_models->value();
+  if (idx <= 0) return;
+  const char *brand_c = lst_car_models->text(idx);
+  if (!brand_c) return;
+  std::string brand = brand_c;
+  std::vector<std::string> models = business_get_models_by_brand(brand);
+  for (size_t i = 0; i < models.size(); i++)
+  {
+    lst_car_engines->add(models[i].c_str());
+  }
+}
+
+void on_select_car_engine()
+{
+  lst_car_gearboxes->clear();
+  cbo_class_selectcar->clear();
+  cbo_fuel_selectcar->clear();
+  short idx_model = lst_car_engines->value();
+  short idx_brand = lst_car_models->value();
+  if (idx_brand <= 0 || idx_model <= 0) return;
+  const char *brand_c = lst_car_models->text(idx_brand);
+  const char *model_c = lst_car_engines->text(idx_model);
+  if (!brand_c || !model_c) return;
+  std::string brand = brand_c;
+  std::string model = model_c;
+  std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
+  for (size_t i = 0; i < gearboxes.size(); i++)
+  {
+    lst_car_gearboxes->add(gearboxes[i].c_str());
+  }
+  std::vector<std::string> fuels = business_get_fuel_types_by_brand_model(brand, model);
+  cbo_fuel_selectcar->clear();
+  for (size_t i = 0; i < fuels.size(); i++)
+  {
+    cbo_fuel_selectcar->add(fuels[i].c_str());
+  }
+  std::vector<std::string> classes = business_get_vehicle_classes_by_brand_model(brand, model);
+  cbo_class_selectcar->clear();
+  for (size_t i = 0; i < classes.size(); i++)
+  {
+    cbo_class_selectcar->add(classes[i].c_str());
+  }
+}
+
+void on_select_car_gearbox()
+{
 }
 
 void search_car_models_cb()

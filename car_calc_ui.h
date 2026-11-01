@@ -73,4 +73,7 @@ void populate_car_gearboxes();
 void search_car_models_cb();
 void search_car_engines_cb();
 void search_car_gearboxes_cb();
+void on_select_car_model();
+void on_select_car_engine();
+void on_select_car_gearbox();
 #endif

@@ -58,6 +58,7 @@ Function {make_window()} {open
         xywh {60 50 50 5} labelsize 21 align 513
       }
       Fl_Browser lst_car_models {
+        callback action_cb user_data {"select_car_model"}
         xywh {5 45 485 60}
       }
       Fl_Text_Display {} {
@@ -65,6 +66,7 @@ Function {make_window()} {open
         xywh {60 135 50 10} labelsize 21 align 513
       }
       Fl_Browser lst_car_engines {
+        callback action_cb user_data {"select_car_engine"}
         xywh {0 135 490 60}
       }
       Fl_Input txt_search_car_models {
@@ -88,6 +90,7 @@ Function {make_window()} {open
         xywh {70 220 50 10} labelsize 21 align 513
       }
       Fl_Browser lst_car_gearboxes {
+        callback action_cb user_data {"select_car_gearbox"}
         xywh {0 220 490 55}
       }
       Fl_Input txt_search_car_gearboxes {
