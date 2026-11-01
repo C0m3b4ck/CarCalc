@@ -58,18 +58,18 @@ Function {make_window()} {open
         xywh {60 50 50 5} labelsize 21 align 513
       }
       Fl_Browser lst_car_models {
-        callback {std::cout << "BROWSER1_CLICK" << std::endl;}
+        callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER1_CLICK val=" << b->value() << std::endl;}
         xywh {5 45 485 60}
-        when FL_WHEN_RELEASE
+        when FL_WHEN_CHANGED
       }
       Fl_Text_Display {} {
         label {Select Car Engine}
         xywh {60 135 50 10} labelsize 21 align 513
       }
       Fl_Browser lst_car_engines {
-        callback {std::cout << "BROWSER2_CLICK" << std::endl;}
+        callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER2_CLICK val=" << b->value() << std::endl;}
         xywh {0 135 490 60}
-        when FL_WHEN_RELEASE
+        when FL_WHEN_CHANGED
       }
       Fl_Input txt_search_car_models {
         xywh {175 19 245 26}
@@ -92,9 +92,9 @@ Function {make_window()} {open
         xywh {70 220 50 10} labelsize 21 align 513
       }
       Fl_Browser lst_car_gearboxes {
-        callback {std::cout << "BROWSER3_CLICK" << std::endl;}
+        callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER3_CLICK val=" << b->value() << std::endl;}
         xywh {0 220 490 55}
-        when FL_WHEN_RELEASE
+        when FL_WHEN_CHANGED
       }
       Fl_Input txt_search_car_gearboxes {
         xywh {195 194 225 26}
