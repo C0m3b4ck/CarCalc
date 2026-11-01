@@ -499,6 +499,7 @@ Function {wake_grp_selectcar()} {
   
   // load car values from DTO if there are any
   // = get_from_dto(char which_dto, std::string what_to_get)
+  populate_car_models();
   // populate lists from database
   populate_car_models();} {}
 }

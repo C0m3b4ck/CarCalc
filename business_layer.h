@@ -3,6 +3,15 @@
 #include <string>
 #include <vector>
 
+struct CarInfoBL {
+	std::string model_name;
+	std::string engine_name;
+	std::string gearbox_name;
+	std::string vehicle_class;
+	std::string fuel_type;
+};
+extern CarInfoBL car_info;
+
 void receive_car_info(std::string get_model_name, std::string get_engine_name, std::string get_gearbox_name, std::string get_vehicle_class, std::string get_fuel_type);
 float get_from_calculated(std::string what_to_get);
 float get_from_values(std::string what_to_get);

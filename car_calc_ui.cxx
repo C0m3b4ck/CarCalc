@@ -552,17 +552,26 @@ void action_cb(Fl_Widget*, void *data) {
 void search_car_models_cb()
 {
   const char *search = txt_search_car_models->value();
-  if (!search || strlen(search) == 0)
-  {
-    populate_car_models();
-    return;
-  }
   lst_car_models->clear();
   std::vector<std::string> brands = business_get_all_brands();
+  if (!search || strlen(search) == 0)
+  {
+    for (size_t i = 0; i < brands.size(); i++)
+    {
+      lst_car_models->add(brands[i].c_str());
+    }
+    return;
+  }
   for (size_t i = 0; i < brands.size(); i++)
   {
     std::string b = brands[i];
-    if (b.find(search) != std::string::npos)
+    std::string s = search;
+    // case-insensitive search
+    std::string bl = b;
+    std::string sl = s;
+    for (size_t k = 0; k < bl.size(); k++) if (bl[k] >= 'A' && bl[k] <= 'Z') bl[k] = bl[k] + 32;
+    for (size_t k = 0; k < sl.size(); k++) if (sl[k] >= 'A' && sl[k] <= 'Z') sl[k] = sl[k] + 32;
+    if (bl.find(sl) != std::string::npos)
     {
       lst_car_models->add(b.c_str());
     }

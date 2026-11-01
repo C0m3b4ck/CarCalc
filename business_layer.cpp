@@ -40,7 +40,11 @@ std::vector<std::string> business_get_vehicle_classes_by_brand_model(const std::
 	return get_vehicle_classes_by_brand_model(brand, model);
 }
 
-extern CarInfo car_info;
+#include "sql_layer.h"
+#include "business_layer.h"
+#ifndef CARINFO_DEFINED_EXTERN
+#define CARINFO_DEFINED_EXTERN
+#endif
 bool business_get_car_consumption_data()
 {
 	float urban_u = 0, exurban_u = 0, mixed_u = 0, co2_e = 0;
@@ -79,7 +83,7 @@ struct CarInfo
 
 CarValues car_values;
 CarCalculated car_calculated;
-CarInfo car_info;
+CarInfoBL car_info;
 
 
 // ======== DTO FUNCTIONS =========
