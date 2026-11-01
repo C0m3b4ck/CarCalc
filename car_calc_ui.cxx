@@ -580,6 +580,7 @@ void on_select_car_model()
   {
     lst_car_engines->add(models[i].c_str());
   }
+  // also repopulate search filtered if needed
 }
 
 void on_select_car_engine()
@@ -631,20 +632,26 @@ void search_car_models_cb()
     }
     return;
   }
+  std::string sl = search;
+  for (size_t k = 0; k < sl.size(); k++) if (sl[k] >= 'A' && sl[k] <= 'Z') sl[k] = sl[k] + 32;
+  // put results starting with search first
+  std::vector<std::string> starts;
+  std::vector<std::string> contains;
   for (size_t i = 0; i < brands.size(); i++)
   {
     std::string b = brands[i];
-    std::string s = search;
-    // case-insensitive search
     std::string bl = b;
-    std::string sl = s;
     for (size_t k = 0; k < bl.size(); k++) if (bl[k] >= 'A' && bl[k] <= 'Z') bl[k] = bl[k] + 32;
-    for (size_t k = 0; k < sl.size(); k++) if (sl[k] >= 'A' && sl[k] <= 'Z') sl[k] = sl[k] + 32;
     if (bl.find(sl) != std::string::npos)
     {
-      lst_car_models->add(b.c_str());
+      if (bl.size() >= sl.size() && bl.compare(0, sl.size(), sl) == 0)
+        starts.push_back(b);
+      else
+        contains.push_back(b);
     }
   }
+  for (size_t i = 0; i < starts.size(); i++) lst_car_models->add(starts[i].c_str());
+  for (size_t i = 0; i < contains.size(); i++) lst_car_models->add(contains[i].c_str());
 }
 
 void search_car_engines_cb()
