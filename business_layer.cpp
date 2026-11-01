@@ -9,6 +9,42 @@
 int car_id = 0; // used for sql lookup, gotten from car name
 std::string units = "lkmg"; //litres, kilometers, grams (for Co2)
 
+// mediation between business and data layers
+std::vector<std::string> business_get_all_brands()
+{
+	return get_all_brands();
+}
+
+std::vector<std::string> business_get_models_by_brand()
+{
+	return get_models_by_brand();
+}
+
+std::vector<std::string> business_get_engines_by_brand_model()
+{
+	return get_engines_by_brand_model();
+}
+
+std::vector<std::string> business_get_gearboxes_by_brand_model()
+{
+	return get_gearboxes_by_brand_model();
+}
+
+std::vector<std::string> business_get_fuel_types_by_brand_model()
+{
+	return get_fuel_types_by_brand_model();
+}
+
+std::vector<std::string> business_get_vehicle_classes_by_brand_model()
+{
+	return get_vehicle_classes_by_brand_model();
+}
+
+bool business_get_car_consumption_data()
+{
+	return get_car_consumption_data();
+}
+
 // DTOs - car values, calculated car values, car info
 struct CarValues
 {

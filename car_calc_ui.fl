@@ -6,7 +6,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {214 100 490 360} type Double hide resizable
+    xywh {24 37 490 360} type Double resizable visible
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -118,7 +118,7 @@ Function {make_window()} {open
         xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
       } {}
     }
-    Fl_Group grp_calculate {
+    Fl_Group grp_calculate {open
       xywh {0 20 595 340}
     } {
       Fl_Text_Display {} {
@@ -381,9 +381,24 @@ Function {get_dto_selectcar()} {
 Function {calculate()} {open
 } {
   code {// pass DTO to business layer
-// call calculation functions
-// get their returns
-// show them in GUI} {}
+std::string urban_str = txt_urban_usage->value();
+std::string exurban_str = txt_exurban_usage->value();
+std::string mixed_str = txt_mixed_usage->value();
+std::string co2_emission_str = txt_co2_emission->value();
+std::string price_str = txt_price->value();
+std::string distance_str = txt_distance_driven();
+// call calculation function
+business_calculate(urban_str, exurban_str, mixed_str, co2_emission_str, price_str, distance_str);
+// get calculated data (converted back to strings)
+std::vector<string> calculated_values = business_return_calculate();
+// show them in GUI
+lbl_urban_calculate->value(calculated_values[0]);
+lbl_exurban_calculate->value(calculated_values[1]);
+lbl_mixed_calculate->value(calculated_values[2]);
+lbl_co2emission_calculate->value(calculated_values[3]);
+lbl_price_calculate->value(calculated_values[4]);
+lbl_distance_calculate->value(calculated_values[5]);} {selected
+  }
 }
 
 Function {proceed_car()} {
@@ -411,8 +426,7 @@ else // if all are selected - just do it
 		wake_grp_calculate(); // clearing txtboxes, filling info etc.
 		hide_all_groups();
 		grp_calculate->show();
-}} {selected
-  }
+}} {}
 }
 
 Function {wake_grp_calculate()} {
@@ -457,18 +471,73 @@ Function {wake_grp_selectcar()} {
   comment {Prepare select car group for being shown to user} open
 } {
   code {// clear lst, txt and cboboxes
-lst_car_models->clear();
-lst_car_engines->clear();
-lst_car_gearboxes->clear();
+  lst_car_models->clear();
+  lst_car_engines->clear();
+  lst_car_gearboxes->clear();
+  
+  cbo_class_selectcar->clear();
+  cbo_fuel_selectcar->clear();
+  
+  txt_search_car_models->value("");
+  txt_search_car_engines->value("");
+  txt_search_car_gearboxes->value("");
+  
+  // load car values from DTO if there are any
+  // = get_from_dto(char which_dto, std::string what_to_get)
+  // populate lists from database
+  populate_car_models();} {}
+}
 
-cbo_class_selectcar->clear();
-cbo_fuel_selectcar->clear();
+Function {populate_car_models()} {open
+} {
+  code {lst_car_models->clear();
+  std::vector<std::string> brands = business_get_all_brands();
+  for (size_t i = 0; i < brands.size(); i++)
+  {
+    lst_car_models->add(brands[i].c_str());
+  }} {}
+}
 
-txt_search_car_models->value("");
-txt_search_car_engines->value("");
-txt_search_car_gearboxes->value("");
+Function {populate_car_engines()} {open
+} {
+  code {lst_car_engines->clear();
+  short idx = lst_car_models->value();
+  if (idx > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::vector<std::string> models = business_get_models_by_brand(brand);
+    for (size_t i = 0; i < models.size(); i++)
+    {
+      lst_car_engines->add(models[i].c_str());
+    }
+  }} {}
+}
 
-// load car values from DTO if there are any
-// = get_from_dto(char which_dto, std::string what_to_get)
-lst_car_models->add("some text");} {}
+Function {populate_car_gearboxes()} {open
+} {
+  code {lst_car_gearboxes->clear();
+  short idx_model = lst_car_engines->value();
+  short idx_brand = lst_car_models->value();
+  if (idx_brand > 0 && idx_model > 0)
+  {
+    std::string brand = lst_car_models->text(idx_brand);
+    std::string model = lst_car_engines->text(idx_model);
+    std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
+    for (size_t i = 0; i < gearboxes.size(); i++)
+    {
+      lst_car_gearboxes->add(gearboxes[i].c_str());
+    }
+    std::vector<std::string> fuels = get_fuel_types_by_brand_model(brand, model);
+    cbo_fuel_selectcar->clear();
+    for (size_t i = 0; i < fuels.size(); i++)
+    {
+      cbo_fuel_selectcar->add(fuels[i].c_str());
+    }
+    std::vector<std::string> classes = get_vehicle_classes_by_brand_model(brand, model);
+    cbo_class_selectcar->clear();
+    for (size_t i = 0; i < classes.size(); i++)
+    {
+      cbo_class_selectcar->add(classes[i].c_str());
+    }
+  }} {}
 }

@@ -3,6 +3,7 @@ in the .cxx file:
 #include "business_layer.h"
 #include <iostream>
 #include <FL/fl_ask.H>
+#include <vector>
 
 in the .h file:
 #include <string>
