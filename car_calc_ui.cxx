@@ -553,14 +553,17 @@ void action_cb(Fl_Widget*, void *data) {
   else if (std::strcmp(action, "select_car_model") == 0)
   {
   	on_select_car_model();
+  	return;
   }
   else if (std::strcmp(action, "select_car_engine") == 0)
   {
   	on_select_car_engine();
+  	return;
   }
   else if (std::strcmp(action, "select_car_gearbox") == 0)
   {
   	on_select_car_gearbox();
+  	return;
   }
 }
 
