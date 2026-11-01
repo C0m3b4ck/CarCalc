@@ -115,16 +115,16 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_models = new Fl_Browser(5, 45, 485, 60);
-        lst_car_models->callback([](Fl_Widget*, void*){ std::cout << "BROWSER1_CLICK" << std::endl; });
-        lst_car_models->when(FL_WHEN_RELEASE);
+        lst_car_models->callback([](Fl_Widget*w, void*){ Fl_Browser* b=(Fl_Browser*)w; std::cout << "BROWSER1_CLICK val=" << b->value() << std::endl; });
+        lst_car_models->when(FL_WHEN_CHANGED | FL_WHEN_RELEASE);
       } // Fl_Browser* lst_car_models
       { Fl_Text_Display* o = new Fl_Text_Display(60, 135, 50, 10, "Select Car Engine");
         o->labelsize(21);
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_engines = new Fl_Browser(0, 135, 490, 60);
-        lst_car_engines->callback([](Fl_Widget*, void*){ std::cout << "BROWSER2_CLICK" << std::endl; });
-        lst_car_engines->when(FL_WHEN_RELEASE);
+        lst_car_engines->callback([](Fl_Widget*w, void*){ Fl_Browser* b=(Fl_Browser*)w; std::cout << "BROWSER2_CLICK val=" << b->value() << std::endl; });
+        lst_car_engines->when(FL_WHEN_CHANGED | FL_WHEN_RELEASE);
       } // Fl_Browser* lst_car_engines
       { txt_search_car_models = new Fl_Input(175, 19, 245, 26);
       } // Fl_Input* txt_search_car_models
@@ -143,8 +143,8 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_gearboxes = new Fl_Browser(0, 220, 490, 55);
-        lst_car_gearboxes->callback([](Fl_Widget*, void*){ std::cout << "BROWSER3_CLICK" << std::endl; });
-        lst_car_gearboxes->when(FL_WHEN_RELEASE);
+        lst_car_gearboxes->callback([](Fl_Widget*w, void*){ Fl_Browser* b=(Fl_Browser*)w; std::cout << "BROWSER3_CLICK val=" << b->value() << std::endl; });
+        lst_car_gearboxes->when(FL_WHEN_CHANGED | FL_WHEN_RELEASE);
       } // Fl_Browser* lst_car_gearboxes
       { txt_search_car_gearboxes = new Fl_Input(195, 194, 225, 26);
       } // Fl_Input* txt_search_car_gearboxes
