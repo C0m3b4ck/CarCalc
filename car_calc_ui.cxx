@@ -569,6 +569,7 @@ void action_cb(Fl_Widget*, void *data) {
 
 void on_select_car_model()
 {
+  std::cout << "DEBUG: on_select_car_model called, value=" << lst_car_models->value() << std::endl;
   lst_car_engines->clear();
   cbo_class_selectcar->clear();
   cbo_fuel_selectcar->clear();
@@ -578,12 +579,12 @@ void on_select_car_model()
   const char *brand_c = lst_car_models->text(idx);
   if (!brand_c) return;
   std::string brand = brand_c;
+  std::cout << "DEBUG: selected brand=" << brand << std::endl;
   std::vector<std::string> models = business_get_models_by_brand(brand);
   for (size_t i = 0; i < models.size(); i++)
   {
     lst_car_engines->add(models[i].c_str());
   }
-  // also repopulate search filtered if needed
 }
 
 void on_select_car_engine()
