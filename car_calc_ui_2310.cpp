@@ -117,6 +117,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Text_Display* o
       { lst_car_models = new Fl_Browser(5, 45, 485, 60);
         lst_car_models->callback((Fl_Callback*)action_cb, (void*)("select_car_model"));
+        lst_car_models->when(FL_WHEN_CHANGED);
       } // Fl_Browser* lst_car_models
       { Fl_Text_Display* o = new Fl_Text_Display(60, 135, 50, 10, "Select Car Engine");
         o->labelsize(21);
@@ -124,6 +125,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Text_Display* o
       { lst_car_engines = new Fl_Browser(0, 135, 490, 60);
         lst_car_engines->callback((Fl_Callback*)action_cb, (void*)("select_car_engine"));
+        lst_car_engines->when(FL_WHEN_CHANGED);
       } // Fl_Browser* lst_car_engines
       { txt_search_car_models = new Fl_Input(175, 19, 245, 26);
       } // Fl_Input* txt_search_car_models
@@ -143,6 +145,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Text_Display* o
       { lst_car_gearboxes = new Fl_Browser(0, 220, 490, 55);
         lst_car_gearboxes->callback((Fl_Callback*)action_cb, (void*)("select_car_gearbox"));
+        lst_car_gearboxes->when(FL_WHEN_CHANGED);
       } // Fl_Browser* lst_car_gearboxes
       { txt_search_car_gearboxes = new Fl_Input(195, 194, 225, 26);
       } // Fl_Input* txt_search_car_gearboxes
@@ -539,6 +542,18 @@ void action_cb(Fl_Widget*, void *data) {
   else if (std::strcmp(action, "proceed_car") == 0) // call proceed_car func
   {
   	proceed_car();
+  }
+  else if (std::strcmp(action, "select_car_model") == 0)
+  {
+  	std::cout << "DEBUG: on_select_car_model called (2310), value=" << (lst_car_models?lst_car_models->value():-1) << std::endl;
+  }
+  else if (std::strcmp(action, "select_car_engine") == 0)
+  {
+  	std::cout << "DEBUG: on_select_car_engine called (2310), value=" << (lst_car_engines?lst_car_engines->value():-1) << std::endl;
+  }
+  else if (std::strcmp(action, "select_car_gearbox") == 0)
+  {
+  	std::cout << "DEBUG: on_select_car_gearbox called (2310), value=" << (lst_car_gearboxes?lst_car_gearboxes->value():-1) << std::endl;
   }
 }
 
