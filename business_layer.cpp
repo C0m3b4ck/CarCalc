@@ -8,8 +8,6 @@
 // variables
 int car_id = 0; // used for sql lookup, gotten from car name
 std::string units = "lkmg"; //litres, kilometers, grams (for Co2)
-// forward declarations
-struct CarInfo;
 
 // mediation between business and data layers
 std::vector<std::string> business_get_all_brands()
@@ -42,11 +40,11 @@ std::vector<std::string> business_get_vehicle_classes_by_brand_model(const std::
 	return get_vehicle_classes_by_brand_model(brand, model);
 }
 
-extern struct CarInfo { std::string model_name; std::string engine_name; std::string gearbox_name; std::string vehicle_class; std::string fuel_type; } car_info;
+extern CarInfo car_info;
 bool business_get_car_consumption_data()
 {
 	float urban_u = 0, exurban_u = 0, mixed_u = 0, co2_e = 0;
-	return ::get_car_consumption_data(car_info.model_name, car_info.engine_name, car_info.engine_name, car_info.gearbox_name, urban_u, exurban_u, mixed_u, co2_e);
+	return get_car_consumption_data(car_info.model_name, car_info.engine_name, car_info.engine_name, car_info.gearbox_name, urban_u, exurban_u, mixed_u, co2_e);
 }
 
 // DTOs - car values, calculated car values, car info
