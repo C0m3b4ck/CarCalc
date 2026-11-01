@@ -115,16 +115,16 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_models = new Fl_Browser(5, 45, 485, 60);
-        lst_car_models->callback([](Fl_Widget*w, void*){ Fl_Browser* b=(Fl_Browser*)w; std::cout << "BROWSER1_CLICK val=" << b->value() << std::endl; });
-        lst_car_models->when(FL_WHEN_CHANGED | FL_WHEN_RELEASE);
+        lst_car_models->callback((Fl_Callback*)action_cb, (void*)("select_car_model"));
+        lst_car_models->when(FL_WHEN_CHANGED);
       } // Fl_Browser* lst_car_models
       { Fl_Text_Display* o = new Fl_Text_Display(60, 135, 50, 10, "Select Car Engine");
         o->labelsize(21);
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_engines = new Fl_Browser(0, 135, 490, 60);
-        lst_car_engines->callback([](Fl_Widget*w, void*){ Fl_Browser* b=(Fl_Browser*)w; std::cout << "BROWSER2_CLICK val=" << b->value() << std::endl; });
-        lst_car_engines->when(FL_WHEN_CHANGED | FL_WHEN_RELEASE);
+        lst_car_engines->callback((Fl_Callback*)action_cb, (void*)("select_car_engine"));
+        lst_car_engines->when(FL_WHEN_CHANGED);
       } // Fl_Browser* lst_car_engines
       { txt_search_car_models = new Fl_Input(175, 19, 245, 26);
       } // Fl_Input* txt_search_car_models
@@ -143,8 +143,8 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_gearboxes = new Fl_Browser(0, 220, 490, 55);
-        lst_car_gearboxes->callback([](Fl_Widget*w, void*){ Fl_Browser* b=(Fl_Browser*)w; std::cout << "BROWSER3_CLICK val=" << b->value() << std::endl; });
-        lst_car_gearboxes->when(FL_WHEN_CHANGED | FL_WHEN_RELEASE);
+        lst_car_gearboxes->callback((Fl_Callback*)action_cb, (void*)("select_car_gearbox"));
+        lst_car_gearboxes->when(FL_WHEN_CHANGED);
       } // Fl_Browser* lst_car_gearboxes
       { txt_search_car_gearboxes = new Fl_Input(195, 194, 225, 26);
       } // Fl_Input* txt_search_car_gearboxes
@@ -556,16 +556,19 @@ void action_cb(Fl_Widget*, void *data) {
   }
   else if (std::strcmp(action, "select_car_model") == 0)
   {
+  	std::cout << "CB: select_car_model val=" << lst_car_models->value() << std::endl;
   	on_select_car_model();
   	return;
   }
   else if (std::strcmp(action, "select_car_engine") == 0)
   {
+  	std::cout << "CB: select_car_engine val=" << lst_car_engines->value() << std::endl;
   	on_select_car_engine();
   	return;
   }
   else if (std::strcmp(action, "select_car_gearbox") == 0)
   {
+  	std::cout << "CB: select_car_gearbox val=" << lst_car_gearboxes->value() << std::endl;
   	on_select_car_gearbox();
   	return;
   }
