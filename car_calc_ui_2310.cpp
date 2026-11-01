@@ -116,33 +116,39 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_models = new Fl_Browser(5, 45, 485, 60);
+        lst_car_models->callback((Fl_Callback*)action_cb, (void*)("select_car_model"));
       } // Fl_Browser* lst_car_models
       { Fl_Text_Display* o = new Fl_Text_Display(60, 135, 50, 10, "Select Car Engine");
         o->labelsize(21);
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_engines = new Fl_Browser(0, 135, 490, 60);
+        lst_car_engines->callback((Fl_Callback*)action_cb, (void*)("select_car_engine"));
       } // Fl_Browser* lst_car_engines
       { txt_search_car_models = new Fl_Input(175, 19, 245, 26);
       } // Fl_Input* txt_search_car_models
       { btn_search_car_models = new Fl_Button(420, 20, 69, 25, "SEARCH");
         btn_search_car_models->labelsize(17);
+        btn_search_car_models->callback((Fl_Callback*)action_cb, (void*)("search_car_models"));
       } // Fl_Button* btn_search_car_models
       { txt_search_car_engines = new Fl_Input(175, 109, 245, 26);
       } // Fl_Input* txt_search_car_engines
       { btn_search_car_engines = new Fl_Button(420, 110, 69, 25, "SEARCH");
         btn_search_car_engines->labelsize(17);
+        btn_search_car_engines->callback((Fl_Callback*)action_cb, (void*)("search_car_engines"));
       } // Fl_Button* btn_search_car_engines
       { Fl_Text_Display* o = new Fl_Text_Display(70, 220, 50, 10, "Select Car Gearbox");
         o->labelsize(21);
         o->align(Fl_Align(513));
       } // Fl_Text_Display* o
       { lst_car_gearboxes = new Fl_Browser(0, 220, 490, 55);
+        lst_car_gearboxes->callback((Fl_Callback*)action_cb, (void*)("select_car_gearbox"));
       } // Fl_Browser* lst_car_gearboxes
       { txt_search_car_gearboxes = new Fl_Input(195, 194, 225, 26);
       } // Fl_Input* txt_search_car_gearboxes
       { btn_search_car_gearboxes = new Fl_Button(420, 195, 69, 25, "SEARCH");
         btn_search_car_gearboxes->labelsize(17);
+        btn_search_car_gearboxes->callback((Fl_Callback*)action_cb, (void*)("search_car_gearboxes"));
       } // Fl_Button* btn_search_car_gearboxes
       { btn_proceedwithcar = new Fl_Button(310, 305, 179, 50, "Proceed with Car ->");
         btn_proceedwithcar->labelsize(18);
