@@ -345,6 +345,18 @@ else if (std::strcmp(action, "search_car_engines") == 0)
 else if (std::strcmp(action, "search_car_gearboxes") == 0)
 {
 	search_car_gearboxes_cb();
+}
+else if (std::strcmp(action, "select_car_model") == 0)
+{
+	on_select_car_model();
+}
+else if (std::strcmp(action, "select_car_engine") == 0)
+{
+	on_select_car_engine();
+}
+else if (std::strcmp(action, "select_car_gearbox") == 0)
+{
+	on_select_car_gearbox();
 }} {}
 }
 
