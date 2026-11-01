@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cstdlib>
 #include <cstring>
 #include <FL/fl_ask.H>
 
