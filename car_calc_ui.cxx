@@ -592,6 +592,7 @@ void on_select_car_model()
 
 void on_select_car_engine()
 {
+  std::cout << "DEBUG: on_select_car_engine called, model_val=" << lst_car_engines->value() << std::endl;
   lst_car_gearboxes->clear();
   cbo_class_selectcar->clear();
   cbo_fuel_selectcar->clear();
@@ -603,6 +604,7 @@ void on_select_car_engine()
   if (!brand_c || !model_c) return;
   std::string brand = brand_c;
   std::string model = model_c;
+  std::cout << "DEBUG: selected model=" << model << std::endl;
   std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
   for (size_t i = 0; i < gearboxes.size(); i++)
   {
