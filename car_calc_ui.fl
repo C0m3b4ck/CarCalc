@@ -60,6 +60,7 @@ Function {make_window()} {open
       Fl_Browser lst_car_models {
         callback action_cb user_data {"select_car_model"}
         xywh {5 45 485 60}
+        when FL_WHEN_CHANGED
       }
       Fl_Text_Display {} {
         label {Select Car Engine}
@@ -68,6 +69,7 @@ Function {make_window()} {open
       Fl_Browser lst_car_engines {
         callback action_cb user_data {"select_car_engine"}
         xywh {0 135 490 60}
+        when FL_WHEN_CHANGED
       }
       Fl_Input txt_search_car_models {
         xywh {175 19 245 26}
@@ -92,6 +94,7 @@ Function {make_window()} {open
       Fl_Browser lst_car_gearboxes {
         callback action_cb user_data {"select_car_gearbox"}
         xywh {0 220 490 55}
+        when FL_WHEN_CHANGED
       }
       Fl_Input txt_search_car_gearboxes {
         xywh {195 194 225 26}
