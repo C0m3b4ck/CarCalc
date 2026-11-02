@@ -1,6 +1,3 @@
-* make buisness layer (gets data, returns calculations)
-* make search functions in sql layer
-* add clear and exit functionality
-
-DONE:
-* adapted DB
+* finish calculation logic
+* finish UI interaction in select car
+* make sure variables are cleared between uses
