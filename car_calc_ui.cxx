@@ -2,7 +2,6 @@
 
 #include "car_calc_ui.h"
 #include "business_layer.h"
-#include "main.h"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -643,15 +642,21 @@ void calculate() {
   // show them in GUI
   // clear first so that no overlapping text is visible
   std::string tmp = "";
-  lbl_urban_calculate->value(tmp.c_str());
-  lbl_exurban_calculate->value(tmp.c_str());
-  lbl_mixed_calculate->value(tmp.c_str());
-  lbl_co2emission_calculate->value(tmp.c_str());
-  lbl_price_calculate->value(tmp.c_str());
-  lbl_distance_calculate->value(tmp.c_str());
+  lbl_urban_calculate->copy_label(tmp.c_str());
+  lbl_exurban_calculate->copy_label(tmp.c_str());
+  lbl_mixed_calculate->copy_label(tmp.c_str());
+  lbl_co2emission_calculate->copy_label(tmp.c_str());
+  lbl_price_calculate->copy_label(tmp.c_str());
+  lbl_distance_calculate->copy_label(tmp.c_str());
+  //printf("label ptr: %p, parent: %p, window shown: %d\n", (void*)lbl_urban_calculate, (void*)lbl_urban_calculate->parent(), lbl_urban_calculate->window() ? lbl_urban_calculate->window()->shown() : -1);
+  // redraw them
+  lbl_urban_calculate->redraw();
+  lbl_exurban_calculate->redraw();
+  lbl_mixed_calculate->redraw();
+  lbl_co2emission_calculate->redraw();
+  lbl_price_calculate->redraw();
+  lbl_distance_calculate->redraw();
   // fill with new values
-  w->redraw();
-  tmp = calculated_values[0];
   tmp = calculated_values[0];
   lbl_urban_calculate->value(tmp.c_str());
   tmp = calculated_values[1];
@@ -663,7 +668,7 @@ void calculate() {
   tmp = calculated_values[4];
   lbl_price_calculate->value(tmp.c_str()); // average price
   // 6, 7, 8 are urban, exurban and mixed prices
-  tmp = calculated_values[9];
+  tmp = calculated_values[8]; 
   lbl_distance_calculate->value(tmp.c_str());
 }
 
