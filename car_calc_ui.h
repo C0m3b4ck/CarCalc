@@ -5,6 +5,9 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Menu_Bar.H>
+#include <vector>
+#include <string>
+#include <FL/Fl_Output.H>
 extern Fl_Menu_Bar *mnu_bar;
 #include <FL/Fl_Group.H>
 extern Fl_Group *grp_selectcar;
@@ -37,7 +40,6 @@ extern Fl_Input *txt_mixed_usage;
 extern Fl_Input *txt_co2_emission;
 extern Fl_Input *txt_price;
 extern Fl_Input *txt_distance_driven;
-#include <FL/Fl_Output.H>
 extern Fl_Output *lbl_modelname_calculate;
 extern Fl_Output *lbl_engine_calculate;
 extern Fl_Output *lbl_gearbox_calculate;
@@ -70,10 +72,4 @@ void wake_grp_selectcar();
 void populate_car_models();
 void populate_car_engines();
 void populate_car_gearboxes();
-void search_car_models_cb();
-void search_car_engines_cb();
-void search_car_gearboxes_cb();
-void on_select_car_model();
-void on_select_car_engine();
-void on_select_car_gearbox();
 #endif
