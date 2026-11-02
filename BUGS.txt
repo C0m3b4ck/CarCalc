@@ -1,0 +1,3 @@
+* fails to load DB every time (AntiX Linux, prints path as "/")
+* incorrect float values in calculate
+* writes over previous label in calculate group (needs to be cleared first)
