@@ -151,10 +151,25 @@ float get_from_calculated(std::string what_to_get)
 		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.co2_emitted << "\n";}
 		return car_calculated.co2_emitted;
 	}
-	else if (what_to_get == "price_paid")
+	else if (what_to_get == "average_price_paid")
 	{
-		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.price_paid << "\n";}
-		return car_calculated.price_paid;
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.average_price_paid << "\n";}
+		return car_calculated.average_price_paid;
+	}
+	else if (what_to_get == "urban_price_paid")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.urban_price_paid << "\n";}
+		return car_calculated.urban_price_paid;
+	}
+	else if (what_to_get == "exurban_price_paid")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.exurban_price_paid << "\n";}
+		return car_calculated.exurban_price_paid;
+	}
+	else if (what_to_get == "mixed_price_paid")
+	{
+		if (DEBUG_PRINT) {std::cout << "Returned " << car_calculated.mixed_price_paid << "\n";}
+		return car_calculated.mixed_price_paid;
 	}
 	else if (what_to_get == "distance_driven")
 	{
@@ -297,8 +312,11 @@ std::vector<std::string> business_return_calculate()
 	std::stringstream ss2; ss2 << car_calculated.exurban_burned; result.push_back(ss2.str());
 	std::stringstream ss3; ss3 << car_calculated.mixed_burned; result.push_back(ss3.str());
 	std::stringstream ss4; ss4 << car_calculated.co2_emitted; result.push_back(ss4.str());
-	std::stringstream ss5; ss5 << car_calculated.price_paid; result.push_back(ss5.str());
-	std::stringstream ss6; ss6 << car_calculated.distance_driven; result.push_back(ss6.str());
+	std::stringstream ss5; ss5 << car_calculated.average_price_paid; result.push_back(ss5.str());
+	std::stringstream ss6; ss6 << car_calculated.urban_price_paid; result.push_back(ss6.str());
+	std::stringstream ss7; ss7 << car_calculated.average_price_paid; result.push_back(ss7.str());
+	std::stringstream ss8; ss8 << car_calculated.average_price_paid; result.push_back(ss8.str());
+	std::stringstream ss9; ss9 << car_calculated.distance_driven; result.push_back(ss9.str());
 	return result;
 }
 

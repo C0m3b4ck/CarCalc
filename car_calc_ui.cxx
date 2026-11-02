@@ -2,6 +2,7 @@
 
 #include "car_calc_ui.h"
 #include "business_layer.h"
+#include "main.h"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -649,6 +650,8 @@ void calculate() {
   lbl_price_calculate->value(tmp.c_str());
   lbl_distance_calculate->value(tmp.c_str());
   // fill with new values
+  w->redraw();
+  tmp = calculated_values[0];
   tmp = calculated_values[0];
   lbl_urban_calculate->value(tmp.c_str());
   tmp = calculated_values[1];
@@ -658,8 +661,9 @@ void calculate() {
   tmp = calculated_values[3];
   lbl_co2emission_calculate->value(tmp.c_str());
   tmp = calculated_values[4];
-  lbl_price_calculate->value(tmp.c_str());
-  tmp = calculated_values[5];
+  lbl_price_calculate->value(tmp.c_str()); // average price
+  // 6, 7, 8 are urban, exurban and mixed prices
+  tmp = calculated_values[9];
   lbl_distance_calculate->value(tmp.c_str());
 }
 

@@ -5,8 +5,8 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Menu_Bar.H>
-#include <FL/Fl_Output.H>
 #include <string>
+#include <FL/Fl_Output.H>
 extern Fl_Menu_Bar *mnu_bar;
 #include <FL/Fl_Group.H>
 extern Fl_Group *grp_selectcar;
