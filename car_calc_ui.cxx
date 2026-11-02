@@ -668,6 +668,8 @@ void calculate() {
   tmp = calculated_values[4];
   lbl_price_calculate->value(tmp.c_str()); // average price
   // 6, 7, 8 are urban, exurban and mixed prices
+  tmp = calculated_values[5];
+  lbl_urban_price_calculate->value(tmp.c_str());
   tmp = calculated_values[8]; 
   lbl_distance_calculate->value(tmp.c_str());
 }

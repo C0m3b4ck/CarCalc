@@ -6,7 +6,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {24 37 490 360} type Double resizable visible
+    xywh {24 37 490 380} type Double resizable visible
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -128,29 +128,29 @@ Function {make_window()} {open
       } {}
     }
     Fl_Group grp_calculate {open
-      xywh {0 20 595 340}
+      xywh {0 20 595 360}
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
-        xywh {220 50 50 5} labelsize 21
+        xywh {200 50 115 0} labelsize 21
         class Fl_Output
       }
       Fl_Button btn_select_car {
         label {<- Select Car}
         user_data {"group_selectcar"}
         callback action_cb
-        xywh {0 310 160 50} labelsize 24
+        xywh {5 335 160 45} labelsize 24
       }
       Fl_Button btn_help_calculate {
         label HELP
-        xywh {165 310 165 50} labelsize 23
+        xywh {165 335 165 45} labelsize 23
       }
       Fl_Button btn_calculate {
         label {Calculate!}
         user_data {"calculate"}
         callback action_cb
         comment {Passes DTO, calls calculation functions}
-        xywh {335 310 155 50} labelsize 25
+        xywh {330 335 160 45} labelsize 25
       }
       Fl_Input txt_urban_usage {
         label {Urban:}
@@ -262,7 +262,7 @@ Function {make_window()} {open
         xywh {165 310 90 0} labelsize 19
         class Fl_Output
       }
-      Fl_Text_Display lbl_price_calculate {
+      Fl_Text_Display lbl_average_price_calculate {
         xywh {235 290 90 20}
         class Fl_Output
       }
@@ -296,6 +296,33 @@ Function {make_window()} {open
       Fl_Text_Display {} {
         label {Trip Info}
         xywh {200 265 45 0} labelsize 21
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_urban_price_calculate {
+        xywh {85 315 80 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Exurban price:}
+        xywh {170 335 90 0} labelsize 12
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_exurban_price_calculate {
+        xywh {255 315 75 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Mixed price:}
+        xywh {330 335 90 0} labelsize 13
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_mixed_price_calculate {selected
+        xywh {410 315 80 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Urban price:}
+        xywh {20 330 60 0} labelsize 13
         class Fl_Output
       }
     }
@@ -448,8 +475,7 @@ tmp = calculated_values[4];
 lbl_price_calculate->value(tmp.c_str()); // average price
 // 6, 7, 8 are urban, exurban and mixed prices
 tmp = calculated_values[9];
-lbl_distance_calculate->value(tmp.c_str());} {selected
-  }
+lbl_distance_calculate->value(tmp.c_str());} {}
 }
 
 Function {proceed_car()} {
