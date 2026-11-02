@@ -68,7 +68,10 @@ struct CarCalculated
 	float exurban_burned = 0.0000;
 	float mixed_burned = 0.0000;
 	float co2_emitted = 0.0000;
-	float price_paid = 0.0000;
+	float average_price_paid = 0.0000;
+	float urban_price_paid = 0.0000;
+	float exurban_price_paid = 0.0000;
+	float mixed_price_paid = 0.0000;
 	float distance_driven = 0.0000;
 };
 
@@ -272,15 +275,18 @@ void business_calculate(const std::string &urban_str, const std::string &exurban
 	car_values.trip_distance = trip_distance_val;
 	
 	// Calculate burned fuel and costs
-	car_calculated.urban_burned = urban_usage_val * trip_distance_val / 100.0f;
-	car_calculated.exurban_burned = exurban_usage_val * trip_distance_val / 100.0f;
-	car_calculated.mixed_burned = mixed_usage_val * trip_distance_val / 100.0f;
-	car_calculated.co2_emitted = co2_emission_val * trip_distance_val / 1000.0f;
-	car_calculated.price_paid = (car_calculated.urban_burned + car_calculated.exurban_burned + car_calculated.mixed_burned) / 3.0f * fuel_price_val;
-	if (car_calculated.price_paid == 0 && mixed_usage_val > 0)
+	car_calculated.urban_burned = urban_usage_val * trip_distance_val; // / 100.0f;
+	car_calculated.exurban_burned = exurban_usage_val * trip_distance_val; // / 100.0f;
+	car_calculated.mixed_burned = mixed_usage_val * trip_distance_val; // / 100.0f;
+	car_calculated.co2_emitted = co2_emission_val * trip_distance_val; // / 1000.0f;
+	car_calculated.average_price_paid = (car_calculated.urban_burned + car_calculated.exurban_burned + car_calculated.mixed_burned) / 3.0f * fuel_price_val;
+	if (car_calculated.average_price_paid == 0 && mixed_usage_val > 0)
 	{
-		car_calculated.price_paid = mixed_usage_val * trip_distance_val / 100.0f * fuel_price_val;
+		car_calculated.average_price_paid = mixed_usage_val * trip_distance_val / 100.0f * fuel_price_val;
 	}
+	car_calculated.urban_price_paid = car_calculated.urban_burned * fuel_price_val * trip_distance_val;
+	car_calculated.exurban_price_paid = car_calculated.exurban_burned * fuel_price_val * trip_distance_val;
+	car_calculated.mixed_price_paid = car_calculated.mixed_burned * fuel_price_val * trip_distance_val;
 	car_calculated.distance_driven = trip_distance_val;
 }
 

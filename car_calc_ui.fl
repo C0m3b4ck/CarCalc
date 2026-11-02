@@ -425,6 +425,16 @@ business_calculate(urban_str, exurban_str, mixed_str, co2_emission_str, price_st
 // get calculated data (converted back to strings)
 std::vector<std::string> calculated_values = business_return_calculate();
 // show them in GUI
+// clear first so that no overlapping text is visible
+std::string tmp = "";
+lbl_urban_calculate->value(tmp.c_str());
+lbl_exurban_calculate->value(tmp.c_str());
+lbl_mixed_calculate->value(tmp.c_str());
+lbl_co2emission_calculate->value(tmp.c_str());
+lbl_price_calculate->value(tmp.c_str());
+lbl_distance_calculate->value(tmp.c_str());
+// fill with new values
+tmp = calculated_values[0];
 std::string tmp = calculated_values[0];
 lbl_urban_calculate->value(tmp.c_str());
 tmp = calculated_values[1];
@@ -436,7 +446,8 @@ lbl_co2emission_calculate->value(tmp.c_str());
 tmp = calculated_values[4];
 lbl_price_calculate->value(tmp.c_str());
 tmp = calculated_values[5];
-lbl_distance_calculate->value(tmp.c_str());} {}
+lbl_distance_calculate->value(tmp.c_str());} {selected
+  }
 }
 
 Function {proceed_car()} {
@@ -623,6 +634,5 @@ Function {on_select_car_engine()} {
 Function {on_select_car_gearbox()} {
   comment {Update car gearbox in DTO and UI} open
 } {
-  code {// on listbox clicked - adjust DTO and other listboxes} {selected
-  }
+  code {// on listbox clicked - adjust DTO and other listboxes} {}
 }

@@ -640,7 +640,16 @@ void calculate() {
   // get calculated data (converted back to strings)
   std::vector<std::string> calculated_values = business_return_calculate();
   // show them in GUI
-  std::string tmp = calculated_values[0];
+  // clear first so that no overlapping text is visible
+  std::string tmp = "";
+  lbl_urban_calculate->value(tmp.c_str());
+  lbl_exurban_calculate->value(tmp.c_str());
+  lbl_mixed_calculate->value(tmp.c_str());
+  lbl_co2emission_calculate->value(tmp.c_str());
+  lbl_price_calculate->value(tmp.c_str());
+  lbl_distance_calculate->value(tmp.c_str());
+  // fill with new values
+  tmp = calculated_values[0];
   lbl_urban_calculate->value(tmp.c_str());
   tmp = calculated_values[1];
   lbl_exurban_calculate->value(tmp.c_str());
