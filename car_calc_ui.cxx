@@ -6,8 +6,8 @@
 #include <string>
 #include <cstring>
 #include <vector>
-#include <FL/fl_ask.H>
 #include <FL/Fl_Output.H>
+#include <FL/fl_ask.H>
 
 Fl_Menu_Bar *mnu_bar=(Fl_Menu_Bar *)0;
 
@@ -105,7 +105,7 @@ Fl_Output *lbl_exurban_calculate=(Fl_Output *)0;
 
 Fl_Output *lbl_mixed_calculate=(Fl_Output *)0;
 
-Fl_Output *lbl_price_calculate=(Fl_Output *)0;
+Fl_Output *lbl_average_price_calculate=(Fl_Output *)0;
 
 Fl_Output *lbl_units_calculate=(Fl_Output *)0;
 
@@ -113,9 +113,15 @@ Fl_Output *lbl_distance_calculate=(Fl_Output *)0;
 
 Fl_Output *lbl_co2emission_calculate=(Fl_Output *)0;
 
+Fl_Output *lbl_urban_price_calculate=(Fl_Output *)0;
+
+Fl_Output *lbl_exurban_price_calculate=(Fl_Output *)0;
+
+Fl_Output *lbl_mixed_price_calculate=(Fl_Output *)0;
+
 Fl_Double_Window* make_window() {
   Fl_Double_Window* w;
-  { Fl_Double_Window* o = new Fl_Double_Window(490, 360, "CarCalc");
+  { Fl_Double_Window* o = new Fl_Double_Window(490, 380, "CarCalc");
     w = o; if (w) {/* empty */}
     { mnu_bar = new Fl_Menu_Bar(0, 0, 490, 20);
       mnu_bar->menu(menu_mnu_bar);
@@ -181,8 +187,8 @@ Fl_Double_Window* make_window() {
       } // Fl_Choice* cbo_fuel_selectcar
       grp_selectcar->end();
     } // Fl_Group* grp_selectcar
-    { grp_calculate = new Fl_Group(0, 20, 595, 340);
-      { Fl_Output* o = new Fl_Output(220, 50, 50, 5, "Calculate Fuel-Related");
+    { grp_calculate = new Fl_Group(0, 20, 595, 360);
+      { Fl_Output* o = new Fl_Output(200, 50, 115, 0, "Calculate Fuel-Related");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -193,15 +199,15 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { btn_select_car = new Fl_Button(0, 310, 160, 50, "<- Select Car");
+      { btn_select_car = new Fl_Button(5, 335, 160, 45, "<- Select Car");
         btn_select_car->labelsize(24);
         btn_select_car->callback((Fl_Callback*)action_cb, (void*)("group_selectcar"));
       } // Fl_Button* btn_select_car
-      { btn_help_calculate = new Fl_Button(165, 310, 165, 50, "HELP");
+      { btn_help_calculate = new Fl_Button(165, 335, 165, 45, "HELP");
         btn_help_calculate->labelsize(23);
       } // Fl_Button* btn_help_calculate
       { // Passes DTO, calls calculation functions
-        btn_calculate = new Fl_Button(335, 310, 155, 50, "Calculate!");
+        btn_calculate = new Fl_Button(330, 335, 160, 45, "Calculate!");
         btn_calculate->labelsize(25);
         btn_calculate->callback((Fl_Callback*)action_cb, (void*)("calculate"));
       } // Fl_Button* btn_calculate
@@ -419,17 +425,17 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { lbl_price_calculate = new Fl_Output(235, 290, 90, 20);
-        lbl_price_calculate->box(FL_DOWN_FRAME);
-        lbl_price_calculate->color(FL_BACKGROUND2_COLOR);
-        lbl_price_calculate->selection_color(FL_SELECTION_COLOR);
-        lbl_price_calculate->labeltype(FL_NORMAL_LABEL);
-        lbl_price_calculate->labelfont(0);
-        lbl_price_calculate->labelsize(14);
-        lbl_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
-        lbl_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
-        lbl_price_calculate->when(FL_WHEN_RELEASE);
-      } // Fl_Output* lbl_price_calculate
+      { lbl_average_price_calculate = new Fl_Output(235, 290, 90, 20);
+        lbl_average_price_calculate->box(FL_DOWN_FRAME);
+        lbl_average_price_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_average_price_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_average_price_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_average_price_calculate->labelfont(0);
+        lbl_average_price_calculate->labelsize(14);
+        lbl_average_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_average_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_average_price_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_average_price_calculate
       { Fl_Output* o = new Fl_Output(330, 310, 90, 0, "Units:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
@@ -503,6 +509,72 @@ Fl_Double_Window* make_window() {
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
         o->labelsize(21);
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_urban_price_calculate = new Fl_Output(85, 315, 80, 20);
+        lbl_urban_price_calculate->box(FL_DOWN_FRAME);
+        lbl_urban_price_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_urban_price_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_urban_price_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_urban_price_calculate->labelfont(0);
+        lbl_urban_price_calculate->labelsize(14);
+        lbl_urban_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_urban_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_urban_price_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_urban_price_calculate
+      { Fl_Output* o = new Fl_Output(170, 335, 90, 0, "Exurban price:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
+        o->labelsize(12);
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_exurban_price_calculate = new Fl_Output(255, 315, 75, 20);
+        lbl_exurban_price_calculate->box(FL_DOWN_FRAME);
+        lbl_exurban_price_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_exurban_price_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_exurban_price_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_exurban_price_calculate->labelfont(0);
+        lbl_exurban_price_calculate->labelsize(14);
+        lbl_exurban_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_exurban_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_exurban_price_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_exurban_price_calculate
+      { Fl_Output* o = new Fl_Output(330, 335, 90, 0, "Mixed price:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
+        o->labelsize(13);
+        o->labelcolor(FL_FOREGROUND_COLOR);
+        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->when(FL_WHEN_RELEASE);
+      } // Fl_Output* o
+      { lbl_mixed_price_calculate = new Fl_Output(410, 315, 80, 20);
+        lbl_mixed_price_calculate->box(FL_DOWN_FRAME);
+        lbl_mixed_price_calculate->color(FL_BACKGROUND2_COLOR);
+        lbl_mixed_price_calculate->selection_color(FL_SELECTION_COLOR);
+        lbl_mixed_price_calculate->labeltype(FL_NORMAL_LABEL);
+        lbl_mixed_price_calculate->labelfont(0);
+        lbl_mixed_price_calculate->labelsize(14);
+        lbl_mixed_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_mixed_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
+        lbl_mixed_price_calculate->when(FL_WHEN_RELEASE);
+      } // Fl_Output* lbl_mixed_price_calculate
+      { Fl_Output* o = new Fl_Output(20, 330, 60, 0, "Urban price:");
+        o->box(FL_DOWN_FRAME);
+        o->color(FL_BACKGROUND2_COLOR);
+        o->selection_color(FL_SELECTION_COLOR);
+        o->labeltype(FL_NORMAL_LABEL);
+        o->labelfont(0);
+        o->labelsize(13);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -629,49 +701,59 @@ void get_dto_selectcar() {
 
 void calculate() {
   // pass DTO to business layer
-  std::string urban_str = txt_urban_usage->value();
-  std::string exurban_str = txt_exurban_usage->value();
-  std::string mixed_str = txt_mixed_usage->value();
-  std::string co2_emission_str = txt_co2_emission->value();
-  std::string price_str = txt_price->value();
-  std::string distance_str = txt_distance_driven->value();
-  // call calculation function
-  business_calculate(urban_str, exurban_str, mixed_str, co2_emission_str, price_str, distance_str);
-  // get calculated data (converted back to strings)
-  std::vector<std::string> calculated_values = business_return_calculate();
-  // show them in GUI
-  // clear first so that no overlapping text is visible
-  std::string tmp = "";
-  lbl_urban_calculate->copy_label(tmp.c_str());
-  lbl_exurban_calculate->copy_label(tmp.c_str());
-  lbl_mixed_calculate->copy_label(tmp.c_str());
-  lbl_co2emission_calculate->copy_label(tmp.c_str());
-  lbl_price_calculate->copy_label(tmp.c_str());
-  lbl_distance_calculate->copy_label(tmp.c_str());
-  //printf("label ptr: %p, parent: %p, window shown: %d\n", (void*)lbl_urban_calculate, (void*)lbl_urban_calculate->parent(), lbl_urban_calculate->window() ? lbl_urban_calculate->window()->shown() : -1);
-  // redraw them
-  lbl_urban_calculate->redraw();
-  lbl_exurban_calculate->redraw();
-  lbl_mixed_calculate->redraw();
-  lbl_co2emission_calculate->redraw();
-  lbl_price_calculate->redraw();
-  lbl_distance_calculate->redraw();
-  // fill with new values
-  tmp = calculated_values[0];
-  lbl_urban_calculate->value(tmp.c_str());
-  tmp = calculated_values[1];
-  lbl_exurban_calculate->value(tmp.c_str());
-  tmp = calculated_values[2];
-  lbl_mixed_calculate->value(tmp.c_str());
-  tmp = calculated_values[3];
-  lbl_co2emission_calculate->value(tmp.c_str());
-  tmp = calculated_values[4];
-  lbl_price_calculate->value(tmp.c_str()); // average price
-  // 6, 7, 8 are urban, exurban and mixed prices
-  tmp = calculated_values[5];
-  lbl_urban_price_calculate->value(tmp.c_str());
-  tmp = calculated_values[8]; 
-  lbl_distance_calculate->value(tmp.c_str());
+    std::string urban_str = txt_urban_usage->value();
+    std::string exurban_str = txt_exurban_usage->value();
+    std::string mixed_str = txt_mixed_usage->value();
+    std::string co2_emission_str = txt_co2_emission->value();
+    std::string price_str = txt_price->value();
+    std::string distance_str = txt_distance_driven->value();
+    // call calculation function
+    business_calculate(urban_str, exurban_str, mixed_str, co2_emission_str, price_str, distance_str);
+    // get calculated data (converted back to strings)
+    std::vector<std::string> calculated_values = business_return_calculate();
+    // show them in GUI
+    // clear first so that no overlapping text is visible
+    std::string tmp = "";
+    lbl_urban_calculate->copy_label(tmp.c_str());
+    lbl_exurban_calculate->copy_label(tmp.c_str());
+    lbl_mixed_calculate->copy_label(tmp.c_str());
+    lbl_co2emission_calculate->copy_label(tmp.c_str());
+    lbl_average_price_calculate->copy_label(tmp.c_str());
+    lbl_urban_price_calculate->copy_label(tmp.c_str());
+    lbl_exurban_price_calculate->copy_label(tmp.c_str());
+    lbl_mixed_price_calculate->copy_label(tmp.c_str());
+    lbl_distance_calculate->copy_label(tmp.c_str());
+    //printf("label ptr: %p, parent: %p, window shown: %d\n", (void*)lbl_urban_calculate, (void*)lbl_urban_calculate->parent(), lbl_urban_calculate->window() ? lbl_urban_calculate->window()->shown() : -1);
+    // redraw them
+    lbl_urban_calculate->redraw();
+    lbl_exurban_calculate->redraw();
+    lbl_mixed_calculate->redraw();
+    lbl_co2emission_calculate->redraw();
+    lbl_average_price_calculate->redraw();
+    lbl_urban_price_calculate->redraw();
+    lbl_exurban_price_calculate->redraw();
+    lbl_mixed_price_calculate->redraw();
+    lbl_distance_calculate->redraw();
+    // fill with new values
+    tmp = calculated_values[0];
+    lbl_urban_calculate->value(tmp.c_str());
+    tmp = calculated_values[1];
+    lbl_exurban_calculate->value(tmp.c_str());
+    tmp = calculated_values[2];
+    lbl_mixed_calculate->value(tmp.c_str());
+    tmp = calculated_values[3];
+    lbl_co2emission_calculate->value(tmp.c_str());
+    tmp = calculated_values[4];
+    lbl_average_price_calculate->value(tmp.c_str()); // average price
+    // 6, 7, 8 are urban, exurban and mixed prices
+    tmp = calculated_values[5];
+    lbl_urban_price_calculate->value(tmp.c_str());
+    tmp = calculated_values[6];
+    lbl_exurban_price_calculate->value(tmp.c_str());
+    tmp = calculated_values[7];
+    lbl_mixed_price_calculate->value(tmp.c_str());
+    tmp = calculated_values[8]; 
+    lbl_distance_calculate->value(tmp.c_str());
 }
 
 /**
@@ -731,7 +813,10 @@ void wake_grp_calculate() {
   lbl_urban_calculate->value("");
   lbl_exurban_calculate->value("");
   lbl_mixed_calculate->value("");
-  lbl_price_calculate->value("");
+  lbl_average_price_calculate->value("");
+  lbl_urban_price_calculate->value("");
+  lbl_exurban_price_calculate->value("");
+  lbl_mixed_price_calculate->value("");
   lbl_units_calculate->value("");
   lbl_distance_calculate->value("");
   lbl_co2emission_calculate->value("");

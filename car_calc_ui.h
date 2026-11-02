@@ -48,10 +48,13 @@ extern Fl_Output *lbl_fueltype_calculate;
 extern Fl_Output *lbl_urban_calculate;
 extern Fl_Output *lbl_exurban_calculate;
 extern Fl_Output *lbl_mixed_calculate;
-extern Fl_Output *lbl_price_calculate;
+extern Fl_Output *lbl_average_price_calculate;
 extern Fl_Output *lbl_units_calculate;
 extern Fl_Output *lbl_distance_calculate;
 extern Fl_Output *lbl_co2emission_calculate;
+extern Fl_Output *lbl_urban_price_calculate;
+extern Fl_Output *lbl_exurban_price_calculate;
+extern Fl_Output *lbl_mixed_price_calculate;
 Fl_Double_Window* make_window();
 extern Fl_Menu_Item menu_mnu_bar[];
 #define sbmnu_calculate (menu_mnu_bar+0)
