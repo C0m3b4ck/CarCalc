@@ -60,7 +60,6 @@ Function {make_window()} {open
       Fl_Browser lst_car_models {
         callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER1_CLICK val=" << b->value() << std::endl;}
         xywh {5 45 485 60}
-        when FL_WHEN_CHANGED
       }
       Fl_Text_Display {} {
         label {Select Car Engine}
@@ -69,14 +68,14 @@ Function {make_window()} {open
       Fl_Browser lst_car_engines {
         callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER2_CLICK val=" << b->value() << std::endl;}
         xywh {0 135 490 60}
-        when FL_WHEN_CHANGED
       }
       Fl_Input txt_search_car_models {
         xywh {175 19 245 26}
       }
       Fl_Button btn_search_car_models {
         label SEARCH
-        callback action_cb user_data {"search_car_models"}
+        user_data {"search_car_models"}
+        callback action_cb
         xywh {420 20 69 25} labelsize 17
       }
       Fl_Input txt_search_car_engines {
@@ -84,7 +83,8 @@ Function {make_window()} {open
       }
       Fl_Button btn_search_car_engines {
         label SEARCH
-        callback action_cb user_data {"search_car_engines"}
+        user_data {"search_car_engines"}
+        callback action_cb
         xywh {420 110 69 25} labelsize 17
       }
       Fl_Text_Display {} {
@@ -94,14 +94,14 @@ Function {make_window()} {open
       Fl_Browser lst_car_gearboxes {
         callback {Fl_Browser* b=(Fl_Browser*)o; std::cout << "BROWSER3_CLICK val=" << b->value() << std::endl;}
         xywh {0 220 490 55}
-        when FL_WHEN_CHANGED
       }
       Fl_Input txt_search_car_gearboxes {
         xywh {195 194 225 26}
       }
       Fl_Button btn_search_car_gearboxes {
         label SEARCH
-        callback action_cb user_data {"search_car_gearboxes"}
+        user_data {"search_car_gearboxes"}
+        callback action_cb
         xywh {420 195 69 25} labelsize 17
       }
       Fl_Button btn_proceedwithcar {
@@ -339,15 +339,15 @@ else if (std::strcmp(action, "proceed_car") == 0) // call proceed_car func
 }
 else if (std::strcmp(action, "search_car_models") == 0)
 {
-	search_car_models_cb();
+	search_car_models();
 }
 else if (std::strcmp(action, "search_car_engines") == 0)
 {
-	search_car_engines_cb();
+	search_car_engines();
 }
 else if (std::strcmp(action, "search_car_gearboxes") == 0)
 {
-	search_car_gearboxes_cb();
+	search_car_gearboxes();
 }
 else if (std::strcmp(action, "select_car_model") == 0)
 {
@@ -419,19 +419,24 @@ std::string exurban_str = txt_exurban_usage->value();
 std::string mixed_str = txt_mixed_usage->value();
 std::string co2_emission_str = txt_co2_emission->value();
 std::string price_str = txt_price->value();
-std::string distance_str = txt_distance_driven();
+std::string distance_str = txt_distance_driven->value();
 // call calculation function
 business_calculate(urban_str, exurban_str, mixed_str, co2_emission_str, price_str, distance_str);
 // get calculated data (converted back to strings)
-std::vector<string> calculated_values = business_return_calculate();
+std::vector<std::string> calculated_values = business_return_calculate();
 // show them in GUI
-lbl_urban_calculate->value(calculated_values[0]);
-lbl_exurban_calculate->value(calculated_values[1]);
-lbl_mixed_calculate->value(calculated_values[2]);
-lbl_co2emission_calculate->value(calculated_values[3]);
-lbl_price_calculate->value(calculated_values[4]);
-lbl_distance_calculate->value(calculated_values[5]);} {selected
-  }
+std::string tmp = calculated_values[0];
+lbl_urban_calculate->value(tmp.c_str());
+tmp = calculated_values[1];
+lbl_exurban_calculate->value(tmp.c_str());
+tmp = calculated_values[2];
+lbl_mixed_calculate->value(tmp.c_str());
+tmp = calculated_values[3];
+lbl_co2emission_calculate->value(tmp.c_str());
+tmp = calculated_values[4];
+lbl_price_calculate->value(tmp.c_str());
+tmp = calculated_values[5];
+lbl_distance_calculate->value(tmp.c_str());} {}
 }
 
 Function {proceed_car()} {
@@ -561,17 +566,63 @@ Function {populate_car_gearboxes()} {open
     {
       lst_car_gearboxes->add(gearboxes[i].c_str());
     }
-    std::vector<std::string> fuels = get_fuel_types_by_brand_model(brand, model);
+    std::vector<std::string> fuels = business_get_fuel_types_by_brand_model(brand, model);
     cbo_fuel_selectcar->clear();
     for (size_t i = 0; i < fuels.size(); i++)
     {
       cbo_fuel_selectcar->add(fuels[i].c_str());
     }
-    std::vector<std::string> classes = get_vehicle_classes_by_brand_model(brand, model);
+    std::vector<std::string> classes = business_get_vehicle_classes_by_brand_model(brand, model);
     cbo_class_selectcar->clear();
     for (size_t i = 0; i < classes.size(); i++)
     {
       cbo_class_selectcar->add(classes[i].c_str());
     }
   }} {}
+}
+
+Function {search_car_models()} {open
+} {
+  code {// return car models based on user search
+
+// populate listboxes
+
+// make sure it is done through business layer} {}
+}
+
+Function {search_car_engines()} {open
+} {
+  code {// return car models based on user search
+
+// populate listboxes
+
+// make sure it is done through business layer} {}
+}
+
+Function {search_car_gearboxes()} {open
+} {
+  code {// return car models based on user search
+
+// populate listboxes
+
+// make sure it is done through business layer} {}
+}
+
+Function {on_select_car_model()} {
+  comment {Update car model in DTO and UI} open
+} {
+  code {// on listbox clicked - adjust DTO and other listboxes} {}
+}
+
+Function {on_select_car_engine()} {
+  comment {Update car engine in DTO and UI} open
+} {
+  code {// on listbox clicked - adjust DTO and other listboxes} {}
+}
+
+Function {on_select_car_gearbox()} {
+  comment {Update car gearbox in DTO and UI} open
+} {
+  code {// on listbox clicked - adjust DTO and other listboxes} {selected
+  }
 }

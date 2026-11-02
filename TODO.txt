@@ -1,3 +1,6 @@
 * make buisness layer (gets data, returns calculations)
--> adapt DB and allow buisness layer to navigate it
+* make search functions in sql layer
 * add clear and exit functionality
+
+DONE:
+* adapted DB
