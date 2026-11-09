@@ -2,10 +2,10 @@
 
 #include "car_calc_ui.h"
 #include "business_layer.h"
-#include <FL/fl_ask.H>
 #include <FL/Fl_Output.H>
-#include <iostream>
+#include <FL/fl_ask.H>
 #include <vector>
+#include <iostream>
 #include <string>
 #include <cstring>
 
@@ -206,10 +206,8 @@ Fl_Double_Window* make_window() {
         cbo_fuel_selectcar->callback((Fl_Callback*)cb_cbo_fuel_selectcar);
       } // Fl_Choice* cbo_fuel_selectcar
       { lbl_fuel_usage = new Fl_Output(390, 277, 95, 28, "Fuel usage:");
-        Fl_Group::current()->resizable(lbl_fuel_usage);
       } // Fl_Output* lbl_fuel_usage
       grp_selectcar->end();
-      Fl_Group::current()->resizable(grp_selectcar);
     } // Fl_Group* grp_selectcar
     { grp_calculate = new Fl_Group(0, 20, 595, 360);
       grp_calculate->hide();
@@ -972,6 +970,7 @@ void browser_cb(Fl_Widget *w, short browser_type) {
  Populate fuel type, class and fuel usage
 */
 void populate_cboboxes_selectcar() {
+  std::cout << "Called populate_cboboxes function!\n";
   cbo_fuel_selectcar->clear();
   cbo_class_selectcar->clear();
     // fill fuel type first
@@ -987,6 +986,10 @@ void populate_cboboxes_selectcar() {
       	cbo_fuel_selectcar->add(fuel_types[i].c_str());
       }
     }
+    else
+    {
+    	std::cout << "Brand and model not selected!\n"; // debug
+    }
     // then fill vehicle class
     if (idx > 0 && idx2 > 0)
     {
@@ -997,6 +1000,10 @@ void populate_cboboxes_selectcar() {
       {
       	cbo_fuel_selectcar->add(vehicle_classes[i].c_str());
       }
+    }
+      else
+    {
+    	std::cout << "Brand and model not selected!\n"; // debug
     }
 }
 

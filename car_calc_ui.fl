@@ -59,7 +59,7 @@ Function {make_window()} {open
       }
       Fl_Browser lst_car_models {
         callback {browser_cb(lst_car_models, 0)}
-        comment {Clicking on it updates DTO, number 0} selected
+        comment {Clicking on it updates DTO, number 0}
         xywh {5 45 485 60} type Hold
       }
       Fl_Text_Display {} {
@@ -701,7 +701,8 @@ if (index > 0)
 Function {populate_cboboxes_selectcar()} {
   comment {Populate fuel type, class and fuel usage} open
 } {
-  code {cbo_fuel_selectcar->clear();
+  code {std::cout << "Called populate_cboboxes function!\\n";
+cbo_fuel_selectcar->clear();
 cbo_class_selectcar->clear();
   // fill fuel type first
   short idx = lst_car_models->value();
@@ -716,6 +717,10 @@ cbo_class_selectcar->clear();
     	cbo_fuel_selectcar->add(fuel_types[i].c_str());
     }
   }
+  else
+  {
+  	std::cout << "Brand and model not selected!\\n"; // debug
+  }
   // then fill vehicle class
   if (idx > 0 && idx2 > 0)
   {
@@ -726,7 +731,12 @@ cbo_class_selectcar->clear();
     {
     	cbo_fuel_selectcar->add(vehicle_classes[i].c_str());
     }
-  }} {}
+  }
+    else
+  {
+  	std::cout << "Brand and model not selected!\\n"; // debug
+  }} {selected
+  }
 }
 
 Function {cbobox_cb(Fl_Widget *o, short which_cbobox)} {
