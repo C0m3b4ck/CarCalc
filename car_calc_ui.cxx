@@ -4,8 +4,8 @@
 #include "business_layer.h"
 #include <FL/Fl_Output.H>
 #include <FL/fl_ask.H>
-#include <vector>
 #include <iostream>
+#include <vector>
 #include <string>
 #include <cstring>
 
@@ -954,14 +954,17 @@ void browser_cb(Fl_Widget *w, short browser_type) {
   	if (browser_type == 0) // model browser
   	{
   		update_model_name(s); // updated car model in struct in BL
+  		populate_car_engines(); // refresh for QoL
   	}
   	else if (browser_type == 1) // engine browser
   	{
   		update_engine_name(s);	
+  		populate_car_gearboxes(); // refresh for QoL
   	}
   	else if (browser_type == 2) // gearbox browser
   	{
   		update_gearbox_name(s);	
+  		populate_cboboxes_selectcar(); // refresh for QoL
   	}
   }
 }
@@ -972,11 +975,9 @@ void browser_cb(Fl_Widget *w, short browser_type) {
 void populate_cboboxes_selectcar() {
   cbo_fuel_selectcar->clear();
   cbo_class_selectcar->clear();
-  // set indexes to 0 to indicate change
-  cbo_fuel_selectcar->value(0);
-  cbo_class_selectcar->value(0);
-  cbo_fuel_selectcar->redraw();
-  cbo_class_selectcar->redraw();
+    // set indexes to 0 to indicate change
+    cbo_fuel_selectcar->value(0);
+    cbo_class_selectcar->value(0);
     // fill fuel type first
     short idx = lst_car_models->value();
     short idx2 = lst_car_engines->value();
@@ -999,7 +1000,6 @@ void populate_cboboxes_selectcar() {
       for (size_t i = 0; i < vehicle_classes.size(); i++)
       {
       	cbo_class_selectcar->add(vehicle_classes[i].c_str());
-      	std::cout << "Added " << vehicle_classes[i].c_str() << "\n"; // debug
       }
     }
 }
