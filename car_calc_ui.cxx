@@ -972,6 +972,11 @@ void browser_cb(Fl_Widget *w, short browser_type) {
 void populate_cboboxes_selectcar() {
   cbo_fuel_selectcar->clear();
   cbo_class_selectcar->clear();
+  // set indexes to 0 to indicate change
+  cbo_fuel_selectcar->value(0);
+  cbo_class_selectcar->value(0);
+  cbo_fuel_selectcar->redraw();
+  cbo_class_selectcar->redraw();
     // fill fuel type first
     short idx = lst_car_models->value();
     short idx2 = lst_car_engines->value();
