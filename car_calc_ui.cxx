@@ -6,8 +6,8 @@
 #include <FL/fl_ask.H>
 #include <iostream>
 #include <vector>
-#include <cstring>
 #include <string>
+#include <cstring>
 
 Fl_Menu_Bar *mnu_bar=(Fl_Menu_Bar *)0;
 
@@ -334,7 +334,7 @@ Fl_Double_Window* make_window() {
         lbl_gearbox_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_gearbox_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_gearbox_calculate
-      { lbl_class_calculate = new Fl_Output(55, 210, 50, 20);
+      { lbl_class_calculate = new Fl_Output(55, 210, 90, 20);
         lbl_class_calculate->box(FL_DOWN_FRAME);
         lbl_class_calculate->color(FL_BACKGROUND2_COLOR);
         lbl_class_calculate->selection_color(FL_SELECTION_COLOR);
@@ -349,7 +349,7 @@ Fl_Double_Window* make_window() {
         cbo_units_calculate->down_box(FL_BORDER_BOX);
         cbo_units_calculate->labelsize(16);
       } // Fl_Choice* cbo_units_calculate
-      { Fl_Output* o = new Fl_Output(110, 230, 90, 0, "Fuel type:");
+      { Fl_Output* o = new Fl_Output(145, 230, 90, 0, "Fuel type:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -360,7 +360,7 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { lbl_fueltype_calculate = new Fl_Output(200, 210, 70, 20);
+      { lbl_fueltype_calculate = new Fl_Output(235, 210, 85, 20);
         lbl_fueltype_calculate->box(FL_DOWN_FRAME);
         lbl_fueltype_calculate->color(FL_BACKGROUND2_COLOR);
         lbl_fueltype_calculate->selection_color(FL_SELECTION_COLOR);
