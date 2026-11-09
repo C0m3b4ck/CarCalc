@@ -47,11 +47,13 @@ Function {make_window()} {open
       }
       MenuItem mnu_btn_exit {
         label Exit
+        user_data {"exit"}
+        callback action_cb
         xywh {30 30 34 24}
       }
     }
-    Fl_Group grp_selectcar {open
-      xywh {0 19 490 362}
+    Fl_Group grp_selectcar {
+      xywh {0 19 490 362} hide
     } {
       Fl_Text_Display {} {
         label {Select Car Model}
@@ -139,8 +141,8 @@ Function {make_window()} {open
         xywh {390 277 95 28}
       }
     }
-    Fl_Group grp_calculate {
-      xywh {0 20 595 360} hide
+    Fl_Group grp_calculate {open
+      xywh {0 20 595 360}
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
@@ -166,15 +168,15 @@ Function {make_window()} {open
       }
       Fl_Input txt_urban_usage {
         label {Urban:}
-        xywh {55 47 80 28}
+        xywh {55 47 105 28}
       }
       Fl_Input txt_exurban_usage {
         label {Exurban:}
-        xywh {215 47 80 28}
+        xywh {225 47 80 28}
       }
       Fl_Input txt_mixed_usage {
         label {Mixed:}
-        xywh {360 47 80 28}
+        xywh {405 47 80 28}
       }
       Fl_Input txt_co2_emission {
         label {Co2 emission:}
@@ -186,7 +188,7 @@ Function {make_window()} {open
       }
       Fl_Input txt_distance_driven {
         label {Trip distance:}
-        xywh {410 77 75 28}
+        xywh {405 77 80 28}
       }
       Fl_Text_Display {} {
         label {Car Info}
@@ -387,6 +389,13 @@ Function {action_cb(Fl_Widget*, void *data)} {
   else if (std::strcmp(action, "search_car_gearboxes") == 0)
   {
   	search_car_gearboxes();
+  }
+  else if (std::strcmp(action, "exit") == 0)
+  {
+  	// ask if user wants to exit
+  	
+  	// if yes - actually close app
+  	std::cout << "Bye from CarCalc! \\n";
   }} {}
 }
 
@@ -760,22 +769,49 @@ Function {fill_from_dto_calculate()} {
   comment {Fill car info from DTO in calculate group} open
 } {
   code {// get DTO info
-std::vector<std::string> car_info_vec = business_return_info();
-// set output lbls to received info
-lbl_modelname_calculate->value("");
-lbl_engine_calculate->value("");
-lbl_gearbox_calculate->value("");
-lbl_class_calculate->value("");
-lbl_fueltype_calculate->value("");
-lbl_urban_calculate->value("");
-lbl_exurban_calculate->value("");
-lbl_mixed_calculate->value("");
-lbl_average_price_calculate->value("");
-lbl_urban_price_calculate->value("");
-lbl_exurban_price_calculate->value("");
-lbl_mixed_price_calculate->value("");
-lbl_units_calculate->value("");
-lbl_distance_calculate->value("");
-lbl_co2emission_calculate->value("");} {selected
+  std::vector<std::string> car_info_vec = business_return_info();
+  // set output lbls to received info
+  // clear first so that no overlapping text is visible
+  std::string tmp = "";
+  lbl_modelname_calculate->copy_label(tmp.c_str());
+  lbl_engine_calculate->copy_label(tmp.c_str());
+  lbl_gearbox_calculate->copy_label(tmp.c_str());
+  lbl_class_calculate->copy_label(tmp.c_str());
+  lbl_fueltype_calculate->copy_label(tmp.c_str());
+  txt_urban_usage->value(tmp.c_str());
+  txt_exurban_usage->value(tmp.c_str());
+  txt_mixed_usage->value(tmp.c_str());
+  txt_co2_emission->value(tmp.c_str());
+  // redraw them
+  lbl_modelname_calculate->redraw();
+  lbl_engine_calculate->redraw();
+  lbl_gearbox_calculate->redraw();
+  lbl_class_calculate->redraw();
+  lbl_fueltype_calculate->redraw();
+  txt_urban_usage->redraw();
+  txt_exurban_usage->redraw();
+  txt_mixed_usage->redraw();
+  txt_co2_emission->redraw();
+  // fill with new values
+  tmp = car_info_vec[0];
+  lbl_modelname_calculate->value(tmp.c_str());
+  tmp = car_info_vec[1];
+  lbl_engine_calculate->value(tmp.c_str());
+  tmp = car_info_vec[2];
+  lbl_gearbox_calculate->value(tmp.c_str());
+  tmp = car_info_vec[3];
+  lbl_class_calculate->value(tmp.c_str());
+  tmp = car_info_vec[4];
+  lbl_fueltype_price_calculate->value(tmp.c_str());
+  // fill text fields with values
+  std::vector<string> car_value_vec = business_return_values();
+  tmp = car_value_vec[0];
+  txt_urban_usage->value(tmp);
+  tmp = car_value_vec[1];
+  txt_exurban_usage->value(tmp);
+  tmp = car_value_vec[2];
+  txt_mixed_usage->value(tmp);
+  tmp = car_value_vec[3];
+  txt_co2_emission->value(tmp);} {selected
   }
 }

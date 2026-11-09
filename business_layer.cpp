@@ -161,6 +161,19 @@ std::vector<std::string> business_return_info()
 	return returned_info;
 }
 
+// return car_values struct as vector
+std::vector<std::string> business_return_values()
+{
+	std::vector<std::string> returned_values;
+	std::stringstream ss1; ss1 << car_values.urban_usage; returned_values.push_back(ss1.str());
+	std::stringstream ss2; ss2 << car_values.exurban_usage; returned_values.push_back(ss2.str());
+	std::stringstream ss3; ss3 << car_values.mixed_usage; returned_values.push_back(ss3.str());
+	std::stringstream ss4; ss4 << car_values.co2_emission; returned_values.push_back(ss4.str());
+	std::stringstream ss5; ss5 << car_values.fuel_price; returned_values.push_back(ss5.str());
+	std::stringstream ss6; ss6 << car_values.trip_distance; returned_values.push_back(ss6.str());
+	return returned_values;
+}
+
 // Calculation functions
 void business_calculate(const std::string &urban_str, const std::string &exurban_str, const std::string &mixed_str, const std::string &co2_emission_str, const std::string &price_str, const std::string &distance_str)
 {
