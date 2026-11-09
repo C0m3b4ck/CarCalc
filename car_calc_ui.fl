@@ -227,8 +227,8 @@ Function {make_window()} {open
         xywh {85 185 400 20}
         class Fl_Output
       }
-      Fl_Text_Display lbl_class_calculate {
-        xywh {55 210 50 20}
+      Fl_Text_Display lbl_class_calculate {selected
+        xywh {55 210 90 20}
         class Fl_Output
       }
       Fl_Choice cbo_units_calculate {
@@ -237,11 +237,11 @@ Function {make_window()} {open
       } {}
       Fl_Text_Display {} {
         label {Fuel type:}
-        xywh {110 230 90 0} labelsize 19
+        xywh {145 230 90 0} labelsize 19
         class Fl_Output
       }
       Fl_Text_Display lbl_fueltype_calculate {
-        xywh {200 210 70 20}
+        xywh {235 210 85 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
@@ -802,16 +802,15 @@ Function {fill_from_dto_calculate()} {
   tmp = car_info_vec[3];
   lbl_class_calculate->value(tmp.c_str());
   tmp = car_info_vec[4];
-  lbl_fueltype_price_calculate->value(tmp.c_str());
+  lbl_fueltype_calculate->value(tmp.c_str());
   // fill text fields with values
-  std::vector<string> car_value_vec = business_return_values();
+  std::vector<std::string> car_value_vec = business_return_values();
   tmp = car_value_vec[0];
-  txt_urban_usage->value(tmp);
+  txt_urban_usage->value(tmp.c_str());
   tmp = car_value_vec[1];
-  txt_exurban_usage->value(tmp);
+  txt_exurban_usage->value(tmp.c_str());
   tmp = car_value_vec[2];
-  txt_mixed_usage->value(tmp);
+  txt_mixed_usage->value(tmp.c_str());
   tmp = car_value_vec[3];
-  txt_co2_emission->value(tmp);} {selected
-  }
+  txt_co2_emission->value(tmp.c_str());} {}
 }
