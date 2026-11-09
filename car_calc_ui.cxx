@@ -835,6 +835,7 @@ void wake_grp_calculate() {
   cbo_units_calculate->add("SI");
   cbo_units_calculate->add("Imperial");
   // get_from_dto, then set
+  fill_from_dto_calculate();
 }
 
 /**
@@ -1023,4 +1024,45 @@ void cbobox_cb(Fl_Widget *o, short which_cbobox) {
   		update_fuel_type(selected_str);
   	}
   }
+}
+
+/**
+ Fill car info from DTO in calculate group
+*/
+void fill_from_dto_calculate() {
+  // get DTO info
+  std::vector<std::string> car_info_vec = business_return_info();
+  // set output lbls to received info
+  // clear first so that no overlapping text is visible
+  std::string tmp = "";
+  lbl_urban_calculate->copy_label(tmp.c_str());
+  lbl_exurban_calculate->copy_label(tmp.c_str());
+  lbl_mixed_calculate->copy_label(tmp.c_str());
+  lbl_co2emission_calculate->copy_label(tmp.c_str());
+  lbl_average_price_calculate->copy_label(tmp.c_str());
+  lbl_urban_price_calculate->copy_label(tmp.c_str());
+  lbl_exurban_price_calculate->copy_label(tmp.c_str());
+  lbl_mixed_price_calculate->copy_label(tmp.c_str());
+  lbl_distance_calculate->copy_label(tmp.c_str());
+  // redraw them
+    lbl_urban_calculate->redraw();
+    lbl_exurban_calculate->redraw();
+    lbl_mixed_calculate->redraw();
+    lbl_co2emission_calculate->redraw();
+    lbl_average_price_calculate->redraw();
+    lbl_urban_price_calculate->redraw();
+    lbl_exurban_price_calculate->redraw();
+    lbl_mixed_price_calculate->redraw();
+    lbl_distance_calculate->redraw();
+  // fill with new values
+  tmp = car_info_vec[0];
+  lbl_urban_calculate->value(tmp.c_str());
+  tmp = car_info_vec[1];
+  lbl_exurban_calculate->value(tmp.c_str());
+  tmp = car_info_vec[2];
+  lbl_mixed_calculate->value(tmp.c_str());
+  tmp = car_info_vec[3];
+  lbl_co2emission_calculate->value(tmp.c_str());
+  tmp = car_info_vec[4];
+  lbl_average_price_calculate->value(tmp.c_str());
 }

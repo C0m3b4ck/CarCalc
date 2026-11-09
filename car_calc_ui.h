@@ -82,4 +82,5 @@ void search_car_gearboxes();
 void browser_cb(Fl_Widget *w, short browser_type);
 void populate_cboboxes_selectcar();
 void cbobox_cb(Fl_Widget *o, short which_cbobox);
+void fill_from_dto_calculate();
 #endif

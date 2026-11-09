@@ -562,7 +562,8 @@ lbl_co2emission_calculate->value("");
 // populate text fields such as car info
 cbo_units_calculate->add("SI");
 cbo_units_calculate->add("Imperial");
-// get_from_dto, then set} {}
+// get_from_dto, then set
+fill_from_dto_calculate();} {}
 }
 
 Function {wake_grp_selectcar()} {
@@ -698,8 +699,7 @@ if (index > 0)
 		update_gearbox_name(s);	
 		populate_cboboxes_selectcar(); // refresh for QoL
 	}
-}} {selected
-  }
+}} {}
 }
 
 Function {populate_cboboxes_selectcar()} {
@@ -754,4 +754,28 @@ if (idx > 0)
 		update_fuel_type(selected_str);
 	}
 }} {}
+}
+
+Function {fill_from_dto_calculate()} {
+  comment {Fill car info from DTO in calculate group} open
+} {
+  code {// get DTO info
+std::vector<std::string> car_info_vec = business_return_info();
+// set output lbls to received info
+lbl_modelname_calculate->value("");
+lbl_engine_calculate->value("");
+lbl_gearbox_calculate->value("");
+lbl_class_calculate->value("");
+lbl_fueltype_calculate->value("");
+lbl_urban_calculate->value("");
+lbl_exurban_calculate->value("");
+lbl_mixed_calculate->value("");
+lbl_average_price_calculate->value("");
+lbl_urban_price_calculate->value("");
+lbl_exurban_price_calculate->value("");
+lbl_mixed_price_calculate->value("");
+lbl_units_calculate->value("");
+lbl_distance_calculate->value("");
+lbl_co2emission_calculate->value("");} {selected
+  }
 }

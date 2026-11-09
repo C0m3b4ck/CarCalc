@@ -206,8 +206,6 @@ bool get_car_consumption_data(const std::string &brand, const std::string &model
             mixed_usage = (conso_mixte_min + conso_mixte_max) / 2.0f;
             if (mixed_usage == 0.0f && conso_mixte_min != 0.0f) mixed_usage = conso_mixte_min;
             if (mixed_usage == 0.0f && conso_mixte_max != 0.0f) mixed_usage = conso_mixte_max;
-            urban_usage = mixed_usage * 1.2f; // approximation
-            exurban_usage = mixed_usage * 0.8f; // approximation
             co2_emission = (co2_mixte_min + co2_mixte_max) / 2.0f;
             if (co2_emission == 0.0f && co2_mixte_min != 0.0f) co2_emission = co2_mixte_min;
             if (co2_emission == 0.0f && co2_mixte_max != 0.0f) co2_emission = co2_mixte_max;
