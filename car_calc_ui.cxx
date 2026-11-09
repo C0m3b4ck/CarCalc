@@ -970,7 +970,6 @@ void browser_cb(Fl_Widget *w, short browser_type) {
  Populate fuel type, class and fuel usage
 */
 void populate_cboboxes_selectcar() {
-  std::cout << "Called populate_cboboxes function!\n";
   cbo_fuel_selectcar->clear();
   cbo_class_selectcar->clear();
     // fill fuel type first
@@ -986,10 +985,6 @@ void populate_cboboxes_selectcar() {
       	cbo_fuel_selectcar->add(fuel_types[i].c_str());
       }
     }
-    else
-    {
-    	std::cout << "Brand and model not selected!\n"; // debug
-    }
     // then fill vehicle class
     if (idx > 0 && idx2 > 0)
     {
@@ -998,12 +993,9 @@ void populate_cboboxes_selectcar() {
       std::vector<std::string> vehicle_classes = business_get_vehicle_classes_by_brand_model(brand, model);
       for (size_t i = 0; i < vehicle_classes.size(); i++)
       {
-      	cbo_fuel_selectcar->add(vehicle_classes[i].c_str());
+      	cbo_class_selectcar->add(vehicle_classes[i].c_str());
+      	std::cout << "Added " << vehicle_classes[i].c_str() << "\n"; // debug
       }
-    }
-      else
-    {
-    	std::cout << "Brand and model not selected!\n"; // debug
     }
 }
 
