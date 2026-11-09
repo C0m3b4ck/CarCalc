@@ -6,7 +6,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {24 37 490 380} type Double resizable visible
+    xywh {24 37 490 380} type Double visible
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -59,7 +59,7 @@ Function {make_window()} {open
       }
       Fl_Browser lst_car_models {
         callback {browser_cb(lst_car_models, 0)}
-        comment {Clicking on it updates DTO, number 0}
+        comment {Clicking on it updates DTO, number 0} selected
         xywh {5 45 485 60} type Hold
       }
       Fl_Text_Display {} {
@@ -387,8 +387,7 @@ Function {action_cb(Fl_Widget*, void *data)} {
   else if (std::strcmp(action, "search_car_gearboxes") == 0)
   {
   	search_car_gearboxes();
-  }} {selected
-  }
+  }} {}
 }
 
 Function {hide_all_groups()} {
