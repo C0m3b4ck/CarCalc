@@ -1,0 +1,13 @@
+# LSan suppressions for CarCalc — filter known-benign library leaks.
+# Run with: LSAN_OPTIONS=suppressions=lsan.supp ./prog
+# (silence leak checks entirely with: ASAN_OPTIONS=detect_leaks=0 ./prog)
+#
+# Note: FLTK is statically linked into the binary, so its frames appear under
+# the program's name and "leak:fltk" does not match them. The actual leaks it
+# causes all originate in the X11 font stack below, so those are suppressed.
+leak:fltk
+leak:sqlite3
+leak:libfontconfig
+leak:libXft
+leak:libX11
+leak:libexpat
