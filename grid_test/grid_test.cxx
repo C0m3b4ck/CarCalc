@@ -583,20 +583,27 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { Fl_Grid* o = new Fl_Grid(46, 118, 355, 192, "gird");
+      { Fl_Grid* o = new Fl_Grid(5, 343, 485, 36, "gird");
         o->layout(1, 3);
-        { btn_select_car = new Fl_Button(0, 335, 165, 45, "<- Select Car");
+        { btn_select_car = new Fl_Button(5, 343, 161, 36, "<- Select Car");
           btn_select_car->labelsize(24);
           btn_select_car->callback((Fl_Callback*)action_cb, (void*)("group_selectcar"));
         } // Fl_Button* btn_select_car
-        { btn_help_calculate = new Fl_Button(165, 335, 165, 45, "HELP");
+        { btn_help_calculate = new Fl_Button(166, 343, 162, 36, "HELP");
           btn_help_calculate->labelsize(23);
         } // Fl_Button* btn_help_calculate
         { // Passes DTO, calls calculation functions
-          btn_calculate = new Fl_Button(330, 335, 160, 45, "Calculate!");
+          btn_calculate = new Fl_Button(328, 343, 162, 36, "Calculate!");
           btn_calculate->labelsize(25);
           btn_calculate->callback((Fl_Callback*)action_cb, (void*)("calculate"));
         } // Fl_Button* btn_calculate
+        Fl_Grid::Cell *cell = NULL;
+        cell = o->widget(o->child(0), 0, 0, 1, 1, 48);
+        if (cell) cell->minimum_size(20, 20);
+        cell = o->widget(o->child(1), 0, 1, 1, 1, 48);
+        if (cell) cell->minimum_size(20, 20);
+        cell = o->widget(o->child(2), 0, 2, 1, 1, 48);
+        if (cell) cell->minimum_size(20, 20);
         o->end();
         Fl_Group::current()->resizable(o);
       } // Fl_Grid* o
