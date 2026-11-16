@@ -6,7 +6,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {24 37 490 380} type Double visible
+    xywh {216 106 490 380} type Double resizable visible
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -142,7 +142,7 @@ Function {make_window()} {open
       }
     }
     Fl_Group grp_calculate {open
-      xywh {0 20 595 360}
+      xywh {0 20 595 360} resizable
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
@@ -227,7 +227,7 @@ Function {make_window()} {open
         xywh {85 185 400 20}
         class Fl_Output
       }
-      Fl_Text_Display lbl_class_calculate {selected
+      Fl_Text_Display lbl_class_calculate {
         xywh {55 210 90 20}
         class Fl_Output
       }
@@ -338,6 +338,9 @@ Function {make_window()} {open
         label {Urban price:}
         xywh {20 330 60 0} labelsize 13
         class Fl_Output
+      }
+      Fl_Box {} {selected
+        xywh {5 45 175 60} hide resizable
       }
     }
   }

@@ -602,7 +602,12 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
+      { Fl_Box* o = new Fl_Box(5, 45, 175, 60);
+        o->hide();
+        Fl_Group::current()->resizable(o);
+      } // Fl_Box* o
       grp_calculate->end();
+      Fl_Group::current()->resizable(grp_calculate);
     } // Fl_Group* grp_calculate
     o->end();
   } // Fl_Double_Window* o
