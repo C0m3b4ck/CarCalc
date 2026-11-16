@@ -4,8 +4,8 @@
 #include "business_layer.h"
 #include <FL/Fl_Output.H>
 #include <FL/fl_ask.H>
-#include <iostream>
 #include <vector>
+#include <iostream>
 #include <string>
 #include <cstring>
 
@@ -210,7 +210,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Output* lbl_fuel_usage
       grp_selectcar->end();
     } // Fl_Group* grp_selectcar
-    { grp_calculate = new Fl_Group(0, 20, 595, 360);
+    { grp_calculate = new Fl_Group(-5, 20, 600, 360);
       { Fl_Output* o = new Fl_Output(200, 50, 115, 0, "Calculate Fuel-Related");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
@@ -222,7 +222,7 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { btn_select_car = new Fl_Button(5, 335, 160, 45, "<- Select Car");
+      { btn_select_car = new Fl_Button(0, 335, 165, 45, "<- Select Car");
         btn_select_car->labelsize(24);
         btn_select_car->callback((Fl_Callback*)action_cb, (void*)("group_selectcar"));
       } // Fl_Button* btn_select_car
@@ -602,9 +602,10 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { Fl_Box* o = new Fl_Box(5, 45, 175, 60);
-        o->hide();
+      { Fl_Box* o = new Fl_Box(0, 20, 490, 215);
         Fl_Group::current()->resizable(o);
+      } // Fl_Box* o
+      { new Fl_Box(0, 235, 490, 145);
       } // Fl_Box* o
       grp_calculate->end();
       Fl_Group::current()->resizable(grp_calculate);

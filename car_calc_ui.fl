@@ -6,7 +6,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {216 106 490 380} type Double resizable visible
+    xywh {103 131 490 380} type Double resizable visible
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -142,7 +142,7 @@ Function {make_window()} {open
       }
     }
     Fl_Group grp_calculate {open
-      xywh {0 20 595 360} resizable
+      xywh {-5 20 600 360} resizable
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
@@ -153,7 +153,7 @@ Function {make_window()} {open
         label {<- Select Car}
         user_data {"group_selectcar"}
         callback action_cb
-        xywh {5 335 160 45} labelsize 24
+        xywh {0 335 165 45} labelsize 24
       }
       Fl_Button btn_help_calculate {
         label HELP
@@ -340,7 +340,10 @@ Function {make_window()} {open
         class Fl_Output
       }
       Fl_Box {} {selected
-        xywh {5 45 175 60} hide resizable
+        xywh {0 20 490 215} resizable
+      }
+      Fl_Box {} {
+        xywh {0 235 490 145}
       }
     }
   }
