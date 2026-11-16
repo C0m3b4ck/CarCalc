@@ -1,0 +1,832 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0405
+header_name {.h}
+code_name {.cxx}
+Function {make_window()} {open
+} {
+  Fl_Window {} {
+    label CarCalc open
+    xywh {103 131 490 380} type Double resizable visible
+  } {
+    Fl_Menu_Bar mnu_bar {
+      xywh {0 0 490 20}
+    } {
+      Submenu sbmnu_calculate {
+        label Calculate open
+        xywh {15 15 68 24}
+      } {
+        MenuItem sbmnu_btn_selectcar {
+          label {Select Car}
+          user_data {"group_selectcar"}
+          callback action_cb
+          xywh {15 15 34 24}
+        }
+        MenuItem sbmnu_btn_calculate {
+          label Calculate
+          user_data {"group_calculate"}
+          callback action_cb
+          comment {Switches to calculate group}
+          xywh {15 15 34 24}
+        }
+      }
+      MenuItem {} {
+        label Settings
+        xywh {5 5 34 24}
+      }
+      MenuItem mnu_btn_file {
+        label File
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_help {
+        label Help
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_about {
+        label About
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_exit {
+        label Exit
+        user_data {"exit"}
+        callback action_cb
+        xywh {30 30 34 24}
+      }
+    }
+    Fl_Group grp_selectcar {
+      xywh {0 19 490 362} hide
+    } {
+      Fl_Text_Display {} {
+        label {Select Car Model}
+        xywh {60 50 50 5} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_models {
+        callback {browser_cb(lst_car_models, 0)}
+        comment {Clicking on it updates DTO, number 0}
+        xywh {5 45 485 60} type Hold
+      }
+      Fl_Text_Display {} {
+        label {Select Car Engine}
+        xywh {60 135 50 10} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_engines {
+        callback {browser_cb(lst_car_engines, 1)}
+        comment {Clicking on it updated DTO, number 1}
+        xywh {0 135 490 60} type Hold
+      }
+      Fl_Input txt_search_car_models {
+        callback browser_cb
+        xywh {175 19 245 26}
+      }
+      Fl_Button btn_search_car_models {
+        label SEARCH
+        user_data {"search_car_models"}
+        callback action_cb
+        xywh {420 20 69 25} labelsize 17
+      }
+      Fl_Input txt_search_car_engines {
+        xywh {175 109 245 26}
+      }
+      Fl_Button btn_search_car_engines {
+        label SEARCH
+        user_data {"search_car_engines"}
+        callback action_cb
+        xywh {420 110 69 25} labelsize 17
+      }
+      Fl_Text_Display {} {
+        label {Select Car Gearbox}
+        xywh {70 220 50 10} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_gearboxes {
+        callback {browser_cb(lst_car_gearboxes, 2)}
+        comment {Clicking on it updates DTO, number 2}
+        xywh {0 220 490 55} type Hold
+      }
+      Fl_Input txt_search_car_gearboxes {
+        xywh {195 194 225 26}
+      }
+      Fl_Button btn_search_car_gearboxes {
+        label SEARCH
+        user_data {"search_car_gearboxes"}
+        callback action_cb
+        xywh {420 195 69 25} labelsize 17
+      }
+      Fl_Button btn_proceedwithcar {
+        label {Proceed with Car ->}
+        user_data {"proceed_car"}
+        callback action_cb
+        xywh {310 305 180 75} labelsize 18
+      }
+      Fl_Button btn_help_selectcar {
+        label HELP
+        xywh {140 305 165 75} labelsize 26
+      }
+      Fl_Button btn_clear_car {
+        label {Clear Car}
+        xywh {5 305 130 75} labelsize 26
+      }
+      Fl_Choice cbo_class_selectcar {
+        label {Class:}
+        callback {cbobox_cb(cbo_class_selectcar, 0)}
+        comment {Number 0 in cbobox_cb} open
+        xywh {55 280 100 20} down_box BORDER_BOX labelsize 17
+      } {}
+      Fl_Choice cbo_fuel_selectcar {
+        label {Fuel:}
+        callback {cbobox_cb(cbo_fuel_selectcar, 1)}
+        comment {Number 1 in cbobox_cb} open
+        xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
+      } {}
+      Fl_Output lbl_fuel_usage {
+        label {Fuel usage:}
+        xywh {390 277 95 28}
+      }
+    }
+    Fl_Group grp_calculate {open
+      xywh {-5 20 600 360} resizable
+    } {
+      Fl_Text_Display {} {
+        label {Calculate Fuel-Related}
+        xywh {200 50 115 0} labelsize 21
+        class Fl_Output
+      }
+      Fl_Input txt_urban_usage {
+        label {Urban:}
+        xywh {55 47 105 28}
+      }
+      Fl_Input txt_exurban_usage {
+        label {Exurban:}
+        xywh {225 47 80 28}
+      }
+      Fl_Input txt_mixed_usage {
+        label {Mixed:}
+        xywh {405 47 80 28}
+      }
+      Fl_Input txt_co2_emission {
+        label {Co2 emission:}
+        xywh {100 77 80 28}
+      }
+      Fl_Input txt_price {
+        label {Price:}
+        xywh {225 77 80 28}
+      }
+      Fl_Input txt_distance_driven {
+        label {Trip distance:}
+        xywh {405 77 80 28}
+      }
+      Fl_Text_Display {} {
+        label {Car Info}
+        xywh {220 140 50 0} labelsize 21
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Model name:}
+        xywh {35 160 50 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Engine:}
+        xywh {5 185 60 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Gearbox:}
+        xywh {10 210 60 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Class:}
+        xywh {0 230 55 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_modelname_calculate {
+        xywh {120 135 365 20}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_engine_calculate {
+        xywh {70 160 415 20}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_gearbox_calculate {
+        xywh {85 185 400 20}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_class_calculate {
+        xywh {55 210 90 20}
+        class Fl_Output
+      }
+      Fl_Choice cbo_units_calculate {
+        label {Units: } open
+        xywh {60 110 120 20} down_box BORDER_BOX labelsize 16
+      } {}
+      Fl_Text_Display {} {
+        label {Fuel type:}
+        xywh {145 230 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_fueltype_calculate {
+        xywh {235 210 85 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Urban:}
+        xywh {0 285 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_urban_calculate {
+        xywh {80 265 80 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Exurban:}
+        xywh {165 285 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_exurban_calculate {
+        xywh {250 265 70 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Mixed:}
+        xywh {330 285 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_mixed_calculate {
+        xywh {405 265 70 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Price:}
+        xywh {165 310 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_average_price_calculate {
+        xywh {235 290 90 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Units:}
+        xywh {330 310 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_units_calculate {
+        xywh {405 290 85 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Trip distance:}
+        xywh {270 265 110 0}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_distance_calculate {
+        xywh {375 245 100 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Co2 emission:}
+        xywh {5 310 90 0}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_co2emission_calculate {
+        xywh {95 290 70 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Trip Info}
+        xywh {200 265 45 0} labelsize 21
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_urban_price_calculate {
+        xywh {85 315 80 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Exurban price:}
+        xywh {170 335 90 0} labelsize 12
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_exurban_price_calculate {
+        xywh {255 315 75 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Mixed price:}
+        xywh {330 335 90 0} labelsize 13
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_mixed_price_calculate {
+        xywh {410 315 80 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Urban price:}
+        xywh {20 330 60 0} labelsize 13
+        class Fl_Output
+      }
+      Fl_Grid {} {
+        label gird open selected
+        xywh {46 118 355 192} resizable
+        dimensions {1 3}
+      } {
+        Fl_Button btn_select_car {
+          label {<- Select Car}
+          user_data {"group_selectcar"}
+          callback action_cb
+          xywh {0 335 165 45} labelsize 24
+        }
+        Fl_Button btn_help_calculate {
+          label HELP
+          xywh {165 335 165 45} labelsize 23
+        }
+        Fl_Button btn_calculate {
+          label {Calculate!}
+          user_data {"calculate"}
+          callback action_cb
+          comment {Passes DTO, calls calculation functions}
+          xywh {330 335 160 45} labelsize 25
+        }
+      }
+    }
+  }
+}
+
+decl {\#include "business_layer.h"
+\#include <FL/Fl_Output.H>
+\#include <FL/fl_ask.H>
+\#include <vector>
+\#include <iostream>
+\#include <string>
+\#include <cstring>} {
+  comment {Includes all necessary headers for the entire program} private global
+}
+
+Function {action_cb(Fl_Widget*, void *data)} {
+  comment {Button callback, calls functions based on the userdata it gets (which button was pressed)} open
+} {
+  code {const char *action = static_cast<const char*>(data); // get to a useable format (char)
+  
+  // based on what action is, call different function
+  
+  // switch group to grp_calc
+  if (std::strcmp(action, "group_calculate") == 0)
+  {
+  	// prepare calculate group
+  	wake_grp_calculate();
+  	// hide all other groups
+  	hide_all_groups();
+  	// switch group to grp_calculate
+  	grp_calculate->show();
+  }
+  else if (std::strcmp(action, "group_selectcar") == 0)
+  {
+  	// prepare select function
+  	wake_grp_selectcar();
+  	// hide all other groups
+  	hide_all_groups();
+  	// switch group to grp_selectcar
+  	grp_selectcar->show();
+  }
+  else if (std::strcmp(action, "calculate") == 0) // calculate button pressed
+  {
+  	// call calculate function
+  	calculate();
+  }
+  else if (std::strcmp(action, "proceed_car") == 0) // call proceed_car func
+  {
+  	proceed_car();
+  }
+  else if (std::strcmp(action, "search_car_models") == 0)
+  {
+  	search_car_models();
+  }
+  else if (std::strcmp(action, "search_car_engines") == 0)
+  {
+  	search_car_engines();
+  }
+  else if (std::strcmp(action, "search_car_gearboxes") == 0)
+  {
+  	search_car_gearboxes();
+  }
+  else if (std::strcmp(action, "exit") == 0)
+  {
+  	// ask if user wants to exit
+  	
+  	// if yes - actually close app
+  	std::cout << "Bye from CarCalc! \\n";
+  }} {}
+}
+
+Function {hide_all_groups()} {
+  comment {Hides all groups} open
+} {
+  code {grp_selectcar->hide();
+grp_calculate->hide();} {}
+}
+
+Function {get_dto_selectcar()} {
+  comment {Gets values from user, then passes them into DTO in business layer} open
+} {
+  code {// in select car
+	// checks if everything is selected will be before this func, if they succeed - this func is called
+	short idx = lst_car_models->value();
+	std::string car_model = ""; std::string car_engine = ""; std::string car_gearbox = "";
+	std::string car_class = ""; std::string car_fuel = "";
+	// get car model
+	if (idx > 0) //0 means argument not selected
+	{
+		car_model = lst_car_models->text(idx);
+	}
+	// get car engine
+	idx = lst_car_engines->value();
+	if (idx > 0) //0 means argument not selected
+	{
+		car_engine = lst_car_engines->text(idx);
+	}
+	// select car gearbox
+	idx = lst_car_gearboxes->value();
+	if (idx > 0) // 0 means nothing selected
+	{
+		car_gearbox = lst_car_gearboxes->text(idx);
+	}
+	// get class and fuel from cboBoxes
+	idx = cbo_class_selectcar->value();
+	if (idx >= 0) // -1 is nothing selected 
+	{
+		car_class = cbo_class_selectcar->text(idx);
+	}
+	idx = cbo_fuel_selectcar->value();
+	if (idx >= 0) // -1 means nothing selected
+	{
+		car_fuel = cbo_fuel_selectcar->text(idx);	
+	}
+	std::cout << "Car info being passed to DTO: " << car_model << " " << car_engine << " " << car_gearbox << " " << car_class << " " << car_fuel << "\\n"; //make it actually output the data
+	// call function from business layer
+	receive_car_info(car_model, car_engine, car_gearbox, car_class, car_fuel);} {}
+}
+
+Function {calculate()} {open
+} {
+  code {// pass DTO to business layer
+  std::string urban_str = txt_urban_usage->value();
+  std::string exurban_str = txt_exurban_usage->value();
+  std::string mixed_str = txt_mixed_usage->value();
+  std::string co2_emission_str = txt_co2_emission->value();
+  std::string price_str = txt_price->value();
+  std::string distance_str = txt_distance_driven->value();
+  // call calculation function
+  business_calculate(urban_str, exurban_str, mixed_str, co2_emission_str, price_str, distance_str);
+  // get calculated data (converted back to strings)
+  std::vector<std::string> calculated_values = business_return_calculate();
+  // show them in GUI
+  // clear first so that no overlapping text is visible
+  std::string tmp = "";
+  lbl_urban_calculate->copy_label(tmp.c_str());
+  lbl_exurban_calculate->copy_label(tmp.c_str());
+  lbl_mixed_calculate->copy_label(tmp.c_str());
+  lbl_co2emission_calculate->copy_label(tmp.c_str());
+  lbl_average_price_calculate->copy_label(tmp.c_str());
+  lbl_urban_price_calculate->copy_label(tmp.c_str());
+  lbl_exurban_price_calculate->copy_label(tmp.c_str());
+  lbl_mixed_price_calculate->copy_label(tmp.c_str());
+  lbl_distance_calculate->copy_label(tmp.c_str());
+  //printf("label ptr: %p, parent: %p, window shown: %d\\n", (void*)lbl_urban_calculate, (void*)lbl_urban_calculate->parent(), lbl_urban_calculate->window() ? lbl_urban_calculate->window()->shown() : -1);
+  // redraw them
+    lbl_urban_calculate->redraw();
+    lbl_exurban_calculate->redraw();
+    lbl_mixed_calculate->redraw();
+    lbl_co2emission_calculate->redraw();
+    lbl_average_price_calculate->redraw();
+    lbl_urban_price_calculate->redraw();
+    lbl_exurban_price_calculate->redraw();
+    lbl_mixed_price_calculate->redraw();
+    lbl_distance_calculate->redraw();
+  // fill with new values
+  tmp = calculated_values[0];
+  lbl_urban_calculate->value(tmp.c_str());
+  tmp = calculated_values[1];
+  lbl_exurban_calculate->value(tmp.c_str());
+  tmp = calculated_values[2];
+  lbl_mixed_calculate->value(tmp.c_str());
+  tmp = calculated_values[3];
+  lbl_co2emission_calculate->value(tmp.c_str());
+  tmp = calculated_values[4];
+  lbl_average_price_calculate->value(tmp.c_str());
+  // 6, 7, 8 are urban, exurban and mixed prices
+  tmp = calculated_values[5];
+  lbl_urban_price_calculate->value(tmp.c_str());
+  tmp = calculated_values[6];
+  lbl_exurban_price_calculate->value(tmp.c_str());
+  tmp = calculated_values[7];
+  lbl_mixed_price_calculate->value(tmp.c_str());
+  tmp = calculated_values[8]; 
+  lbl_distance_calculate->value(tmp.c_str());} {}
+}
+
+Function {proceed_car()} {
+  comment {Checks if all selected, if not - warns user, then passes DTO if user confirms} open
+} {
+  code {if (lst_car_models->value() == 0 || lst_car_engines->value() == 0 || lst_car_gearboxes->value() == 0 || cbo_class_selectcar->value() == -1 || cbo_fuel_selectcar->value() == -1)
+{ // if any option is not selected
+	// ask user if they want to proceed anyway
+	int c = fl_choice("Some options are not selected. Do you want to continue anyway?",
+	"This is fine", // button 0
+	"Go back and select", // button 1 (default selection)
+	NULL);
+	if (c == 0) // this is fine button pressed
+	{
+		// if yes, pass DTO and show grp_calculate
+		get_dto_selectcar(); // should resolve fuel usage if not already
+		wake_grp_calculate(); // clearing txtboxes, filling info etc.
+		hide_all_groups();
+		grp_calculate->show();
+	}
+}
+else // if all are selected - just do it
+{
+		get_dto_selectcar(); // should resolve fuel usage if not alread
+		wake_grp_calculate(); // clearing txtboxes, filling info etc.
+		hide_all_groups();
+		grp_calculate->show();
+}} {}
+}
+
+Function {wake_grp_calculate()} {
+  comment {Prepare grp_calculate for being shown to user} open
+} {
+  code {// clear text fields, labels and cboboxes
+txt_urban_usage->value("");
+txt_exurban_usage->value("");
+txt_mixed_usage->value("");
+txt_co2_emission->value("");
+txt_price->value("");
+txt_distance_driven->value("");
+
+  // pointer debug
+  /*
+  fprintf(stderr, "ptr = %p\\n", (void *) lbl_modelname_calculate);
+  if (!lbl_modelname_calculate) {fprintf(stderr, "NULL\\n"); return; }
+  fprintf(stderr, "windows = %p\\n", (void*)lbl_modelname_calculate->window());
+  fprintf(stderr, "buffer = %p\\n", (void*)lbl_modelname_calculate->buffer());
+  */
+  
+lbl_modelname_calculate->value("");
+lbl_engine_calculate->value("");
+lbl_gearbox_calculate->value("");
+lbl_class_calculate->value("");
+lbl_fueltype_calculate->value("");
+lbl_urban_calculate->value("");
+lbl_exurban_calculate->value("");
+lbl_mixed_calculate->value("");
+lbl_average_price_calculate->value("");
+lbl_urban_price_calculate->value("");
+lbl_exurban_price_calculate->value("");
+lbl_mixed_price_calculate->value("");
+lbl_units_calculate->value("");
+lbl_distance_calculate->value("");
+lbl_co2emission_calculate->value("");
+
+// populate text fields such as car info
+cbo_units_calculate->add("SI");
+cbo_units_calculate->add("Imperial");
+// get_from_dto, then set
+fill_from_dto_calculate();} {}
+}
+
+Function {wake_grp_selectcar()} {
+  comment {Prepare select car group for being shown to user} open
+} {
+  code {// clear lst, txt and cboboxes
+  lst_car_models->clear();
+  lst_car_engines->clear();
+  lst_car_gearboxes->clear();
+  
+  cbo_class_selectcar->clear();
+  cbo_fuel_selectcar->clear();
+  
+  txt_search_car_models->value("");
+  txt_search_car_engines->value("");
+  txt_search_car_gearboxes->value("");
+  
+  // load car values from DTO if there are any
+  // = get_from_dto(char which_dto, std::string what_to_get)
+  // populate lists from database
+  populate_car_models();} {}
+}
+
+Function {populate_car_models()} {open
+} {
+  code {lst_car_models->clear();
+  std::vector<std::string> brands = business_get_all_brands();
+  for (size_t i = 0; i < brands.size(); i++)
+  {
+    lst_car_models->add(brands[i].c_str());
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {populate_car_engines()} {open
+} {
+  code {lst_car_engines->clear();
+  short idx = lst_car_models->value();
+  if (idx > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::vector<std::string> models = business_get_models_by_brand(brand);
+    for (size_t i = 0; i < models.size(); i++)
+    {
+      lst_car_engines->add(models[i].c_str());
+    }
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {populate_car_gearboxes()} {open
+} {
+  code {lst_car_gearboxes->clear();
+  short idx = lst_car_models->value();
+  short idx2 = lst_car_engines->value();
+  if (idx > 0 && idx2 > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
+    for (size_t i = 0; i < gearboxes.size(); i++)
+    {
+      lst_car_gearboxes->add(gearboxes[i].c_str());
+    }
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {search_car_models()} {open
+} {
+  code {// return car models based on user search
+std::string search_query = txt_search_car_models->value();
+// pass as arg to sql
+// that function will sort based on search term match
+
+// populate listboxes
+
+// populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {search_car_engines()} {open
+} {
+  code {// return car engines based on user search
+std::string search_term = txt_search_car_engines->value();
+// pass as parameter to sql function (through BL obviously)
+// that function will sort based on search term match
+
+// populate listboxes
+populate_car_engines();
+// populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {search_car_gearboxes()} {open
+} {
+  code {// return car models based on user search
+std::string search_term = txt_search_car_gearboxes->value();
+// call sql function with search term as parameter (through BL obviously)
+// that function will sort based on search term match
+
+// populate listboxes
+populate_car_gearboxes();
+// populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {browser_cb(Fl_Widget *w, short browser_type)} {
+  comment {Callback for listboxes to get selected element} open
+} {
+  code {Fl_Browser *b = (Fl_Browser *)w;
+int index = b->value(); // 0 is none
+if (index > 0)
+{
+	const char *s = b->text(index);
+	printf("Selected element from listbox with text: %s\\n", s);
+	// decide which value (model, gearbox, engine) to update
+	if (browser_type == 0) // model browser
+	{
+		update_model_name(s); // updated car model in struct in BL
+		populate_car_engines(); // refresh for QoL
+	}
+	else if (browser_type == 1) // engine browser
+	{
+		update_engine_name(s);	
+		populate_car_gearboxes(); // refresh for QoL
+	}
+	else if (browser_type == 2) // gearbox browser
+	{
+		update_gearbox_name(s);	
+		populate_cboboxes_selectcar(); // refresh for QoL
+	}
+}} {}
+}
+
+Function {populate_cboboxes_selectcar()} {
+  comment {Populate fuel type, class and fuel usage} open
+} {
+  code {cbo_fuel_selectcar->clear();
+cbo_class_selectcar->clear();
+  // set indexes to 0 to indicate change
+  cbo_fuel_selectcar->value(0);
+  cbo_class_selectcar->value(0);
+  // fill fuel type first
+  short idx = lst_car_models->value();
+  short idx2 = lst_car_engines->value();
+  if (idx > 0 && idx2 > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> fuel_types = business_get_fuel_types_by_brand_model(brand, model);
+    for (size_t i = 0; i < fuel_types.size(); i++)
+    {
+    	cbo_fuel_selectcar->add(fuel_types[i].c_str());
+    }
+  }
+  // then fill vehicle class
+  if (idx > 0 && idx2 > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> vehicle_classes = business_get_vehicle_classes_by_brand_model(brand, model);
+    for (size_t i = 0; i < vehicle_classes.size(); i++)
+    {
+    	cbo_class_selectcar->add(vehicle_classes[i].c_str());
+    }
+  }} {}
+}
+
+Function {cbobox_cb(Fl_Widget *o, short which_cbobox)} {
+  comment {Callback for cboBoxes (needs cboBox name and cboBox number as args)} open
+} {
+  code {Fl_Choice *c = (Fl_Choice*)o;
+int idx = c->value();
+if (idx > 0)
+{
+	std::string selected_str = c->text(idx);
+	// update DTO data based on which cboBox this is
+	if (which_cbobox == 0) // vehicle class
+	{
+		update_vehicle_class(selected_str);
+	}
+	else if (which_cbobox == 1) // fuel type
+	{
+		update_fuel_type(selected_str);
+	}
+}} {}
+}
+
+Function {fill_from_dto_calculate()} {
+  comment {Fill car info from DTO in calculate group} open
+} {
+  code {// get DTO info
+  std::vector<std::string> car_info_vec = business_return_info();
+  // set output lbls to received info
+  // clear first so that no overlapping text is visible
+  std::string tmp = "";
+  lbl_modelname_calculate->copy_label(tmp.c_str());
+  lbl_engine_calculate->copy_label(tmp.c_str());
+  lbl_gearbox_calculate->copy_label(tmp.c_str());
+  lbl_class_calculate->copy_label(tmp.c_str());
+  lbl_fueltype_calculate->copy_label(tmp.c_str());
+  txt_urban_usage->value(tmp.c_str());
+  txt_exurban_usage->value(tmp.c_str());
+  txt_mixed_usage->value(tmp.c_str());
+  txt_co2_emission->value(tmp.c_str());
+  // redraw them
+  lbl_modelname_calculate->redraw();
+  lbl_engine_calculate->redraw();
+  lbl_gearbox_calculate->redraw();
+  lbl_class_calculate->redraw();
+  lbl_fueltype_calculate->redraw();
+  txt_urban_usage->redraw();
+  txt_exurban_usage->redraw();
+  txt_mixed_usage->redraw();
+  txt_co2_emission->redraw();
+  // fill with new values
+  tmp = car_info_vec[0];
+  lbl_modelname_calculate->value(tmp.c_str());
+  tmp = car_info_vec[1];
+  lbl_engine_calculate->value(tmp.c_str());
+  tmp = car_info_vec[2];
+  lbl_gearbox_calculate->value(tmp.c_str());
+  tmp = car_info_vec[3];
+  lbl_class_calculate->value(tmp.c_str());
+  tmp = car_info_vec[4];
+  lbl_fueltype_calculate->value(tmp.c_str());
+  // fill text fields with values
+  std::vector<std::string> car_value_vec = business_return_values();
+  tmp = car_value_vec[0];
+  txt_urban_usage->value(tmp.c_str());
+  tmp = car_value_vec[1];
+  txt_exurban_usage->value(tmp.c_str());
+  tmp = car_value_vec[2];
+  txt_mixed_usage->value(tmp.c_str());
+  tmp = car_value_vec[3];
+  txt_co2_emission->value(tmp.c_str());} {}
+}

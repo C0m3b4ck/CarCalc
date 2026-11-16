@@ -141,7 +141,7 @@ Function {make_window()} {open
         xywh {390 277 95 28}
       }
     }
-    Fl_Group grp_calculate {open
+    Fl_Group grp_calculate {open selected
       xywh {-5 20 600 360} resizable
     } {
       Fl_Text_Display {} {
@@ -339,12 +339,6 @@ Function {make_window()} {open
         xywh {20 330 60 0} labelsize 13
         class Fl_Output
       }
-      Fl_Box {} {
-        xywh {0 20 490 215} resizable
-      }
-      Fl_Box {} {
-        xywh {0 235 490 145}
-      }
     }
   }
 }
@@ -356,7 +350,7 @@ decl {\#include "business_layer.h"
 \#include <iostream>
 \#include <string>
 \#include <cstring>} {
-  comment {Includes all necessary headers for the entire program} selected private global
+  comment {Includes all necessary headers for the entire program} private global
 }
 
 Function {action_cb(Fl_Widget*, void *data)} {

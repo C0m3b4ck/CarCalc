@@ -11,3 +11,9 @@ SourceForge and releases link here
 
 # Author
 Started on October 13th 2026 by C0m3b4ck.
+
+# Credits
+Used libraries:
+FLTK 1.4.5 by 
+SQLite X by
+Database from ADEME
