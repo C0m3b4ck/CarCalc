@@ -49,13 +49,13 @@ extern Fl_Output *lbl_average_price_calculate;
 extern Fl_Output *lbl_units_calculate;
 extern Fl_Output *lbl_distance_calculate;
 extern Fl_Output *lbl_co2emission_calculate;
-extern Fl_Output *lbl_urban_price_calculate;
-extern Fl_Output *lbl_exurban_price_calculate;
-extern Fl_Output *lbl_mixed_price_calculate;
 #include <FL/Fl_Grid.H>
 extern Fl_Button *btn_select_car;
 extern Fl_Button *btn_help_calculate;
 extern Fl_Button *btn_calculate;
+extern Fl_Output *lbl_mixed_price_calculate;
+extern Fl_Output *lbl_urban_price_calculate;
+extern Fl_Output *lbl_exurban_price_calculate;
 Fl_Double_Window* make_window();
 extern Fl_Menu_Item menu_mnu_bar[];
 #define sbmnu_calculate (menu_mnu_bar+0)

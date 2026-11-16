@@ -110,21 +110,21 @@ Fl_Output *lbl_distance_calculate=(Fl_Output *)0;
 
 Fl_Output *lbl_co2emission_calculate=(Fl_Output *)0;
 
-Fl_Output *lbl_urban_price_calculate=(Fl_Output *)0;
-
-Fl_Output *lbl_exurban_price_calculate=(Fl_Output *)0;
-
-Fl_Output *lbl_mixed_price_calculate=(Fl_Output *)0;
-
 Fl_Button *btn_select_car=(Fl_Button *)0;
 
 Fl_Button *btn_help_calculate=(Fl_Button *)0;
 
 Fl_Button *btn_calculate=(Fl_Button *)0;
 
+Fl_Output *lbl_mixed_price_calculate=(Fl_Output *)0;
+
+Fl_Output *lbl_urban_price_calculate=(Fl_Output *)0;
+
+Fl_Output *lbl_exurban_price_calculate=(Fl_Output *)0;
+
 Fl_Double_Window* make_window() {
   Fl_Double_Window* w;
-  { Fl_Double_Window* o = new Fl_Double_Window(490, 380, "CarCalc");
+  { Fl_Double_Window* o = new Fl_Double_Window(491, 401, "CarCalc");
     w = o; (void)w;
     { mnu_bar = new Fl_Menu_Bar(0, 0, 490, 20);
       mnu_bar->menu(menu_mnu_bar);
@@ -203,7 +203,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Output* lbl_fuel_usage
       grp_selectcar->end();
     } // Fl_Group* grp_selectcar
-    { grp_calculate = new Fl_Group(-5, 20, 600, 360);
+    { grp_calculate = new Fl_Group(-5, 20, 610, 364);
       { Fl_Output* o = new Fl_Output(200, 50, 115, 0, "Calculate Fuel-Related");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
@@ -517,92 +517,69 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { lbl_urban_price_calculate = new Fl_Output(85, 315, 80, 20);
-        lbl_urban_price_calculate->box(FL_DOWN_FRAME);
-        lbl_urban_price_calculate->color(FL_BACKGROUND2_COLOR);
-        lbl_urban_price_calculate->selection_color(FL_SELECTION_COLOR);
-        lbl_urban_price_calculate->labeltype(FL_NORMAL_LABEL);
-        lbl_urban_price_calculate->labelfont(0);
-        lbl_urban_price_calculate->labelsize(14);
-        lbl_urban_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
-        lbl_urban_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
-        lbl_urban_price_calculate->when(FL_WHEN_RELEASE);
-      } // Fl_Output* lbl_urban_price_calculate
-      { Fl_Output* o = new Fl_Output(170, 335, 90, 0, "Exurban price:");
-        o->box(FL_DOWN_FRAME);
-        o->color(FL_BACKGROUND2_COLOR);
-        o->selection_color(FL_SELECTION_COLOR);
-        o->labeltype(FL_NORMAL_LABEL);
-        o->labelfont(0);
-        o->labelsize(12);
-        o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
-        o->when(FL_WHEN_RELEASE);
-      } // Fl_Output* o
-      { lbl_exurban_price_calculate = new Fl_Output(255, 315, 75, 20);
-        lbl_exurban_price_calculate->box(FL_DOWN_FRAME);
-        lbl_exurban_price_calculate->color(FL_BACKGROUND2_COLOR);
-        lbl_exurban_price_calculate->selection_color(FL_SELECTION_COLOR);
-        lbl_exurban_price_calculate->labeltype(FL_NORMAL_LABEL);
-        lbl_exurban_price_calculate->labelfont(0);
-        lbl_exurban_price_calculate->labelsize(14);
-        lbl_exurban_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
-        lbl_exurban_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
-        lbl_exurban_price_calculate->when(FL_WHEN_RELEASE);
-      } // Fl_Output* lbl_exurban_price_calculate
-      { Fl_Output* o = new Fl_Output(330, 335, 90, 0, "Mixed price:");
-        o->box(FL_DOWN_FRAME);
-        o->color(FL_BACKGROUND2_COLOR);
-        o->selection_color(FL_SELECTION_COLOR);
-        o->labeltype(FL_NORMAL_LABEL);
-        o->labelfont(0);
-        o->labelsize(13);
-        o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
-        o->when(FL_WHEN_RELEASE);
-      } // Fl_Output* o
-      { lbl_mixed_price_calculate = new Fl_Output(410, 315, 80, 20);
-        lbl_mixed_price_calculate->box(FL_DOWN_FRAME);
-        lbl_mixed_price_calculate->color(FL_BACKGROUND2_COLOR);
-        lbl_mixed_price_calculate->selection_color(FL_SELECTION_COLOR);
-        lbl_mixed_price_calculate->labeltype(FL_NORMAL_LABEL);
-        lbl_mixed_price_calculate->labelfont(0);
-        lbl_mixed_price_calculate->labelsize(14);
-        lbl_mixed_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
-        lbl_mixed_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
-        lbl_mixed_price_calculate->when(FL_WHEN_RELEASE);
-      } // Fl_Output* lbl_mixed_price_calculate
-      { Fl_Output* o = new Fl_Output(20, 330, 60, 0, "Urban price:");
-        o->box(FL_DOWN_FRAME);
-        o->color(FL_BACKGROUND2_COLOR);
-        o->selection_color(FL_SELECTION_COLOR);
-        o->labeltype(FL_NORMAL_LABEL);
-        o->labelfont(0);
-        o->labelsize(13);
-        o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
-        o->when(FL_WHEN_RELEASE);
-      } // Fl_Output* o
-      { Fl_Grid* o = new Fl_Grid(5, 343, 485, 36, "gird");
-        o->layout(1, 3);
-        { btn_select_car = new Fl_Button(5, 343, 161, 36, "<- Select Car");
+      { Fl_Grid* o = new Fl_Grid(0, 344, 500, 40, "gird");
+        o->layout(2, 3);
+        static const int rowgaps[] = { 20, -1 };
+        o->row_gap(rowgaps, 2);
+        static const int colgaps[] = { 0, -1, -1 };
+        o->col_gap(colgaps, 3);
+        { btn_select_car = new Fl_Button(0, 344, 184, 20, "<- Select Car");
           btn_select_car->labelsize(24);
           btn_select_car->callback((Fl_Callback*)action_cb, (void*)("group_selectcar"));
         } // Fl_Button* btn_select_car
-        { btn_help_calculate = new Fl_Button(166, 343, 162, 36, "HELP");
+        { btn_help_calculate = new Fl_Button(184, 344, 183, 20, "HELP");
           btn_help_calculate->labelsize(23);
         } // Fl_Button* btn_help_calculate
         { // Passes DTO, calls calculation functions
-          btn_calculate = new Fl_Button(328, 343, 162, 36, "Calculate!");
+          btn_calculate = new Fl_Button(367, 344, 183, 20, "Calculate!");
           btn_calculate->labelsize(25);
           btn_calculate->callback((Fl_Callback*)action_cb, (void*)("calculate"));
         } // Fl_Button* btn_calculate
+        { lbl_mixed_price_calculate = new Fl_Output(0, 384, 184, 20, "Mixed price:");
+          lbl_mixed_price_calculate->box(FL_DOWN_FRAME);
+          lbl_mixed_price_calculate->color(FL_BACKGROUND2_COLOR);
+          lbl_mixed_price_calculate->selection_color(FL_SELECTION_COLOR);
+          lbl_mixed_price_calculate->labeltype(FL_NORMAL_LABEL);
+          lbl_mixed_price_calculate->labelfont(0);
+          lbl_mixed_price_calculate->labelsize(14);
+          lbl_mixed_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
+          lbl_mixed_price_calculate->align(Fl_Align(289));
+          lbl_mixed_price_calculate->when(FL_WHEN_RELEASE);
+        } // Fl_Output* lbl_mixed_price_calculate
+        { lbl_urban_price_calculate = new Fl_Output(184, 384, 183, 20, "Urban price:");
+          lbl_urban_price_calculate->box(FL_DOWN_FRAME);
+          lbl_urban_price_calculate->color(FL_BACKGROUND2_COLOR);
+          lbl_urban_price_calculate->selection_color(FL_SELECTION_COLOR);
+          lbl_urban_price_calculate->labeltype(FL_NORMAL_LABEL);
+          lbl_urban_price_calculate->labelfont(0);
+          lbl_urban_price_calculate->labelsize(14);
+          lbl_urban_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
+          lbl_urban_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
+          lbl_urban_price_calculate->when(FL_WHEN_RELEASE);
+        } // Fl_Output* lbl_urban_price_calculate
+        { lbl_exurban_price_calculate = new Fl_Output(367, 384, 183, 20, "Exurban price:");
+          lbl_exurban_price_calculate->box(FL_DOWN_FRAME);
+          lbl_exurban_price_calculate->color(FL_BACKGROUND2_COLOR);
+          lbl_exurban_price_calculate->selection_color(FL_SELECTION_COLOR);
+          lbl_exurban_price_calculate->labeltype(FL_NORMAL_LABEL);
+          lbl_exurban_price_calculate->labelfont(0);
+          lbl_exurban_price_calculate->labelsize(14);
+          lbl_exurban_price_calculate->labelcolor(FL_FOREGROUND_COLOR);
+          lbl_exurban_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
+          lbl_exurban_price_calculate->when(FL_WHEN_RELEASE);
+        } // Fl_Output* lbl_exurban_price_calculate
         Fl_Grid::Cell *cell = NULL;
         cell = o->widget(o->child(0), 0, 0, 1, 1, 48);
         if (cell) cell->minimum_size(20, 20);
         cell = o->widget(o->child(1), 0, 1, 1, 1, 48);
         if (cell) cell->minimum_size(20, 20);
         cell = o->widget(o->child(2), 0, 2, 1, 1, 48);
+        if (cell) cell->minimum_size(20, 20);
+        cell = o->widget(o->child(3), 1, 0, 1, 1, 48);
+        if (cell) cell->minimum_size(20, 20);
+        cell = o->widget(o->child(4), 1, 1, 1, 1, 48);
+        if (cell) cell->minimum_size(20, 20);
+        cell = o->widget(o->child(5), 1, 2, 1, 1, 48);
         if (cell) cell->minimum_size(20, 20);
         o->end();
         Fl_Group::current()->resizable(o);
