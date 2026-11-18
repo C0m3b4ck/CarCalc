@@ -2,7 +2,10 @@
 
 int main(int argc, char** argv)
 {
-	Fl_Window* w = make_window(); // call make_window()
-	w->show(argc, argv); // show window
-	return Fl::run(); // return function return
+	Fl_Window* w = make_window();
+	wake_grp_calculate();
+	hide_all_groups();
+	grp_calculate->show();
+	w->show(argc, argv);
+	return Fl::run();
 } 

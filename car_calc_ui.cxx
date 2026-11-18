@@ -150,13 +150,16 @@ Fl_Double_Window* make_window() {
         lst_car_engines->callback((Fl_Callback*)cb_lst_car_engines);
       } // Fl_Browser* lst_car_engines
       { txt_search_car_models = new Fl_Input(175, 19, 245, 26);
-        txt_search_car_models->callback((Fl_Callback*)browser_cb);
+        txt_search_car_models->callback((Fl_Callback*)action_cb, (void*)("search_car_models"));
+        txt_search_car_models->when(1);
       } // Fl_Input* txt_search_car_models
       { btn_search_car_models = new Fl_Button(420, 20, 69, 25, "SEARCH");
         btn_search_car_models->labelsize(17);
         btn_search_car_models->callback((Fl_Callback*)action_cb, (void*)("search_car_models"));
       } // Fl_Button* btn_search_car_models
       { txt_search_car_engines = new Fl_Input(175, 109, 245, 26);
+        txt_search_car_engines->callback((Fl_Callback*)action_cb, (void*)("search_car_engines"));
+        txt_search_car_engines->when(1);
       } // Fl_Input* txt_search_car_engines
       { btn_search_car_engines = new Fl_Button(420, 110, 69, 25, "SEARCH");
         btn_search_car_engines->labelsize(17);
@@ -172,6 +175,8 @@ Fl_Double_Window* make_window() {
         lst_car_gearboxes->callback((Fl_Callback*)cb_lst_car_gearboxes);
       } // Fl_Browser* lst_car_gearboxes
       { txt_search_car_gearboxes = new Fl_Input(195, 194, 225, 26);
+        txt_search_car_gearboxes->callback((Fl_Callback*)action_cb, (void*)("search_car_gearboxes"));
+        txt_search_car_gearboxes->when(1);
       } // Fl_Input* txt_search_car_gearboxes
       { btn_search_car_gearboxes = new Fl_Button(420, 195, 69, 25, "SEARCH");
         btn_search_car_gearboxes->labelsize(17);
@@ -203,7 +208,8 @@ Fl_Double_Window* make_window() {
       } // Fl_Output* lbl_fuel_usage
       grp_selectcar->end();
     } // Fl_Group* grp_selectcar
-    { grp_calculate = new Fl_Group(-5, 20, 600, 360);
+    { grp_calculate = new Fl_Group(0, 20, 490, 360);
+      grp_calculate->hide();
       { Fl_Output* o = new Fl_Output(200, 50, 115, 0, "Calculate Fuel-Related");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
@@ -613,10 +619,61 @@ Fl_Double_Window* make_window() {
 #include "business_layer.h"
 #include <FL/Fl_Output.H>
 #include <FL/fl_ask.H>
+#include <algorithm>
+#include <cctype>
 #include <vector>
 #include <iostream>
 #include <string>
 #include <cstring>
+
+static std::string ui_to_lower(std::string s)
+{
+  std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+  return s;
+}
+
+static int ui_match_score(const std::string &text, const std::string &query)
+{
+  if (query.empty()) return 0;
+  std::string t = ui_to_lower(text);
+  std::string q = ui_to_lower(query);
+  if (t == q) return 100000;
+  if (t.size() >= q.size() && t.compare(0, q.size(), q) == 0) return 90000 - static_cast<int>(t.size() - q.size());
+  size_t pos = t.find(q);
+  if (pos != std::string::npos) return 80000 - static_cast<int>(pos) * 100 - static_cast<int>(t.size() - q.size());
+
+  // subsequence (fuzzy) match
+  size_t ti = 0, qi = 0, first = std::string::npos, last = 0;
+  while (ti < t.size() && qi < q.size())
+  {
+    if (t[ti] == q[qi])
+    {
+      if (first == std::string::npos) first = ti;
+      last = ti;
+      ++qi;
+    }
+    ++ti;
+  }
+  if (qi == q.size() && first != std::string::npos)
+  {
+    int span = static_cast<int>(last - first + 1);
+    int gaps = span - static_cast<int>(q.size());
+    return 70000 - span * 50 - gaps * 10 - static_cast<int>(first);
+  }
+
+  return 0;
+}
+
+static bool ui_match_better(const std::string &a, const std::string &b, const std::string &query)
+{
+  int sa = ui_match_score(a, query);
+  int sb = ui_match_score(b, query);
+  if (sa != sb) return sa > sb;
+  std::string la = ui_to_lower(a);
+  std::string lb = ui_to_lower(b);
+  if (la != lb) return la < lb;
+  return a < b;
+}
 
 /**
  Button callback, calls functions based on the userdata it gets (which button was pressed)
@@ -879,6 +936,12 @@ void wake_grp_selectcar() {
 void populate_car_models() {
   lst_car_models->clear();
     std::vector<std::string> brands = business_get_all_brands();
+    const char *q = txt_search_car_models ? txt_search_car_models->value() : "";
+    if (q && *q)
+    {
+      std::string qs = q;
+      std::stable_sort(brands.begin(), brands.end(), [&](const std::string &a, const std::string &b) { return ui_match_better(a, b, qs); });
+    }
     for (size_t i = 0; i < brands.size(); i++)
     {
       lst_car_models->add(brands[i].c_str());
@@ -894,6 +957,12 @@ void populate_car_engines() {
     {
       std::string brand = lst_car_models->text(idx);
       std::vector<std::string> models = business_get_models_by_brand(brand);
+      const char *q = txt_search_car_engines ? txt_search_car_engines->value() : "";
+      if (q && *q)
+      {
+        std::string qs = q;
+        std::stable_sort(models.begin(), models.end(), [&](const std::string &a, const std::string &b) { return ui_match_better(a, b, qs); });
+      }
       for (size_t i = 0; i < models.size(); i++)
       {
         lst_car_engines->add(models[i].c_str());
@@ -912,6 +981,12 @@ void populate_car_gearboxes() {
       std::string brand = lst_car_models->text(idx);
       std::string model = lst_car_engines->text(idx2);
       std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
+      const char *q = txt_search_car_gearboxes ? txt_search_car_gearboxes->value() : "";
+      if (q && *q)
+      {
+        std::string qs = q;
+        std::stable_sort(gearboxes.begin(), gearboxes.end(), [&](const std::string &a, const std::string &b) { return ui_match_better(a, b, qs); });
+      }
       for (size_t i = 0; i < gearboxes.size(); i++)
       {
         lst_car_gearboxes->add(gearboxes[i].c_str());
@@ -922,39 +997,18 @@ void populate_car_gearboxes() {
 }
 
 void search_car_models() {
-  // return car models based on user search
-  std::string search_query = txt_search_car_models->value();
-  // pass as arg to sql
-  // that function will sort based on search term match
-
-  // populate listboxes
-
-  // populate cboBoxes - search is done
-  populate_cboboxes_selectcar();
+  // return car models based on user search, sorted by match quality
+  populate_car_models();
 }
 
 void search_car_engines() {
-  // return car engines based on user search
-  std::string search_term = txt_search_car_engines->value();
-  // pass as parameter to sql function (through BL obviously)
-  // that function will sort based on search term match
-
-  // populate listboxes
+  // return car engines based on user search, sorted by match quality
   populate_car_engines();
-  // populate cboBoxes - search is done
-  populate_cboboxes_selectcar();
 }
 
 void search_car_gearboxes() {
-  // return car models based on user search
-  std::string search_term = txt_search_car_gearboxes->value();
-  // call sql function with search term as parameter (through BL obviously)
-  // that function will sort based on search term match
-
-  // populate listboxes
+  // return car gearboxes based on user search, sorted by match quality
   populate_car_gearboxes();
-  // populate cboBoxes - search is done
-  populate_cboboxes_selectcar();
 }
 
 /**
