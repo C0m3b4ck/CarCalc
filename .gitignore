@@ -2,3 +2,5 @@ prog
 *.py
 *.tok
 prog_asan
+*.exe
+.win-deps/
