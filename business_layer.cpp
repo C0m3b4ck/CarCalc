@@ -6,6 +6,7 @@
 #include "business_layer.h"
 #include <string>
 #include <cstdlib>
+#include <iomanip>
 #include <sstream>
 
 // variables
@@ -48,6 +49,36 @@ struct CarCalculated
 CarValues car_values;
 CarCalculated car_calculated;
 CarInfo car_info;
+
+// Populated only when the (currently dormant) government lookup is wired in.
+struct GovernmentFuelPriceState
+{
+	bool available = false;
+	float pb95_pln_per_l = 0.0f;
+	float pb98_pln_per_l = 0.0f;
+};
+GovernmentFuelPriceState government_fuel_price;
+
+void business_set_government_fuel_price(float pb95_pln_per_l, float pb98_pln_per_l)
+{
+	government_fuel_price.available = true;
+	government_fuel_price.pb95_pln_per_l = pb95_pln_per_l;
+	government_fuel_price.pb98_pln_per_l = pb98_pln_per_l;
+}
+
+bool business_has_government_fuel_price()
+{
+	return government_fuel_price.available;
+}
+
+std::string business_get_government_fuel_price_display()
+{
+	if (!government_fuel_price.available) return "N/A";
+	std::ostringstream out;
+	out << "PB95 " << std::fixed << std::setprecision(2) << government_fuel_price.pb95_pln_per_l
+	    << " / PB98 " << government_fuel_price.pb98_pln_per_l << " PLN/l";
+	return out.str();
+}
 
 // mediation between business and data layers
 std::vector<std::string> business_get_all_brands()
@@ -226,6 +257,7 @@ std::vector<std::string> business_return_calculate()
 	std::stringstream ss7; ss7 << car_calculated.average_price_paid; result.push_back(ss7.str());
 	std::stringstream ss8; ss8 << car_calculated.average_price_paid; result.push_back(ss8.str());
 	std::stringstream ss9; ss9 << car_calculated.distance_driven; result.push_back(ss9.str());
+	result.push_back(business_get_government_fuel_price_display());
 	return result;
 }
 

@@ -29,8 +29,10 @@ Function {make_window()} {open
           xywh {15 15 34 24}
         }
       }
-      MenuItem {} {
+      MenuItem mnu_btn_settings {
         label Settings
+        user_data {"group_settings"}
+        callback action_cb
         xywh {5 5 34 24}
       }
       MenuItem mnu_btn_file {
@@ -244,6 +246,14 @@ Function {make_window()} {open
         xywh {60 110 120 20} down_box BORDER_BOX labelsize 16
       } {}
       Fl_Text_Display {} {
+        label {Gov. fuel price:}
+        xywh {190 110 95 0} labelsize 13 align 513
+        class Fl_Output
+      }
+      Fl_Output lbl_fuel_price_calculate {
+        xywh {290 108 190 22}
+      }
+      Fl_Text_Display {} {
         label {Fuel type:}
         xywh {145 230 90 0} labelsize 19
         class Fl_Output
@@ -348,14 +358,98 @@ Function {make_window()} {open
         class Fl_Output
       }
     }
+    Fl_Group grp_settings {
+      xywh {0 20 490 360} hide
+    } {
+      Fl_Text_Display {} {
+        label Settings
+        xywh {200 50 90 0} labelsize 21 align 513
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Language:}
+        xywh {80 105 90 0} labelsize 19 align 513
+        class Fl_Output
+      }
+      Fl_Choice cbo_language_settings {
+        label {Language:} open
+        callback {action_cb(cbo_language_settings, (void*)("language_changed"))}
+        xywh {180 100 190 28} down_box BORDER_BOX labelsize 17
+      } {
+        MenuItem {} {
+          label English
+          xywh {0 0 100 20}
+        }
+        MenuItem {} {
+          label Polski
+          xywh {0 0 100 20}
+        }
+      }
+      Fl_Output lbl_settings_status {
+        xywh {80 150 330 28}
+      }
+      Fl_Text_Display {} {
+        label Data
+        xywh {80 205 60 0} labelsize 21 align 513
+        class Fl_Output
+      }
+      Fl_Button {} {
+        label {Download selected database}
+        user_data {"group_download_data"}
+        callback action_cb
+        xywh {80 235 330 45} labelsize 16
+      }
+      Fl_Button {} {
+        label {Back}
+        user_data {"group_calculate"}
+        callback action_cb
+        xywh {80 305 150 45} labelsize 20
+      }
+    }
+    Fl_Group grp_download_data {
+      xywh {0 20 490 360} hide
+    } {
+      Fl_Text_Display {} {
+        label {Download data}
+        xywh {160 50 170 0} labelsize 21 align 513
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Selected file:}
+        xywh {60 105 110 0} labelsize 19 align 513
+        class Fl_Output
+      }
+      Fl_Output lbl_selected_db {
+        xywh {180 102 250 28}
+      }
+      Fl_Button {} {
+        label {Choose destination and download}
+        user_data {"download_db"}
+        callback action_cb
+        xywh {90 165 310 50} labelsize 16
+      }
+      Fl_Output lbl_download_status {
+        xywh {60 240 370 30}
+      }
+      Fl_Button {} {
+        label {Back}
+        user_data {"group_settings"}
+        callback action_cb
+        xywh {90 305 150 45} labelsize 20
+      }
+    }
   }
 }
 
 decl {\#include "business_layer.h"
+\#include "language.h"
+\#include "sql_layer.h"
 \#include <FL/Fl_Output.H>
+\#include <FL/Fl_File_Chooser.H>
 \#include <FL/fl_ask.H>
 \#include <algorithm>
 \#include <cctype>
+\#include <filesystem>
 \#include <vector>
 \#include <iostream>
 \#include <string>
@@ -408,6 +502,165 @@ static bool ui_match_better(const std::string &a, const std::string &b, const st
   std::string lb = ui_to_lower(b);
   if (la != lb) return la < lb;
   return a < b;
+}
+
+static void replace_all_text(std::string &text, const std::string &from, const std::string &to)
+{
+  if (from.empty()) return;
+  size_t pos = 0;
+  while ((pos = text.find(from, pos)) != std::string::npos)
+  {
+    text.replace(pos, from.size(), to);
+    pos += to.size();
+  }
+}
+
+static std::string localize_price_text(std::string text)
+{
+  const std::string key = canonical_text(text);
+  if (key == "N/A" || key == "N/D")
+  {
+    const char *translated = translate_cstr("N/A");
+    return translated ? std::string(translated) : text;
+  }
+  const char *unit = translate_cstr("PLN/l");
+  replace_all_text(text, "PLN/l", unit ? unit : "PLN/l");
+  replace_all_text(text, "zł/l", unit ? unit : "PLN/l");
+  return text;
+}
+
+static void translate_widget(Fl_Widget *widget)
+{
+  if (!widget) return;
+  const char *label = widget->label();
+  const std::string key = canonical_text(label ? label : "");
+  const char *translated = translate_cstr(key.c_str());
+  if (translated && (!label || std::strcmp(label, translated) != 0))
+    widget->copy_label(translated);
+  const int size = translation_size(key.c_str());
+  if (size > 0) widget->labelsize(size);
+
+  Fl_Output *output = dynamic_cast<Fl_Output *>(widget);
+  if (output && output->value())
+  {
+    const std::string localized = localize_price_text(output->value());
+    if (localized != output->value()) output->value(localized.c_str());
+  }
+}
+
+static void translate_menu_item(Fl_Menu_Item *item, const char *english)
+{
+  if (!item) return;
+  item->label(translate_cstr(english));
+  const int size = translation_size(english);
+  if (size > 0) item->labelsize(size);
+}
+
+static void translate_widget_group(Fl_Group *group)
+{
+  if (!group) return;
+  for (int i = 0; i < group->children(); ++i)
+    translate_widget(group->child(i));
+}
+
+void apply_language_to_ui()
+{
+  translate_menu_item(sbmnu_calculate, "Calculate");
+  translate_menu_item(sbmnu_btn_selectcar, "Select Car");
+  translate_menu_item(sbmnu_btn_calculate, "Calculate");
+  translate_menu_item(mnu_btn_settings, "Settings");
+  translate_menu_item(mnu_btn_file, "File");
+  translate_menu_item(mnu_btn_help, "Help");
+  translate_menu_item(mnu_btn_about, "About");
+  translate_menu_item(mnu_btn_exit, "Exit");
+  mnu_bar->redraw();
+
+  translate_widget_group(grp_selectcar);
+  translate_widget_group(grp_calculate);
+  translate_widget_group(grp_settings);
+  translate_widget_group(grp_download_data);
+}
+
+void refresh_language_choices()
+{
+  if (!cbo_language_settings) return;
+  cbo_language_settings->clear();
+  for (const LanguageInfo &language : available_languages())
+    cbo_language_settings->add(language.name.c_str());
+  cbo_language_settings->value(current_language_index());
+}
+
+void wake_grp_settings()
+{
+  refresh_language_choices();
+  lbl_settings_status->value(active_translation_status().c_str());
+  apply_language_to_ui();
+}
+
+void wake_grp_download_data()
+{
+  lbl_selected_db->value(database_path_for_current_language().c_str());
+  lbl_download_status->value(translate_cstr("Ready"));
+  apply_language_to_ui();
+}
+
+void language_changed()
+{
+  int choice = cbo_language_settings ? cbo_language_settings->value() : 0;
+  set_language_by_index(choice);
+  set_database_path(database_path_for_current_language());
+  update_model_name("");
+  update_engine_name("");
+  update_gearbox_name("");
+  update_vehicle_class("");
+  update_fuel_type("");
+  wake_grp_selectcar();
+  wake_grp_settings();
+  wake_grp_download_data();
+  apply_language_to_ui();
+}
+
+void download_selected_database()
+{
+  const std::string source = database_path_for_current_language();
+  if (!std::filesystem::exists(source))
+  {
+    const std::string message = std::string(translate_cstr("Database file not found: ")) + source;
+    lbl_download_status->value(message.c_str());
+    fl_alert("%s", message.c_str());
+    return;
+  }
+
+  Fl_File_Chooser chooser(".", "*.db", Fl_File_Chooser::SINGLE | Fl_File_Chooser::CREATE,
+                         translate_cstr("Choose where to save the database"));
+  chooser.show();
+  while (chooser.shown()) Fl::wait();
+  const char *chosen = chooser.value();
+  if (!chosen || !*chosen)
+  {
+    lbl_download_status->value(translate_cstr("Download cancelled"));
+    return;
+  }
+
+  const std::string destination = chosen;
+  if (std::filesystem::absolute(source) == std::filesystem::absolute(destination))
+  {
+    lbl_download_status->value(translate_cstr("The database is already in that location"));
+    return;
+  }
+
+  try
+  {
+    std::filesystem::copy_file(source, destination, std::filesystem::copy_options::overwrite_existing);
+    const std::string message = std::string(translate_cstr("Saved: ")) + destination;
+    lbl_download_status->value(message.c_str());
+  }
+  catch (const std::exception &error)
+  {
+    const std::string message = std::string(translate_cstr("Download failed: ")) + error.what();
+    lbl_download_status->value(message.c_str());
+    fl_alert("%s", message.c_str());
+  }
 }} {
   comment {Includes all necessary headers for the entire program} private global
 }
@@ -423,6 +676,7 @@ Function {action_cb(Fl_Widget*, void *data)} {
   if (std::strcmp(action, "group_calculate") == 0)
   {
   	// prepare calculate group
+  	apply_language_to_ui();
   	wake_grp_calculate();
   	// hide all other groups
   	hide_all_groups();
@@ -432,11 +686,32 @@ Function {action_cb(Fl_Widget*, void *data)} {
   else if (std::strcmp(action, "group_selectcar") == 0)
   {
   	// prepare select function
+  	apply_language_to_ui();
   	wake_grp_selectcar();
   	// hide all other groups
   	hide_all_groups();
   	// switch group to grp_selectcar
   	grp_selectcar->show();
+  }
+  else if (std::strcmp(action, "group_settings") == 0)
+  {
+  	wake_grp_settings();
+  	hide_all_groups();
+  	grp_settings->show();
+  }
+  else if (std::strcmp(action, "group_download_data") == 0)
+  {
+  	wake_grp_download_data();
+  	hide_all_groups();
+  	grp_download_data->show();
+  }
+  else if (std::strcmp(action, "language_changed") == 0)
+  {
+  	language_changed();
+  }
+  else if (std::strcmp(action, "download_db") == 0)
+  {
+  	download_selected_database();
   }
   else if (std::strcmp(action, "calculate") == 0) // calculate button pressed
   {
@@ -462,9 +737,15 @@ Function {action_cb(Fl_Widget*, void *data)} {
   else if (std::strcmp(action, "exit") == 0)
   {
   	// ask if user wants to exit
-  	
+  	int choice = fl_choice("%s",
+  	                       translate_cstr("Leave"), translate_cstr("Stay"), NULL,
+  	                       translate_cstr("Do you want to leave CarCalc?"));
   	// if yes - actually close app
-  	std::cout << "Bye from CarCalc! \\n";
+  	if (choice == 0)
+  	{
+  		std::cout << "Bye from CarCalc! \\n";
+  		if (Fl::first_window()) Fl::first_window()->hide();
+  	}
   }} {}
 }
 
@@ -472,7 +753,9 @@ Function {hide_all_groups()} {
   comment {Hides all groups} open
 } {
   code {grp_selectcar->hide();
-grp_calculate->hide();} {}
+grp_calculate->hide();
+ grp_settings->hide();
+ grp_download_data->hide();} {}
 }
 
 Function {get_dto_selectcar()} {
@@ -541,6 +824,7 @@ Function {calculate()} {open
   lbl_exurban_price_calculate->copy_label(tmp.c_str());
   lbl_mixed_price_calculate->copy_label(tmp.c_str());
   lbl_distance_calculate->copy_label(tmp.c_str());
+  lbl_fuel_price_calculate->copy_label(tmp.c_str());
   //printf("label ptr: %p, parent: %p, window shown: %d\\n", (void*)lbl_urban_calculate, (void*)lbl_urban_calculate->parent(), lbl_urban_calculate->window() ? lbl_urban_calculate->window()->shown() : -1);
   // redraw them
     lbl_urban_calculate->redraw();
@@ -552,6 +836,7 @@ Function {calculate()} {open
     lbl_exurban_price_calculate->redraw();
     lbl_mixed_price_calculate->redraw();
     lbl_distance_calculate->redraw();
+    lbl_fuel_price_calculate->redraw();
   // fill with new values
   tmp = calculated_values[0];
   lbl_urban_calculate->value(tmp.c_str());
@@ -571,7 +856,10 @@ Function {calculate()} {open
   tmp = calculated_values[7];
   lbl_mixed_price_calculate->value(tmp.c_str());
   tmp = calculated_values[8]; 
-  lbl_distance_calculate->value(tmp.c_str());} {}
+  lbl_distance_calculate->value(tmp.c_str());
+  // 9 is the government fuel price, or N/A until it is available
+  tmp = localize_price_text(calculated_values[9]);
+  lbl_fuel_price_calculate->value(tmp.c_str());} {}
 }
 
 Function {proceed_car()} {
@@ -580,10 +868,11 @@ Function {proceed_car()} {
   code {if (lst_car_models->value() == 0 || lst_car_engines->value() == 0 || lst_car_gearboxes->value() == 0 || cbo_class_selectcar->value() == -1 || cbo_fuel_selectcar->value() == -1)
 { // if any option is not selected
 	// ask user if they want to proceed anyway
-	int c = fl_choice("Some options are not selected. Do you want to continue anyway?",
-	"This is fine", // button 0
-	"Go back and select", // button 1 (default selection)
-	NULL);
+	int c = fl_choice("%s",
+	translate_cstr("This is fine"), // button 0
+	translate_cstr("Go back and select"), // button 1 (default selection)
+	NULL,
+	translate_cstr("Some options are not selected. Do you want to continue anyway?"));
 	if (c == 0) // this is fine button pressed
 	{
 		// if yes, pass DTO and show grp_calculate
@@ -636,6 +925,8 @@ lbl_mixed_price_calculate->value("");
 lbl_units_calculate->value("");
 lbl_distance_calculate->value("");
 lbl_co2emission_calculate->value("");
+const std::string fuel_price_display = localize_price_text(business_get_government_fuel_price_display());
+lbl_fuel_price_calculate->value(fuel_price_display.c_str());
 
 // populate text fields such as car info
 cbo_units_calculate->add("SI");

@@ -39,13 +39,31 @@ The dataset is published under **Licence Ouverte / Open Licence 2.0**; see
 
 ### Native (Linux)
 
+**Fully local build (recommended).** FLTK 1.4.5 and SQLite 3.54.1 are checked
+into [`vendor/`](vendor/) and compiled from scratch:
+
 ```bash
-g++ -O2 -std=c++17 -o prog \
-  main.cpp business_layer.cpp io_layer.cpp sql_layer.cpp car_calc_ui.cxx \
-  -lsqlite3 $(fltk-config --cxxflags) $(fltk-config --ldflags)
+./build_full.sh                 # produces ./prog
+OUT=~/CarCalc ./build_full.sh   # custom output path
+CLEAN=0 ./build_full.sh         # reuse the dependency build tree
 ```
 
-Requires a C++17 compiler, FLTK development headers and SQLite3 development files.
+This needs a C++17 compiler, CMake, X11 headers and libcurl headers, but **no
+system FLTK or SQLite package**. Dependencies are built into the ignored
+`.build-full/` directory.
+
+**Build against system libraries.** For a quick incremental build:
+
+```bash
+./compile_app.sh
+# or:
+g++ -O2 -std=c++17 -o prog \
+  main.cpp business_layer.cpp io_layer.cpp sql_layer.cpp language.cpp \
+  government_prices.cpp car_calc_ui.cxx \
+  -lsqlite3 -lcurl $(fltk-config --cxxflags) $(fltk-config --ldflags)
+```
+
+This variant requires FLTK development headers and SQLite3 development files.
 
 ### Windows x64 (cross-compile from Linux)
 
@@ -67,16 +85,19 @@ FLTK_WIN_DIR=/path/to/fltk ./compile_windows.sh    # custom Windows FLTK build
 ```
 
 The bundled helper uses a prebuilt MinGW-w64 FLTK 1.3.9 static library when
-available. To build **everything from scratch**, use these upstream sources:
+available; SQLite is compiled from the vendored amalgamation in
+[`vendor/sqlite-3.54.1/`](vendor/sqlite-3.54.1/). To build FLTK from source too,
+use the checked-in upstream sources (or fetch the same releases):
 
-| Dependency | Version | Source | License |
-|---|---|---|---|
-| FLTK | 1.4.5 | [fltk.org download](https://www.fltk.org/software.php?VERSION=1.4.5#v1.4.5) · [GitHub tag](https://github.com/fltk/fltk/releases/tag/release-1.4.5) | LGPL v2 + FLTK exceptions |
-| SQLite | latest amalgamation | [sqlite.org/download.html](https://www.sqlite.org/download.html) | Public domain |
+| Dependency | Version | Vendored source | Upstream | License |
+|---|---|---|---|---|
+| FLTK | 1.4.5 | [`vendor/fltk-1.4.5/`](vendor/fltk-1.4.5/) | [fltk.org](https://www.fltk.org/software.php?VERSION=1.4.5) · [GitHub tag](https://github.com/fltk/fltk/releases/tag/release-1.4.5) | LGPL v2 + FLTK exceptions |
+| SQLite | 3.54.1 | [`vendor/sqlite-3.54.1/`](vendor/sqlite-3.54.1/) | [sqlite.org](https://www.sqlite.org/download.html) | Public domain |
 
 Cross-compile FLTK with `x86_64-w64-mingw32-g++ --host=x86_64-w64-mingw32`,
 build statically, then point `FLTK_WIN_DIR` at that tree. SQLite's
 `sqlite3.c`/`sqlite3.h` are compiled directly into the executable by the script.
+See [`vendor/README.md`](vendor/README.md) for checksums and rebuild details.
 
 ## Licenses
 

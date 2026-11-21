@@ -12,8 +12,8 @@ cd "$(dirname "$0")"
 
 OUT=prog_asan
 
-g++ -o "$OUT" main.cpp business_layer.cpp io_layer.cpp sql_layer.cpp car_calc_ui.cxx \
-    -lsqlite3 \
+g++ -o "$OUT" main.cpp business_layer.cpp io_layer.cpp sql_layer.cpp language.cpp government_prices.cpp car_calc_ui.cxx \
+    -lsqlite3 -lcurl \
     $(fltk-config --cxxflags) $(fltk-config --ldflags) \
     -fsanitize=address -fno-omit-frame-pointer -g -O1
 

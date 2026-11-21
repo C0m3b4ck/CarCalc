@@ -5,7 +5,17 @@
 #include <string>
 #include <cstdlib>
 
-static std::string db_path = "cars.db";
+static std::string db_path = "cars_en.db";
+
+void set_database_path(const std::string &path)
+{
+    db_path = path;
+}
+
+std::string get_database_path()
+{
+    return db_path;
+}
 
 std::vector<std::string> get_all_brands()
 {

@@ -23,6 +23,10 @@ struct CarDBEntry
     float prix_vehicule;
 };
 
+// Database selection
+void set_database_path(const std::string &path);
+std::string get_database_path();
+
 // Get all distinct car models/brands
 std::vector<std::string> get_all_brands();
 std::vector<std::string> get_models_by_brand(const std::string &brand);

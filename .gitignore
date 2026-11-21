@@ -4,3 +4,4 @@ prog
 prog_asan
 *.exe
 .win-deps/
+.build-full/

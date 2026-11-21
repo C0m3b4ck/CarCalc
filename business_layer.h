@@ -33,4 +33,9 @@ bool business_get_car_consumption_data();
 void business_calculate(const std::string &urban_str, const std::string &exurban_str, const std::string &mixed_str, const std::string &co2_emission_str, const std::string &price_str, const std::string &distance_str);
 std::vector<std::string> business_return_calculate();
 
+// Government fuel price display state. No lookup is performed by the app yet.
+void business_set_government_fuel_price(float pb95_pln_per_l, float pb98_pln_per_l);
+bool business_has_government_fuel_price();
+std::string business_get_government_fuel_price_display();
+
 #endif // BUSINESS_LAYER_H_INCLUDED

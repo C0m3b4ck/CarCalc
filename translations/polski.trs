@@ -1,0 +1,57 @@
+# CarCalc translation file
+# Format: English-label=translation|font-size
+# Lines starting with # or ; are comments. Omit |size to keep the widget size.
+
+[language]
+name=Polski
+database=cars_pl.db
+
+[labels]
+Calculate=Oblicz|14
+Select Car=Wybierz samochód|14
+<- Select Car=<- Wybierz samochód|24
+Settings=Ustawienia|14
+File=Plik|14
+Help=Pomoc|14
+HELP=POMOC|26
+About=Informacje|14
+Exit=Wyjście|14
+Select Car Model=Wybierz model samochodu|21
+Select Car Engine=Wybierz silnik|21
+Select Car Gearbox=Wybierz skrzynię biegów|21
+SEARCH=SZUKAJ|17
+Proceed with Car ->=Przejdź z samochodem ->|18
+Clear Car=Wyczyść samochód|26
+Calculate Fuel-Related=Obliczenia paliwowe|21
+Calculate!=Oblicz!|25
+Urban:=Miejskie:|14
+Exurban:=Pozamiejskie:|14
+Mixed:=Mieszane:|14
+Co2 emission:=Emisja CO2:|14
+Price:=Cena:|14
+Trip distance:=Dystans:|14
+Car Info=Informacje o samochodzie|21
+Model name:=Model:|19
+Engine:=Silnik:|19
+Gearbox:=Skrzynia:|19
+Class:=Klasa:|17
+Fuel:=Paliwo:|17
+Fuel type:=Typ paliwa:|19
+Gov. fuel price:=Cena paliwa:|13
+Fuel usage:=Zużycie paliwa:|14
+Units: =Jednostki: |16
+Units:=Jednostki:|19
+Trip Info=Informacje o trasie|21
+Exurban price:=Cena pozamiejska:|12
+Mixed price:=Cena mieszana:|13
+Urban price:=Cena miejska:|13
+Language:=Język:|19
+Data=Dane|21
+Download selected database=Pobierz wybraną bazę danych|16
+Download data=Pobierz dane|21
+Selected file:=Wybrany plik:|19
+Choose destination and download=Wybierz miejsce i pobierz|16
+Back=Wstecz|20
+Ready=Gotowe|14
+N/A=N/D|14
+PLN/l=zł/l|14

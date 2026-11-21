@@ -1,0 +1,57 @@
+# CarCalc translation file
+# Format: English-label=translation|font-size
+# Lines starting with # or ; are comments. Omit |size to keep the widget size.
+
+[language]
+name=English
+database=cars_en.db
+
+[labels]
+Calculate=Calculate|14
+Select Car=Select Car|14
+<- Select Car=<- Select Car|24
+Settings=Settings|14
+File=File|14
+Help=Help|14
+HELP=HELP|26
+About=About|14
+Exit=Exit|14
+Select Car Model=Select Car Model|21
+Select Car Engine=Select Car Engine|21
+Select Car Gearbox=Select Car Gearbox|21
+SEARCH=SEARCH|17
+Proceed with Car ->=Proceed with Car ->|18
+Clear Car=Clear Car|26
+Calculate Fuel-Related=Calculate Fuel-Related|21
+Calculate!=Calculate!|25
+Urban:=Urban:|14
+Exurban:=Exurban:|14
+Mixed:=Mixed:|14
+Co2 emission:=Co2 emission:|14
+Price:=Price:|14
+Trip distance:=Trip distance:|14
+Car Info=Car Info|21
+Model name:=Model name:|19
+Engine:=Engine:|19
+Gearbox:=Gearbox:|19
+Class:=Class:|17
+Fuel:=Fuel:|17
+Fuel type:=Fuel type:|19
+Gov. fuel price:=Gov. fuel price:|13
+Fuel usage:=Fuel usage:|14
+Units: =Units: |16
+Units:=Units:|19
+Trip Info=Trip Info|21
+Exurban price:=Exurban price:|12
+Mixed price:=Mixed price:|13
+Urban price:=Urban price:|13
+Language:=Language:|19
+Data=Data|21
+Download selected database=Download selected database|16
+Download data=Download data|21
+Selected file:=Selected file:|19
+Choose destination and download=Choose destination and download|16
+Back=Back|20
+Ready=Ready|14
+N/A=N/A|14
+PLN/l=PLN/l|14
