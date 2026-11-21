@@ -10,7 +10,7 @@
 #   FLTK_WIN_DIR   - directory with Windows FLTK 1.3/1.4 (FL/ + lib/libfltk.a)
 #   CARCALC_DEPS   - where cached dependencies are stored (default: ./.win-deps)
 #
-# SQLite is compiled from the vendored amalgamation in vendor/sqlite-3.54.1/
+# SQLite is compiled from the bundled amalgamation in external_libraries/sqlite-3.54.1/
 # when available; FLTK uses a prebuilt MinGW-w64 static library (see below).
 #
 # Requires: x86_64-w64-mingw32-g++, unzip, and curl/wget (only if deps are missing).
@@ -78,11 +78,11 @@ fi
 # ---------------------------------------------------------------------------
 # 2. SQLite amalgamation (compiled into the .exe, no sqlite3.dll needed)
 # ---------------------------------------------------------------------------
-VENDORED_SQLITE="$PWD/vendor/sqlite-3.54.1"
+EXTERNAL_SQLITE="$PWD/external_libraries/sqlite-3.54.1"
 SQLITE_DIR="$DEPS/sqlite"
-if [[ -f "$VENDORED_SQLITE/sqlite3.c" && -f "$VENDORED_SQLITE/sqlite3.h" ]]; then
-    SQLITE_DIR="$VENDORED_SQLITE"
-    echo "==> Using vendored SQLite 3.54.1 from $SQLITE_DIR"
+if [[ -f "$EXTERNAL_SQLITE/sqlite3.c" && -f "$EXTERNAL_SQLITE/sqlite3.h" ]]; then
+    SQLITE_DIR="$EXTERNAL_SQLITE"
+    echo "==> Using bundled SQLite 3.54.1 from $SQLITE_DIR"
 else
     if [[ ! -f "$SQLITE_DIR/sqlite3.c" || ! -f "$SQLITE_DIR/sqlite3.h" ]]; then
         echo "==> Preparing SQLite amalgamation in $SQLITE_DIR"

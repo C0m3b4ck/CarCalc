@@ -40,7 +40,7 @@ The dataset is published under **Licence Ouverte / Open Licence 2.0**; see
 ### Native (Linux)
 
 **Fully local build (recommended).** FLTK 1.4.5 and SQLite 3.54.1 are checked
-into [`vendor/`](vendor/) and compiled from scratch:
+into [`external_libraries/`](external_libraries/) and compiled from scratch:
 
 ```bash
 ./build_full.sh                 # produces ./prog
@@ -85,19 +85,19 @@ FLTK_WIN_DIR=/path/to/fltk ./compile_windows.sh    # custom Windows FLTK build
 ```
 
 The bundled helper uses a prebuilt MinGW-w64 FLTK 1.3.9 static library when
-available; SQLite is compiled from the vendored amalgamation in
-[`vendor/sqlite-3.54.1/`](vendor/sqlite-3.54.1/). To build FLTK from source too,
+available; SQLite is compiled from the bundled amalgamation in
+[`external_libraries/sqlite-3.54.1/`](external_libraries/sqlite-3.54.1/). To build FLTK from source too,
 use the checked-in upstream sources (or fetch the same releases):
 
-| Dependency | Version | Vendored source | Upstream | License |
+| Dependency | Version | Bundled source | Upstream | License |
 |---|---|---|---|---|
-| FLTK | 1.4.5 | [`vendor/fltk-1.4.5/`](vendor/fltk-1.4.5/) | [fltk.org](https://www.fltk.org/software.php?VERSION=1.4.5) · [GitHub tag](https://github.com/fltk/fltk/releases/tag/release-1.4.5) | LGPL v2 + FLTK exceptions |
-| SQLite | 3.54.1 | [`vendor/sqlite-3.54.1/`](vendor/sqlite-3.54.1/) | [sqlite.org](https://www.sqlite.org/download.html) | Public domain |
+| FLTK | 1.4.5 | [`external_libraries/fltk-1.4.5/`](external_libraries/fltk-1.4.5/) | [fltk.org](https://www.fltk.org/software.php?VERSION=1.4.5) · [GitHub tag](https://github.com/fltk/fltk/releases/tag/release-1.4.5) | LGPL v2 + FLTK exceptions |
+| SQLite | 3.54.1 | [`external_libraries/sqlite-3.54.1/`](external_libraries/sqlite-3.54.1/) | [sqlite.org](https://www.sqlite.org/download.html) | Public domain |
 
 Cross-compile FLTK with `x86_64-w64-mingw32-g++ --host=x86_64-w64-mingw32`,
 build statically, then point `FLTK_WIN_DIR` at that tree. SQLite's
 `sqlite3.c`/`sqlite3.h` are compiled directly into the executable by the script.
-See [`vendor/README.md`](vendor/README.md) for checksums and rebuild details.
+See [`external_libraries/README.md`](external_libraries/README.md) for checksums and rebuild details.
 
 ## Licenses
 

@@ -1,4 +1,4 @@
-# Vendored dependency sources
+# Bundled external library sources
 
 This directory contains the exact upstream source releases used by
 `./build_full.sh`. They are checked in so a full build does not depend on a

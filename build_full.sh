@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Build CarCalc entirely from the vendored dependency sources.
+# Build CarCalc entirely from the bundled external dependency sources.
 #
-# FLTK 1.4.5 and SQLite 3.54.1 are compiled from vendor/ into BUILD_DIR;
+# FLTK 1.4.5 and SQLite 3.54.1 are compiled from external_libraries/ into BUILD_DIR;
 # no system FLTK or SQLite development package is required at link time.
 # System libcurl headers are still needed for the government price feature.
 #
@@ -18,8 +18,8 @@ cd "$(dirname "$0")"
 ROOT="$PWD"
 OUT="${OUT:-$ROOT/prog}"
 BUILD_DIR="${BUILD_DIR:-$ROOT/.build-full}"
-FLTK_SRC="$ROOT/vendor/fltk-1.4.5"
-SQLITE_SRC="$ROOT/vendor/sqlite-3.54.1"
+FLTK_SRC="$ROOT/external_libraries/fltk-1.4.5"
+SQLITE_SRC="$ROOT/external_libraries/sqlite-3.54.1"
 JOBS="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}"
 CLEAN="${CLEAN:-1}"
 
@@ -37,8 +37,8 @@ done
 for required in "$FLTK_SRC/CMakeLists.txt" "$FLTK_SRC/FL/Fl.H" \
                 "$SQLITE_SRC/sqlite3.c" "$SQLITE_SRC/sqlite3.h"; do
     if [[ ! -f "$required" ]]; then
-        echo "error: missing vendored source: $required" >&2
-        echo "       restore vendor/ from the repository before building." >&2
+        echo "error: missing bundled source: $required" >&2
+        echo "       restore external_libraries/ from the repository before building." >&2
         exit 1
     fi
 done
