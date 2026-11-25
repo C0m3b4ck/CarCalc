@@ -235,7 +235,7 @@ Fl_Double_Window* make_window() {
       grp_selectcar->end();
     } // Fl_Group* grp_selectcar
     { grp_calculate = new Fl_Group(0, 20, 490, 360);
-      { Fl_Output* o = new Fl_Output(200, 50, 115, 0, "Calculate Fuel-Related");
+      { Fl_Output* o = new Fl_Output(145, 25, 200, 0, "Calculate Fuel-Related");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -271,7 +271,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Input* txt_price
       { txt_distance_driven = new Fl_Input(405, 77, 80, 28, "Trip distance:");
       } // Fl_Input* txt_distance_driven
-      { Fl_Output* o = new Fl_Output(220, 140, 50, 0, "Car Info");
+      { Fl_Output* o = new Fl_Output(130, 112, 240, 0, "Car Info");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -282,7 +282,7 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { Fl_Output* o = new Fl_Output(35, 160, 50, 0, "Model name:");
+      { Fl_Output* o = new Fl_Output(0, 135, 115, 0, "Model name:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -293,7 +293,7 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { Fl_Output* o = new Fl_Output(5, 185, 60, 0, "Engine:");
+      { Fl_Output* o = new Fl_Output(0, 160, 85, 0, "Engine:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -304,7 +304,7 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { Fl_Output* o = new Fl_Output(10, 210, 60, 0, "Gearbox:");
+      { Fl_Output* o = new Fl_Output(0, 185, 95, 0, "Gearbox:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -315,13 +315,13 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { Fl_Output* o = new Fl_Output(0, 230, 55, 0, "Class:");
+      { Fl_Output* o = new Fl_Output(0, 210, 50, 0, "Class:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(19);
+        o->labelsize(17);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -387,7 +387,7 @@ Fl_Double_Window* make_window() {
       } // Fl_Output* o
       { lbl_fuel_price_calculate = new Fl_Output(290, 108, 190, 22);
       } // Fl_Output* lbl_fuel_price_calculate
-      { Fl_Output* o = new Fl_Output(145, 230, 90, 0, "Fuel type:");
+      { Fl_Output* o = new Fl_Output(145, 210, 85, 0, "Fuel type:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -409,13 +409,13 @@ Fl_Double_Window* make_window() {
         lbl_fueltype_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_fueltype_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_fueltype_calculate
-      { Fl_Output* o = new Fl_Output(0, 285, 90, 0, "Urban:");
+      { Fl_Output* o = new Fl_Output(0, 265, 75, 0, "Urban:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(19);
+        o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -431,13 +431,13 @@ Fl_Double_Window* make_window() {
         lbl_urban_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_urban_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_urban_calculate
-      { Fl_Output* o = new Fl_Output(165, 285, 90, 0, "Exurban:");
+      { Fl_Output* o = new Fl_Output(155, 265, 90, 0, "Exurban:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(19);
+        o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -453,13 +453,13 @@ Fl_Double_Window* make_window() {
         lbl_exurban_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_exurban_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_exurban_calculate
-      { Fl_Output* o = new Fl_Output(330, 285, 90, 0, "Mixed:");
+      { Fl_Output* o = new Fl_Output(315, 265, 85, 0, "Mixed:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(19);
+        o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -475,13 +475,13 @@ Fl_Double_Window* make_window() {
         lbl_mixed_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_mixed_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_mixed_calculate
-      { Fl_Output* o = new Fl_Output(165, 310, 90, 0, "Price:");
+      { Fl_Output* o = new Fl_Output(135, 290, 95, 0, "Price:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(19);
+        o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -497,7 +497,7 @@ Fl_Double_Window* make_window() {
         lbl_average_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_average_price_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_average_price_calculate
-      { Fl_Output* o = new Fl_Output(330, 310, 90, 0, "Units:");
+      { Fl_Output* o = new Fl_Output(315, 290, 85, 0, "Units:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -519,7 +519,7 @@ Fl_Double_Window* make_window() {
         lbl_units_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_units_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_units_calculate
-      { Fl_Output* o = new Fl_Output(270, 265, 110, 0, "Trip distance:");
+      { Fl_Output* o = new Fl_Output(260, 245, 110, 0, "Trip distance:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -541,7 +541,7 @@ Fl_Double_Window* make_window() {
         lbl_distance_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_distance_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_distance_calculate
-      { Fl_Output* o = new Fl_Output(5, 310, 90, 0, "Co2 emission:");
+      { Fl_Output* o = new Fl_Output(0, 290, 90, 0, "Co2 emission:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -563,7 +563,7 @@ Fl_Double_Window* make_window() {
         lbl_co2emission_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_co2emission_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_co2emission_calculate
-      { Fl_Output* o = new Fl_Output(200, 265, 45, 0, "Trip Info");
+      { Fl_Output* o = new Fl_Output(150, 230, 200, 0, "Trip Info");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -585,7 +585,7 @@ Fl_Double_Window* make_window() {
         lbl_urban_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_urban_price_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_urban_price_calculate
-      { Fl_Output* o = new Fl_Output(170, 335, 90, 0, "Exurban price:");
+      { Fl_Output* o = new Fl_Output(150, 315, 100, 0, "Exurban price:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -607,7 +607,7 @@ Fl_Double_Window* make_window() {
         lbl_exurban_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_exurban_price_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_exurban_price_calculate
-      { Fl_Output* o = new Fl_Output(330, 335, 90, 0, "Mixed price:");
+      { Fl_Output* o = new Fl_Output(320, 315, 85, 0, "Mixed price:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -629,7 +629,7 @@ Fl_Double_Window* make_window() {
         lbl_mixed_price_calculate->align(Fl_Align(FL_ALIGN_TOP));
         lbl_mixed_price_calculate->when(FL_WHEN_RELEASE);
       } // Fl_Output* lbl_mixed_price_calculate
-      { Fl_Output* o = new Fl_Output(20, 330, 60, 0, "Urban price:");
+      { Fl_Output* o = new Fl_Output(0, 315, 80, 0, "Urban price:");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
@@ -1295,7 +1295,9 @@ void resolve_text(GroupSnapshot &snapshot, double scale)
         bool moved = false;
         if (is_label_widget(item))
         {
-          for (int distance = 1; distance <= 160 && !moved; ++distance)
+          // Search in laid-out pixels so a scaled value box can be escaped.
+          const int move_limit = std::max(160, scaled_font_size(160, scale));
+          for (int distance = 1; distance <= move_limit && !moved; ++distance)
           {
             const int deltas[2] = {-distance, distance};
             for (int delta : deltas)
@@ -1303,9 +1305,15 @@ void resolve_text(GroupSnapshot &snapshot, double scale)
               const int original_y = item.ny;
               item.ny += delta;
               const std::vector<TextRun> trial = label_runs(item);
-              bool inside = !scaled_window;
-              for (const TextRun &run : trial)
-                if (run.y < 0 || run.y + run.h > scaled_window->h()) inside = false;
+              bool inside = true;
+              if (scaled_window)
+              {
+                const int group_y = snapshot.container ? snapshot.container->y() : 0;
+                const int absolute_y = group_y + item.ny;
+                if (absolute_y < 0 || absolute_y + item.nh > scaled_window->h()) inside = false;
+                for (const TextRun &run : trial)
+                  if (run.y < 0 || run.y + run.h > scaled_window->h()) inside = false;
+              }
               if (inside && !runs_collide(trial, item, snapshot.children))
               {
                 runs = trial;

@@ -160,7 +160,7 @@ Function {make_window()} {open
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
-        xywh {200 50 115 0} labelsize 21
+        xywh {145 25 200 0} labelsize 21 align 1
         class Fl_Output
       }
       Fl_Button btn_select_car {
@@ -208,27 +208,27 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Car Info}
-        xywh {220 140 50 0} labelsize 21
+        xywh {130 112 240 0} labelsize 21 align 1
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Model name:}
-        xywh {35 160 50 0} labelsize 19
+        xywh {0 135 115 0} labelsize 19 align 1
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Engine:}
-        xywh {5 185 60 0} labelsize 19
+        xywh {0 160 85 0} labelsize 19 align 1
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Gearbox:}
-        xywh {10 210 60 0} labelsize 19
+        xywh {0 185 95 0} labelsize 19 align 1
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Class:}
-        xywh {0 230 55 0} labelsize 19
+        xywh {0 210 50 0} labelsize 17 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_modelname_calculate {
@@ -261,7 +261,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Fuel type:}
-        xywh {145 230 90 0} labelsize 19
+        xywh {145 210 85 0} labelsize 19 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_fueltype_calculate {
@@ -270,7 +270,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Urban:}
-        xywh {0 285 90 0} labelsize 19
+        xywh {0 265 75 0} labelsize 14 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_urban_calculate {
@@ -279,7 +279,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Exurban:}
-        xywh {165 285 90 0} labelsize 19
+        xywh {155 265 90 0} labelsize 14 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_exurban_calculate {
@@ -288,7 +288,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Mixed:}
-        xywh {330 285 90 0} labelsize 19
+        xywh {315 265 85 0} labelsize 14 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_mixed_calculate {
@@ -297,7 +297,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Price:}
-        xywh {165 310 90 0} labelsize 19
+        xywh {135 290 95 0} labelsize 14 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_average_price_calculate {
@@ -306,7 +306,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Units:}
-        xywh {330 310 90 0} labelsize 19
+        xywh {315 290 85 0} labelsize 19 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_units_calculate {
@@ -315,7 +315,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Trip distance:}
-        xywh {270 265 110 0}
+        xywh {260 245 110 0} labelsize 14 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_distance_calculate {
@@ -324,7 +324,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Co2 emission:}
-        xywh {5 310 90 0}
+        xywh {0 290 90 0} labelsize 14 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_co2emission_calculate {
@@ -333,7 +333,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Trip Info}
-        xywh {200 265 45 0} labelsize 21
+        xywh {150 230 200 0} labelsize 21 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_urban_price_calculate {
@@ -342,7 +342,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Exurban price:}
-        xywh {170 335 90 0} labelsize 12
+        xywh {150 315 100 0} labelsize 12 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_exurban_price_calculate {
@@ -351,7 +351,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Mixed price:}
-        xywh {330 335 90 0} labelsize 13
+        xywh {320 315 85 0} labelsize 13 align 1
         class Fl_Output
       }
       Fl_Text_Display lbl_mixed_price_calculate {
@@ -360,7 +360,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Urban price:}
-        xywh {20 330 60 0} labelsize 13
+        xywh {0 315 80 0} labelsize 13 align 1
         class Fl_Output
       }
     }
@@ -1001,7 +1001,9 @@ void resolve_text(GroupSnapshot &snapshot, double scale)
         bool moved = false;
         if (is_label_widget(item))
         {
-          for (int distance = 1; distance <= 160 && !moved; ++distance)
+          // Search in laid-out pixels so a scaled value box can be escaped.
+          const int move_limit = std::max(160, scaled_font_size(160, scale));
+          for (int distance = 1; distance <= move_limit && !moved; ++distance)
           {
             const int deltas[2] = {-distance, distance};
             for (int delta : deltas)
@@ -1009,9 +1011,15 @@ void resolve_text(GroupSnapshot &snapshot, double scale)
               const int original_y = item.ny;
               item.ny += delta;
               const std::vector<TextRun> trial = label_runs(item);
-              bool inside = !scaled_window;
-              for (const TextRun &run : trial)
-                if (run.y < 0 || run.y + run.h > scaled_window->h()) inside = false;
+              bool inside = true;
+              if (scaled_window)
+              {
+                const int group_y = snapshot.container ? snapshot.container->y() : 0;
+                const int absolute_y = group_y + item.ny;
+                if (absolute_y < 0 || absolute_y + item.nh > scaled_window->h()) inside = false;
+                for (const TextRun &run : trial)
+                  if (run.y < 0 || run.y + run.h > scaled_window->h()) inside = false;
+              }
               if (inside && !runs_collide(trial, item, snapshot.children))
               {
                 runs = trial;
