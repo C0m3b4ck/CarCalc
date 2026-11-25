@@ -16,7 +16,7 @@ CO₂ emissions and trip costs.
 - Trip-distance based fuel calculations
 - Localized databases (`cars.db`, `cars_en.db`, `cars_pl.db`)
 - Lightweight native GUI (FLTK) with an embedded SQLite database — no server or runtime install needed
-- Resize-aware scaling: dragging the window scales widget boxes and fonts, keeps gaps pixel-sized, and gives label-only widgets their own wrapped rows; `CARCALC_UI_SCALE=1.5 ./prog` overrides the factor
+- Resize-aware scaling: dragging scales boxes/fonts continuously from the minimum window up to the screen size; gaps stay pixel-sized from 1x upward and shrink below 1x; field labels follow their value displays; `CARCALC_UI_SCALE=1.5 ./prog` overrides the factor
 
 ## Download
 

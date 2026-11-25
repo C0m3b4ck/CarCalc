@@ -18,14 +18,14 @@ so running `fluid -c car_calc_ui_v2.fl` always preserves it.
 FLTK's default proportional child stretching is disabled. Instead, the UI is
 relaid out from a snapshot of the original FLUID geometry when the window is
 dragged: widget boxes and fonts scale with the window, positive gaps keep their
-pixel size, and intentional overlaps scale. Thin label-only widgets (text
-displays and zero-height outputs) are measured and placed in their own wrapped
-bands above the rows they annotate, so they never cover controls or other
-labels. The window is enlarged once at startup to fit those bands at factor 1.
+pixel size from 1x upward and shrink below 1x so small windows still fit, and
+intentional overlaps scale. Label-only widgets are positioned relative to
+their value displays, so fields such as "Mixed price:" stay aligned and the
+original flat layout is preserved.
 
 - Default (`CARCALC_UI_SCALE` unset or `auto`): factor follows the window size
-  relative to the label-aware initial layout, clamped to `0.5`–`3.0`. It is
-  reduced only when the scaled layout would overflow the window.
+  continuously from the smallest fitting window up to the screen size, clamped
+  to `0.5`–`3.0`. It is reduced only when the scaled layout would overflow.
 - Override: `CARCALC_UI_SCALE=1.5 ./CarCalc_v2` uses a fixed factor instead.
 
 The original app built by `../compile_app.sh` uses the same resize-aware policy.

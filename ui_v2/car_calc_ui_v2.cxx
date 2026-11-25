@@ -767,8 +767,9 @@ Fl_Double_Window* make_window() {
 //
 // FLTK's proportional child stretching is disabled. The UI is laid out from a
 // snapshot of the original FLUID geometry: widget boxes and fonts scale with
-// the window, positive gaps keep their pixel size, and label-only widgets get
-// their own wrapped rows so they never cover controls or each other.
+// the window, positive gaps keep their pixel size from 1x upward and shrink
+// below 1x, and label-only widgets follow their value displays so the flat GUI
+// layout stays aligned.
 // CARCALC_UI_SCALE overrides the derived factor.
 // ---------------------------------------------------------------------------
 namespace ui_v2_scaling {
@@ -1046,132 +1047,13 @@ void layout_group(GroupSnapshot &snapshot, double scale)
   const std::vector<Row> rows = build_rows(snapshot);
   if (rows.empty()) return;
 
-  std::vector<int> item_row(snapshot.children.size(), -1);
-  for (std::size_t r = 0; r < rows.size(); ++r)
-    for (Geometry *item : rows[r].items)
-      item_row[item->index] = r;
-
-  std::vector<int> base_top(rows.size(), 0);
-  std::vector<int> base_bottom(rows.size(), 0);
+  std::vector<int> row_top(rows.size(), 0);
   int next_row_top = scale_offset(rows.front().top, scale);
   for (std::size_t r = 0; r < rows.size(); ++r)
   {
     const Row &row = rows[r];
-    base_top[r] = next_row_top;
+    row_top[r] = next_row_top;
     int bottom = next_row_top;
-    for (Geometry *item : row.items)
-      bottom = std::max(bottom, next_row_top + scale_offset(item->y - row.top, scale) +
-                                scale_dim(item->h, scale));
-    base_bottom[r] = bottom;
-
-    if (r + 1 < rows.size())
-    {
-      int gap = rows[r + 1].top - row.bottom;
-      if (gap < 0) gap = scale_offset(gap, scale);
-      next_row_top = bottom + gap;
-    }
-  }
-
-  std::vector<LabelAnchor> labels;
-  std::vector<int> row_band(rows.size(), 0);
-  std::vector<bool> row_has_label(rows.size(), false);
-
-  for (Geometry &item : snapshot.children)
-  {
-    if (!is_label_widget(item)) continue;
-
-    Geometry *anchor = nullptr;
-    int best = 0;
-    for (Geometry &candidate : snapshot.children)
-    {
-      if (is_label_widget(candidate)) continue;
-      const int distance = distance_to_rect(item, candidate);
-      if (!anchor || distance < best)
-      {
-        anchor = &candidate;
-        best = distance;
-      }
-    }
-    if (!anchor) continue;
-
-    const int row = item_row[anchor->index];
-    if (row < 0) continue;
-
-    const int font = std::max(8, scale_dim(unscaled_font(item), scale));
-    const int required = font + 4;
-    const int width = std::max(scale_dim(item.w, scale), measured_label_width(item.widget, font));
-    const int gap_before = row == 0 ? base_top[0] : base_top[row] - base_bottom[row - 1];
-    row_has_label[row] = true;
-    row_band[row] = std::max(row_band[row], std::max(0, required - gap_before));
-    labels.push_back({&item, anchor, row, font, required, width, 0});
-  }
-
-  std::vector<BandCluster> clusters;
-  std::vector<int> row_cluster(rows.size(), -1);
-  for (std::size_t r = 0; r < rows.size();)
-  {
-    if (!row_has_label[r])
-    {
-      ++r;
-      continue;
-    }
-    BandCluster cluster = {static_cast<int>(r), static_cast<int>(r), 0, 0, 0};
-    while (r < rows.size() && row_has_label[r])
-    {
-      cluster.end = static_cast<int>(r);
-      cluster.band = std::max(cluster.band, row_band[r]);
-      row_cluster[r] = static_cast<int>(clusters.size());
-      ++r;
-    }
-
-    std::vector<std::size_t> cluster_labels;
-    for (std::size_t i = 0; i < labels.size(); ++i)
-    {
-      if (labels[i].row < cluster.start || labels[i].row > cluster.end) continue;
-      cluster.line_height = std::max(cluster.line_height, labels[i].required);
-      cluster_labels.push_back(i);
-    }
-    cluster.line_height = std::max(1, cluster.line_height);
-
-    // Pack labels into lines using the same greedy rule as placement, so the
-    // band is tall enough for every line that will actually be drawn.
-    std::sort(cluster_labels.begin(), cluster_labels.end(),
-              [&labels](std::size_t a, std::size_t b) {
-                return labels[a].anchor->x < labels[b].anchor->x;
-              });
-    const int available = layout_width(snapshot);
-    int line = 0;
-    int cursor = 0;
-    for (std::size_t index : cluster_labels)
-    {
-      if (cursor > 0 && cursor + labels[index].width > available)
-      {
-        ++line;
-        cursor = 0;
-      }
-      labels[index].line = line;
-      cursor += labels[index].width + 6;
-    }
-    cluster.band = std::max(cluster.band, (line + 1) * cluster.line_height);
-    clusters.push_back(cluster);
-  }
-
-  std::vector<int> row_top(rows.size(), 0);
-  int carried = 0;
-  for (std::size_t r = 0; r < rows.size(); ++r)
-  {
-    const Row &row = rows[r];
-    const int cluster = row_cluster[r];
-    if (cluster >= 0 && r == static_cast<std::size_t>(clusters[cluster].start))
-    {
-      // Labels end at the first shifted row's top, inside the band inserted
-      // above the cluster.
-      clusters[cluster].top = base_top[r] + carried + clusters[cluster].band;
-      carried += clusters[cluster].band;
-    }
-    const int top = base_top[r] + carried;
-    row_top[r] = top;
-
     int cursor_x = scale_offset(row.items.front()->x, scale);
     for (std::size_t i = 0; i < row.items.size(); ++i)
     {
@@ -1179,43 +1061,76 @@ void layout_group(GroupSnapshot &snapshot, double scale)
       item.nw = scale_dim(item.w, scale);
       item.nh = scale_dim(item.h, scale);
       item.nx = cursor_x;
-      item.ny = top + scale_offset(item.y - row.top, scale);
+      item.ny = row_top[r] + scale_offset(item.y - row.top, scale);
+      bottom = std::max(bottom, item.ny + item.nh);
 
       int gap = 0;
       if (i + 1 < row.items.size())
       {
         gap = row.items[i + 1]->x - (item.x + item.w);
-        if (gap < 0) gap = scale_offset(gap, scale);
+        // Positive gaps are spacing and stay fixed at 1x and above. Below 1x
+        // they shrink with the widgets so small windows still fit. Negative
+        // gaps are intentional overlaps and always scale.
+        if (gap < 0 || scale < 1.0) gap = scale_offset(gap, scale);
       }
       cursor_x = item.nx + item.nw + gap;
     }
+
+    if (r + 1 < rows.size())
+    {
+      int gap = rows[r + 1].top - row.bottom;
+      if (gap < 0 || scale < 1.0) gap = scale_offset(gap, scale);
+      next_row_top = bottom + gap;
+    }
   }
 
-  // Place labels in their cluster's band using the line assignment computed
-  // above, so no label spills outside the band or covers a neighbouring row.
-  std::vector<std::size_t> order(labels.size());
-  for (std::size_t i = 0; i < labels.size(); ++i) order[i] = i;
-  std::sort(order.begin(), order.end(), [&labels](std::size_t a, std::size_t b) {
-    return labels[a].anchor->x < labels[b].anchor->x;
-  });
-
-  std::vector<int> cluster_cursor(clusters.size(), 0);
-  const int available = layout_width(snapshot);
-  for (std::size_t index : order)
+  // Label-only widgets are annotations for a nearby value widget. Follow
+  // that value's laid-out position, otherwise fixed gaps move the value but
+  // not its label and fields such as "Mixed price:" drift out of alignment.
+  for (Geometry &label : snapshot.children)
   {
-    LabelAnchor &entry = labels[index];
-    const int cluster = row_cluster[entry.row];
-    if (cluster < 0) continue;
+    if (!is_label_widget(label)) continue;
+    label.nw = scale_dim(label.w, scale);
+    label.nh = scale_dim(label.h, scale);
 
-    Geometry &item = *entry.label;
-    item.nw = entry.width;
-    item.nh = entry.required;
-    if (cluster_cursor[cluster] > 0 && cluster_cursor[cluster] + item.nw > available)
-      cluster_cursor[cluster] = 0;
-    item.nx = cluster_cursor[cluster];
-    item.ny = std::max(0, clusters[cluster].top -
-                          (entry.line + 1) * clusters[cluster].line_height);
-    cluster_cursor[cluster] += item.nw + 6;
+    Geometry *anchor = nullptr;
+    int best_score = 1000000000;
+    const char *text = label.widget->label();
+    if (text && std::strchr(text, ':'))
+    {
+      for (Geometry &candidate : snapshot.children)
+      {
+        if (is_label_widget(candidate) || candidate.h <= 0) continue;
+        // Only result displays are valid anchors; buttons and inputs can
+        // share a row with a label but must not move it.
+        if (!dynamic_cast<Fl_Output *>(candidate.widget) &&
+            !dynamic_cast<Fl_Text_Display *>(candidate.widget)) continue;
+        if (candidate.widget->label() && *candidate.widget->label()) continue;
+        const int dx = candidate.x - label.x;
+        const int dy = candidate.y - label.y;
+        if (dy < -32 || dy > 8) continue;
+        if (dx < -label.w / 2) continue;
+        // Value boxes normally start just past the label's right edge and sit
+        // 20 pixels above its baseline.
+        const int score = std::abs(dx - label.w) + std::abs(dy + 20) * 3;
+        if (score < best_score)
+        {
+          best_score = score;
+          anchor = &candidate;
+        }
+      }
+    }
+
+    if (anchor)
+    {
+      label.nx = anchor->nx + scale_offset(label.x - anchor->x, scale);
+      label.ny = anchor->ny + scale_offset(label.y - anchor->y, scale);
+    }
+    else
+    {
+      label.nx = scale_offset(label.x, scale);
+      label.ny = scale_offset(label.y, scale);
+    }
   }
 }
 
@@ -1248,7 +1163,7 @@ LayoutSize layout_size(Fl_Window *window, double scale)
   LayoutSize size = {0, 0};
   for (const Geometry &item : window_snapshots)
   {
-    size.width = std::max(size.width, item.nx + item.nw);
+    size.width = std::max(size.width, scale_offset(item.x, scale) + scale_dim(item.w, scale));
     size.height = std::max(size.height, scale_offset(item.y, scale) + scale_dim(item.h, scale));
   }
   for (GroupSnapshot &snapshot : group_snapshots)
@@ -1334,6 +1249,8 @@ void scale_window(Fl_Window *window)
 
   capture_layout(window);
 
+  // Keep the original FLUID window size unless the scaled flat layout needs
+  // more room.
   const LayoutSize needed = layout_size(window, 1.0);
   const int initial_width = std::min(std::max(window->w(), needed.width), Fl::w());
   const int initial_height = std::min(std::max(window->h(), needed.height), Fl::h());
@@ -1342,11 +1259,31 @@ void scale_window(Fl_Window *window)
   base_width = window->w();
   base_height = window->h();
 
+  // Find the smallest factor whose layout still fits at the matching window
+  // size, then let the WM resize freely from there up to the whole screen.
+  double smallest_factor = 1.0;
+  for (int step = 20; step >= 10; --step)
+  {
+    const double candidate = step / 20.0;
+    const LayoutSize candidate_size = layout_size(window, candidate);
+    if (candidate_size.width <= scale_dim(base_width, candidate) &&
+        candidate_size.height <= scale_dim(base_height, candidate))
+      smallest_factor = candidate;
+    else
+      break;
+  }
+  const int min_width = scale_dim(base_width, smallest_factor);
+  const int min_height = scale_dim(base_height, smallest_factor);
+  if (Fl::w() > 0 && Fl::h() > 0)
+    window->size_range(min_width, min_height, Fl::w(), Fl::h());
+  else
+    window->size_range(min_width, min_height);
+
   for (int i = 0; i < window->children(); ++i)
     freeze_resize(dynamic_cast<Fl_Group *>(window->child(i)));
 
   // The initial factor is 1, so refresh_scale() would otherwise consider it
-  // unchanged and skip the first label-band layout.
+  // unchanged and skip the first flat-layout pass.
   apply_layout(window, 1.0);
   refresh_scale();
 
