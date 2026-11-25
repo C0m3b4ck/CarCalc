@@ -759,6 +759,7 @@ Fl_Double_Window* make_window() {
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <map>
 #include <vector>
 
 // ---------------------------------------------------------------------------
@@ -786,6 +787,10 @@ struct Geometry
   int nw;
   int nh;
   int index;
+  int label_base;
+  int label_original;
+  int text_base;
+  int text_original;
 };
 
 struct GroupSnapshot
@@ -836,10 +841,42 @@ double applied_factor = 1.0;
 bool poll_started = false;
 std::vector<Geometry> window_snapshots;
 std::vector<GroupSnapshot> group_snapshots;
+std::map<Fl_Menu_Item *, int> menu_font_base;
+std::map<Fl_Menu_Item *, int> menu_font_original;
+
+int scaled_font_size(int size, double scale)
+{
+  if (size <= 0) return size;
+  return std::max(1, static_cast<int>(std::lround(size * scale)));
+}
+
+void set_widget_text_size(Fl_Widget *widget, int size);
+void apply_menu_fonts(const Fl_Menu_Item *items, double scale);
+
+void apply_fonts_to_target(double scale)
+{
+  for (Geometry &item : window_snapshots)
+  {
+    item.widget->labelsize(scaled_font_size(item.label_base, scale));
+    set_widget_text_size(item.widget, scaled_font_size(item.text_base, scale));
+    if (Fl_Menu_ *menu = dynamic_cast<Fl_Menu_ *>(item.widget))
+      apply_menu_fonts(menu->menu(), scale);
+  }
+  for (GroupSnapshot &snapshot : group_snapshots)
+  {
+    for (Geometry &item : snapshot.children)
+    {
+      item.widget->labelsize(scaled_font_size(item.label_base, scale));
+      set_widget_text_size(item.widget, scaled_font_size(item.text_base, scale));
+    }
+  }
+}
 
 double clamp_scale(double value)
 {
-  return std::min(3.0, std::max(0.5, value));
+  // No upper cap: a maximized window on a large display must scale all the
+  // way to that screen instead of leaving the UI in the top-left corner.
+  return std::max(0.5, value);
 }
 
 bool env_scale(double *result)
@@ -868,66 +905,88 @@ int scale_offset(int value, double scale)
   return static_cast<int>(std::lround(value * scale));
 }
 
-int scaled_step(int value, double ratio)
+
+int widget_text_size(Fl_Widget *widget)
 {
-  if (value <= 0) return value;
-  return std::max(1, static_cast<int>(std::lround(value * ratio)));
+  if (Fl_Input_ *input = dynamic_cast<Fl_Input_ *>(widget)) return input->textsize();
+  if (Fl_Browser *browser = dynamic_cast<Fl_Browser *>(widget)) return browser->textsize();
+  if (Fl_Text_Display *display = dynamic_cast<Fl_Text_Display *>(widget)) return display->textsize();
+  if (Fl_Menu_ *menu = dynamic_cast<Fl_Menu_ *>(widget)) return menu->textsize();
+  return 0;
 }
 
-void scale_menu_items(const Fl_Menu_Item *items, double ratio)
+void set_widget_text_size(Fl_Widget *widget, int size)
+{
+  if (size <= 0) return;
+  if (Fl_Input_ *input = dynamic_cast<Fl_Input_ *>(widget)) input->textsize(size);
+  else if (Fl_Browser *browser = dynamic_cast<Fl_Browser *>(widget)) browser->textsize(size);
+  else if (Fl_Text_Display *display = dynamic_cast<Fl_Text_Display *>(widget)) display->textsize(size);
+  else if (Fl_Menu_ *menu = dynamic_cast<Fl_Menu_ *>(widget)) menu->textsize(size);
+}
+
+void capture_menu_fonts(const Fl_Menu_Item *items)
 {
   for (const Fl_Menu_Item *item = items; item && item->label(); item = item->next())
   {
     Fl_Menu_Item *editable = const_cast<Fl_Menu_Item *>(item);
     const int size = editable->labelsize();
-    if (size > 0) editable->labelsize(scaled_step(size, ratio));
-    if (item->flags & FL_SUBMENU)
-      scale_menu_items(item + 1, ratio);
+    if (size > 0 && !menu_font_base.count(editable))
+    {
+      menu_font_base[editable] = size;
+      menu_font_original[editable] = size;
+    }
+    if (item->flags & FL_SUBMENU) capture_menu_fonts(item + 1);
     else if (item->flags & FL_SUBMENU_POINTER)
-      scale_menu_items(static_cast<const Fl_Menu_Item *>(item->user_data()), ratio);
+      capture_menu_fonts(static_cast<const Fl_Menu_Item *>(item->user_data()));
   }
 }
 
-void scale_fonts(Fl_Widget *widget, double ratio)
+void apply_menu_fonts(const Fl_Menu_Item *items, double scale)
+{
+  for (const Fl_Menu_Item *item = items; item && item->label(); item = item->next())
+  {
+    Fl_Menu_Item *editable = const_cast<Fl_Menu_Item *>(item);
+    const auto base = menu_font_base.find(editable);
+    if (base != menu_font_base.end() && base->second > 0)
+      editable->labelsize(scaled_font_size(base->second, scale));
+    if (item->flags & FL_SUBMENU) apply_menu_fonts(item + 1, scale);
+    else if (item->flags & FL_SUBMENU_POINTER)
+      apply_menu_fonts(static_cast<const Fl_Menu_Item *>(item->user_data()), scale);
+  }
+}
+
+Geometry *geometry_of(Fl_Widget *widget)
+{
+  for (Geometry &item : window_snapshots)
+    if (item.widget == widget) return &item;
+  for (GroupSnapshot &snapshot : group_snapshots)
+    for (Geometry &item : snapshot.children)
+      if (item.widget == widget) return &item;
+  return nullptr;
+}
+
+void set_widget_font_base(Fl_Widget *widget, int size)
 {
   if (!widget) return;
+  Geometry *item = geometry_of(widget);
+  if (item) item->label_base = size;
+  widget->labelsize(ui_v2_scaled_size(size));
+}
 
-  const int label_size = widget->labelsize();
-  if (label_size > 0) widget->labelsize(scaled_step(label_size, ratio));
-
-  if (Fl_Input_ *input = dynamic_cast<Fl_Input_ *>(widget))
-  {
-    const int text_size = input->textsize();
-    if (text_size > 0) input->textsize(scaled_step(text_size, ratio));
-  }
-  if (Fl_Browser *browser = dynamic_cast<Fl_Browser *>(widget))
-  {
-    const int text_size = browser->textsize();
-    if (text_size > 0) browser->textsize(scaled_step(text_size, ratio));
-  }
-  if (Fl_Text_Display *display = dynamic_cast<Fl_Text_Display *>(widget))
-  {
-    const int text_size = display->textsize();
-    if (text_size > 0) display->textsize(scaled_step(text_size, ratio));
-  }
-  if (Fl_Menu_ *menu = dynamic_cast<Fl_Menu_ *>(widget))
-  {
-    const int text_size = menu->textsize();
-    if (text_size > 0) menu->textsize(scaled_step(text_size, ratio));
-    scale_menu_items(menu->menu(), ratio);
-  }
-
-  if (Fl_Group *group = dynamic_cast<Fl_Group *>(widget))
-  {
-    for (int i = 0; i < group->children(); ++i)
-      scale_fonts(group->child(i), ratio);
-  }
+void set_menu_font_base(Fl_Menu_Item *item, int size)
+{
+  if (!item) return;
+  menu_font_base[item] = size;
+  item->labelsize(ui_v2_scaled_size(size));
 }
 
 Geometry snapshot_of(Fl_Widget *widget)
 {
+  const int label = widget->labelsize();
+  const int text = widget_text_size(widget);
   return {widget, widget->x(), widget->y(), widget->w(), widget->h(),
-          widget->x(), widget->y(), widget->w(), widget->h(), -1};
+          widget->x(), widget->y(), widget->w(), widget->h(), -1,
+          label, label, text, text};
 }
 
 void freeze_resize(Fl_Group *group)
@@ -949,6 +1008,8 @@ void capture_layout(Fl_Window *window)
     Geometry window_item = snapshot_of(child);
     window_item.index = i;
     window_snapshots.push_back(window_item);
+    if (Fl_Menu_ *menu = dynamic_cast<Fl_Menu_ *>(child))
+      capture_menu_fonts(menu->menu());
 
     if (Fl_Group *group = dynamic_cast<Fl_Group *>(child))
     {
@@ -1134,28 +1195,191 @@ void layout_group(GroupSnapshot &snapshot, double scale)
   }
 }
 
+struct TextRun
+{
+  int x;
+  int y;
+  int w;
+  int h;
+};
+
+static std::vector<TextRun> *text_runs = nullptr;
+
+// FLTK positions and wraps label text inside a widget box. Use its own draw
+// callback to measure the resulting runs instead of guessing from fl_width().
+void measure_run(const char *text, int length, int x, int y)
+{
+  if (!text_runs) return;
+  int dx = 0;
+  int dy = 0;
+  int w = 0;
+  int h = 0;
+  fl_text_extents(text, length, dx, dy, w, h);
+  if (w > 0 && h > 0) text_runs->push_back({x + dx, y + dy, w, h});
+}
+
+std::vector<TextRun> label_runs(const Geometry &item)
+{
+  std::vector<TextRun> runs;
+  const char *text = item.widget->label();
+  if (!text || !*text) return runs;
+
+  const Fl_Boxtype box = item.widget->box();
+  int x = item.nx + Fl::box_dx(box);
+  int y = item.ny + Fl::box_dy(box);
+  int w = item.nw - Fl::box_dw(box);
+  int h = item.nh - Fl::box_dh(box);
+
+  const Fl_Align align = item.widget->align();
+  if (w > 11 && (align & (FL_ALIGN_LEFT | FL_ALIGN_RIGHT)))
+  {
+    x += 3;
+    w -= 6;
+  }
+
+  fl_font(item.widget->labelfont(), item.widget->labelsize());
+  text_runs = &runs;
+  fl_draw(text, x, y, w, h, align, measure_run, nullptr, 0);
+  text_runs = nullptr;
+  return runs;
+}
+
+bool runs_overlap(const TextRun &a, const TextRun &b)
+{
+  const int dx = std::min(a.x + a.w, b.x + b.w) - std::max(a.x, b.x);
+  const int dy = std::min(a.y + a.h, b.y + b.h) - std::max(a.y, b.y);
+  return dx > 1 && dy > 1;
+}
+
+bool runs_collide(const std::vector<TextRun> &runs, const Geometry &item,
+                  const std::vector<Geometry> &children)
+{
+  for (const Geometry &other : children)
+  {
+    if (other.widget == item.widget || is_label_widget(other)) continue;
+    const TextRun box = {other.nx, other.ny, other.nw, other.nh};
+    for (const TextRun &run : runs)
+      if (runs_overlap(run, box)) return true;
+  }
+  for (const Geometry &other : children)
+  {
+    if (other.widget == item.widget || !other.widget->label() || !*other.widget->label())
+      continue;
+    const std::vector<TextRun> other_runs = label_runs(other);
+    for (const TextRun &run : runs)
+      for (const TextRun &other_run : other_runs)
+        if (runs_overlap(run, other_run)) return true;
+  }
+  return false;
+}
+
+// Labels can still collide after scaling because translations are longer than
+// English and because the original layout uses zero-height label widgets.
+// Move label-only annotations first, then shrink only the colliding text until
+// the measured runs no longer cover anything else.
+void resolve_text(GroupSnapshot &snapshot, double scale)
+{
+  // Several passes let one widget's shrink make room for a neighbouring
+  // label that was processed earlier in the same pass.
+  for (int pass = 0; pass < 4; ++pass)
+  {
+    bool changed = false;
+    for (Geometry &item : snapshot.children)
+    {
+      if (!item.widget->label() || !*item.widget->label()) continue;
+
+      std::vector<TextRun> runs = label_runs(item);
+      int guard = 0;
+      while (runs_collide(runs, item, snapshot.children) && guard++ < 160)
+      {
+        bool moved = false;
+        if (is_label_widget(item))
+        {
+          for (int distance = 1; distance <= 160 && !moved; ++distance)
+          {
+            const int deltas[2] = {-distance, distance};
+            for (int delta : deltas)
+            {
+              const int original_y = item.ny;
+              item.ny += delta;
+              const std::vector<TextRun> trial = label_runs(item);
+              bool inside = !scaled_window;
+              for (const TextRun &run : trial)
+                if (run.y < 0 || run.y + run.h > scaled_window->h()) inside = false;
+              if (inside && !runs_collide(trial, item, snapshot.children))
+              {
+                runs = trial;
+                moved = true;
+                break;
+              }
+              item.ny = original_y;
+            }
+          }
+        }
+        if (moved) continue;
+
+        const int size = item.widget->labelsize();
+        const int minimum = scaled_font_size(4, scale);
+        if (size > minimum)
+        {
+          item.widget->labelsize(size - 1);
+          runs = label_runs(item);
+          changed = true;
+          continue;
+        }
+        break;
+      }
+    }
+    if (!changed) break;
+  }
+}
+
 void apply_layout(Fl_Window *window, double scale)
 {
+  // Font sizes are derived from captured (or translated) base sizes on every
+  // pass, so collision-driven shrink adjustments never accumulate across
+  // resizes or language changes.
+  apply_fonts_to_target(scale);
+
   for (Geometry &item : window_snapshots)
   {
-    if (dynamic_cast<Fl_Group *>(item.widget))
-    {
-      const int y = scale_offset(item.y, scale);
-      item.widget->resize(0, y, window->w(), std::max(1, window->h() - y));
-    }
-    else
-    {
-      item.widget->resize(0, scale_offset(item.y, scale), window->w(),
-                          scale_dim(item.h, scale));
-    }
+    const int y = scale_offset(item.y, scale);
+    const int h = dynamic_cast<Fl_Group *>(item.widget)
+                  ? std::max(1, window->h() - y) : scale_dim(item.h, scale);
+    item.widget->resize(0, y, window->w(), h);
+    item.nx = 0;
+    item.ny = y;
+    item.nw = window->w();
+    item.nh = h;
   }
 
   for (GroupSnapshot &snapshot : group_snapshots)
   {
     layout_group(snapshot, scale);
+    resolve_text(snapshot, scale);
     for (Geometry &item : snapshot.children)
       item.widget->resize(item.nx, item.ny, item.nw, item.nh);
   }
+}
+
+bool layout_drifted()
+{
+  for (const Geometry &item : window_snapshots)
+  {
+    if (item.widget->x() != item.nx || item.widget->y() != item.ny ||
+        item.widget->w() != item.nw || item.widget->h() != item.nh)
+      return true;
+  }
+  for (const GroupSnapshot &snapshot : group_snapshots)
+  {
+    for (const Geometry &item : snapshot.children)
+    {
+      if (item.widget->x() != item.nx || item.widget->y() != item.ny ||
+          item.widget->w() != item.nw || item.widget->h() != item.nh)
+        return true;
+    }
+  }
+  return false;
 }
 
 LayoutSize layout_size(Fl_Window *window, double scale)
@@ -1178,6 +1402,29 @@ LayoutSize layout_size(Fl_Window *window, double scale)
     }
   }
   (void)window;
+  return size;
+}
+
+void apply_layout(Fl_Window *window, double scale);
+
+LayoutSize actual_layout_size(Fl_Window *window, double scale)
+{
+  apply_layout(window, scale);
+  LayoutSize size = {0, 0};
+  for (const Geometry &item : window_snapshots)
+  {
+    size.width = std::max(size.width, item.widget->x() + item.widget->w());
+    size.height = std::max(size.height, item.widget->y() + item.widget->h());
+  }
+  for (const GroupSnapshot &snapshot : group_snapshots)
+  {
+    for (const Geometry &item : snapshot.children)
+    {
+      size.width = std::max(size.width, item.widget->x() + item.widget->w());
+      size.height = std::max(size.height,
+                             snapshot.container->y() + item.widget->y() + item.widget->h());
+    }
+  }
   return size;
 }
 
@@ -1222,13 +1469,13 @@ void refresh_scale()
   if (!scaled_window) return;
 
   const double target = desired_scale();
-  if (std::fabs(target - applied_factor) < 0.001) return;
+  // FLTK stretches the window's children whenever the window is resized,
+  // even if the derived scale factor stays the same. Reapply the snapshot
+  // layout in that case so the flat layout is restored immediately.
+  if (!layout_drifted() && std::fabs(target - applied_factor) < 0.001) return;
 
-  const double ratio = target / applied_factor;
   factor = target;
   apply_layout(scaled_window, target);
-  for (int i = 0; i < scaled_window->children(); ++i)
-    scale_fonts(scaled_window->child(i), ratio);
   applied_factor = target;
   scaled_window->redraw();
 }
@@ -1265,7 +1512,7 @@ void scale_window(Fl_Window *window)
   for (int step = 20; step >= 10; --step)
   {
     const double candidate = step / 20.0;
-    const LayoutSize candidate_size = layout_size(window, candidate);
+    const LayoutSize candidate_size = actual_layout_size(window, candidate);
     if (candidate_size.width <= scale_dim(base_width, candidate) &&
         candidate_size.height <= scale_dim(base_height, candidate))
       smallest_factor = candidate;
@@ -1303,7 +1550,7 @@ double ui_v2_scale_factor()
 
 int ui_v2_scaled_size(int size)
 {
-  return ui_v2_scaling::scaled_step(size, ui_v2_scaling::factor);
+  return ui_v2_scaling::scaled_font_size(size, ui_v2_scaling::factor);
 }
 
 void ui_v2_relayout()
@@ -1407,7 +1654,9 @@ static void translate_widget(Fl_Widget *widget)
   if (translated && (!label || std::strcmp(label, translated) != 0))
     widget->copy_label(translated);
   const int size = translation_size(key.c_str());
-  if (size > 0) widget->labelsize(ui_v2_scaled_size(size));
+  ui_v2_scaling::Geometry *item = ui_v2_scaling::geometry_of(widget);
+  if (size > 0) ui_v2_scaling::set_widget_font_base(widget, size);
+  else if (item) ui_v2_scaling::set_widget_font_base(widget, item->label_original);
 
   Fl_Output *output = dynamic_cast<Fl_Output *>(widget);
   if (output && output->value())
@@ -1422,7 +1671,10 @@ static void translate_menu_item(Fl_Menu_Item *item, const char *english)
   if (!item) return;
   item->label(translate_cstr(english));
   const int size = translation_size(english);
-  if (size > 0) item->labelsize(ui_v2_scaled_size(size));
+  const auto original = ui_v2_scaling::menu_font_original.find(item);
+  if (size > 0) ui_v2_scaling::set_menu_font_base(item, size);
+  else if (original != ui_v2_scaling::menu_font_original.end())
+    ui_v2_scaling::set_menu_font_base(item, original->second);
 }
 
 static void translate_widget_group(Fl_Group *group)

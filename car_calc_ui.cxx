@@ -760,6 +760,7 @@ Fl_Double_Window* make_window() {
 #include <filesystem>
 #include <vector>
 #include <iostream>
+#include <map>
 #include <string>
 
 // Applies the current resize-derived font scale to labels set from .trs files,
@@ -783,6 +784,10 @@ struct CarCalcGeometry
 	int nw;
 	int nh;
 	int index;
+	int label_base;
+	int label_original;
+	int text_base;
+	int text_original;
 };
 
 struct CarCalcGroupSnapshot
@@ -800,10 +805,20 @@ static double g_applied_factor = 1.0;
 static bool g_scale_poll_started = false;
 static std::vector<CarCalcGeometry> g_window_snapshots;
 static std::vector<CarCalcGroupSnapshot> g_group_snapshots;
+static std::map<Fl_Menu_Item*, int> g_menu_font_base;
+static std::map<Fl_Menu_Item*, int> g_menu_font_original;
+
+static int scaled_font_size(int size, double factor)
+{
+	if (size <= 0) return size;
+	return std::max(1, static_cast<int>(std::lround(size * factor)));
+}
 
 static double clamp_scale(double value)
 {
-	return std::min(3.0, std::max(0.5, value));
+	// No upper cap: a maximized window on a large display must scale all the
+	// way to that screen instead of leaving the UI in the top-left corner.
+	return std::max(0.5, value);
 }
 
 static bool env_scale(double* result)
@@ -838,66 +853,87 @@ int carcalc_scaled_font_size(int size)
 	return std::max(1, static_cast<int>(std::lround(size * g_font_factor)));
 }
 
-static int scaled_step(int size, double ratio)
+static int widget_text_size(Fl_Widget* widget)
 {
-	if (size <= 0) return size;
-	return std::max(1, static_cast<int>(std::lround(size * ratio)));
+	if (Fl_Input_* input = dynamic_cast<Fl_Input_*>(widget)) return input->textsize();
+	if (Fl_Browser* browser = dynamic_cast<Fl_Browser*>(widget)) return browser->textsize();
+	if (Fl_Text_Display* display = dynamic_cast<Fl_Text_Display*>(widget)) return display->textsize();
+	if (Fl_Menu_* menu = dynamic_cast<Fl_Menu_*>(widget)) return menu->textsize();
+	return 0;
 }
 
-static void scale_menu_fonts(const Fl_Menu_Item* items, double ratio)
+static void set_widget_text_size(Fl_Widget* widget, int size)
+{
+	if (size <= 0) return;
+	if (Fl_Input_* input = dynamic_cast<Fl_Input_*>(widget)) input->textsize(size);
+	else if (Fl_Browser* browser = dynamic_cast<Fl_Browser*>(widget)) browser->textsize(size);
+	else if (Fl_Text_Display* display = dynamic_cast<Fl_Text_Display*>(widget)) display->textsize(size);
+	else if (Fl_Menu_* menu = dynamic_cast<Fl_Menu_*>(widget)) menu->textsize(size);
+}
+
+static void capture_menu_fonts(const Fl_Menu_Item* items)
 {
 	for (const Fl_Menu_Item* item = items; item && item->label(); item = item->next())
 	{
 		Fl_Menu_Item* editable = const_cast<Fl_Menu_Item*>(item);
 		const int size = editable->labelsize();
-		if (size > 0) editable->labelsize(scaled_step(size, ratio));
-		if (item->flags & FL_SUBMENU)
-			scale_menu_fonts(item + 1, ratio);
+		if (size > 0 && !g_menu_font_base.count(editable))
+		{
+			g_menu_font_base[editable] = size;
+			g_menu_font_original[editable] = size;
+		}
+		if (item->flags & FL_SUBMENU) capture_menu_fonts(item + 1);
 		else if (item->flags & FL_SUBMENU_POINTER)
-			scale_menu_fonts(static_cast<const Fl_Menu_Item*>(item->user_data()), ratio);
+			capture_menu_fonts(static_cast<const Fl_Menu_Item*>(item->user_data()));
 	}
 }
 
-static void scale_widget_fonts(Fl_Widget* widget, double ratio)
+static void apply_menu_fonts(const Fl_Menu_Item* items, double factor)
+{
+	for (const Fl_Menu_Item* item = items; item && item->label(); item = item->next())
+	{
+		Fl_Menu_Item* editable = const_cast<Fl_Menu_Item*>(item);
+		const auto base = g_menu_font_base.find(editable);
+		if (base != g_menu_font_base.end() && base->second > 0)
+			editable->labelsize(scaled_font_size(base->second, factor));
+		if (item->flags & FL_SUBMENU) apply_menu_fonts(item + 1, factor);
+		else if (item->flags & FL_SUBMENU_POINTER)
+			apply_menu_fonts(static_cast<const Fl_Menu_Item*>(item->user_data()), factor);
+	}
+}
+
+static CarCalcGeometry* carcalc_geometry_of(Fl_Widget* widget)
+{
+	for (CarCalcGeometry& item : g_window_snapshots)
+		if (item.widget == widget) return &item;
+	for (CarCalcGroupSnapshot& snapshot : g_group_snapshots)
+		for (CarCalcGeometry& item : snapshot.children)
+			if (item.widget == widget) return &item;
+	return nullptr;
+}
+
+static void set_widget_font_base(Fl_Widget* widget, int size)
 {
 	if (!widget) return;
+	CarCalcGeometry* item = carcalc_geometry_of(widget);
+	if (item) item->label_base = size;
+	widget->labelsize(carcalc_scaled_font_size(size));
+}
 
-	const int label_size = widget->labelsize();
-	if (label_size > 0) widget->labelsize(scaled_step(label_size, ratio));
-
-	if (Fl_Input_* input = dynamic_cast<Fl_Input_*>(widget))
-	{
-		const int text_size = input->textsize();
-		if (text_size > 0) input->textsize(scaled_step(text_size, ratio));
-	}
-	if (Fl_Browser* browser = dynamic_cast<Fl_Browser*>(widget))
-	{
-		const int text_size = browser->textsize();
-		if (text_size > 0) browser->textsize(scaled_step(text_size, ratio));
-	}
-	if (Fl_Text_Display* display = dynamic_cast<Fl_Text_Display*>(widget))
-	{
-		const int text_size = display->textsize();
-		if (text_size > 0) display->textsize(scaled_step(text_size, ratio));
-	}
-	if (Fl_Menu_* menu = dynamic_cast<Fl_Menu_*>(widget))
-	{
-		const int text_size = menu->textsize();
-		if (text_size > 0) menu->textsize(scaled_step(text_size, ratio));
-		scale_menu_fonts(menu->menu(), ratio);
-	}
-
-	if (Fl_Group* group = dynamic_cast<Fl_Group*>(widget))
-	{
-		for (int i = 0; i < group->children(); ++i)
-			scale_widget_fonts(group->child(i), ratio);
-	}
+static void set_menu_font_base(Fl_Menu_Item* item, int size)
+{
+	if (!item) return;
+	g_menu_font_base[item] = size;
+	item->labelsize(carcalc_scaled_font_size(size));
 }
 
 static CarCalcGeometry snapshot_of(Fl_Widget* widget)
 {
+	const int label = widget->labelsize();
+	const int text = widget_text_size(widget);
 	return {widget, widget->x(), widget->y(), widget->w(), widget->h(),
-	        widget->x(), widget->y(), widget->w(), widget->h(), -1};
+	        widget->x(), widget->y(), widget->w(), widget->h(), -1,
+	        label, label, text, text};
 }
 
 static void freeze_resize(Fl_Group* group)
@@ -919,6 +955,8 @@ static void capture_layout(Fl_Window* window)
 		CarCalcGeometry window_item = snapshot_of(child);
 		window_item.index = i;
 		g_window_snapshots.push_back(window_item);
+		if (Fl_Menu_* menu = dynamic_cast<Fl_Menu_*>(child))
+			capture_menu_fonts(menu->menu());
 
 		if (Fl_Group* group = dynamic_cast<Fl_Group*>(child))
 		{
@@ -932,6 +970,25 @@ static void capture_layout(Fl_Window* window)
 				group_snapshot.children.push_back(child_item);
 			}
 			g_group_snapshots.push_back(group_snapshot);
+		}
+	}
+}
+
+static void apply_fonts_to_target(double factor)
+{
+	for (CarCalcGeometry& item : g_window_snapshots)
+	{
+		item.widget->labelsize(scaled_font_size(item.label_base, factor));
+		set_widget_text_size(item.widget, scaled_font_size(item.text_base, factor));
+		if (Fl_Menu_* menu = dynamic_cast<Fl_Menu_*>(item.widget))
+			apply_menu_fonts(menu->menu(), factor);
+	}
+	for (CarCalcGroupSnapshot& snapshot : g_group_snapshots)
+	{
+		for (CarCalcGeometry& item : snapshot.children)
+		{
+			item.widget->labelsize(scaled_font_size(item.label_base, factor));
+			set_widget_text_size(item.widget, scaled_font_size(item.text_base, factor));
 		}
 	}
 }
@@ -1163,6 +1220,29 @@ static CarCalcLayoutSize layout_size(Fl_Window* window, double factor)
 	return size;
 }
 
+static void apply_layout(Fl_Window* window, double factor);
+
+static CarCalcLayoutSize actual_layout_size(Fl_Window* window, double factor)
+{
+	apply_layout(window, factor);
+	CarCalcLayoutSize size = {0, 0};
+	for (const CarCalcGeometry& item : g_window_snapshots)
+	{
+		size.width = std::max(size.width, item.widget->x() + item.widget->w());
+		size.height = std::max(size.height, item.widget->y() + item.widget->h());
+	}
+	for (const CarCalcGroupSnapshot& snapshot : g_group_snapshots)
+	{
+		for (const CarCalcGeometry& item : snapshot.children)
+		{
+			size.width = std::max(size.width, item.widget->x() + item.widget->w());
+			size.height = std::max(size.height,
+			                       snapshot.container->y() + item.widget->y() + item.widget->h());
+		}
+	}
+	return size;
+}
+
 static bool layout_fits(Fl_Window* window, double factor)
 {
 	const CarCalcLayoutSize size = layout_size(window, factor);
@@ -1190,28 +1270,194 @@ static double fitted_scale(Fl_Window* window, double factor)
 	return low;
 }
 
+struct CarCalcTextRun
+{
+	int x;
+	int y;
+	int w;
+	int h;
+};
+
+static std::vector<CarCalcTextRun>* g_text_runs = nullptr;
+
+// FLTK positions and wraps label text inside a widget box. Use its own draw
+// callback to measure the resulting runs instead of guessing from fl_width().
+static void carcalc_measure_run(const char* text, int length, int x, int y)
+{
+	if (!g_text_runs) return;
+	int dx = 0;
+	int dy = 0;
+	int w = 0;
+	int h = 0;
+	fl_text_extents(text, length, dx, dy, w, h);
+	if (w > 0 && h > 0)
+		g_text_runs->push_back({x + dx, y + dy, w, h});
+}
+
+static std::vector<CarCalcTextRun> carcalc_label_runs(const CarCalcGeometry& item)
+{
+	std::vector<CarCalcTextRun> runs;
+	const char* text = item.widget->label();
+	if (!text || !*text) return runs;
+
+	const Fl_Boxtype box = item.widget->box();
+	int x = item.nx + Fl::box_dx(box);
+	int y = item.ny + Fl::box_dy(box);
+	int w = item.nw - Fl::box_dw(box);
+	int h = item.nh - Fl::box_dh(box);
+
+	const Fl_Align align = item.widget->align();
+	if (w > 11 && (align & (FL_ALIGN_LEFT | FL_ALIGN_RIGHT)))
+	{
+		x += 3;
+		w -= 6;
+	}
+
+	fl_font(item.widget->labelfont(), item.widget->labelsize());
+	g_text_runs = &runs;
+	fl_draw(text, x, y, w, h, align, carcalc_measure_run, nullptr, 0);
+	g_text_runs = nullptr;
+	return runs;
+}
+
+static bool carcalc_runs_overlap(const CarCalcTextRun& a, const CarCalcTextRun& b)
+{
+	const int dx = std::min(a.x + a.w, b.x + b.w) - std::max(a.x, b.x);
+	const int dy = std::min(a.y + a.h, b.y + b.h) - std::max(a.y, b.y);
+	return dx > 1 && dy > 1;
+}
+
+static bool carcalc_runs_collide(const std::vector<CarCalcTextRun>& runs,
+                                 const CarCalcGeometry& item,
+                                 const std::vector<CarCalcGeometry>& children)
+{
+	for (const CarCalcGeometry& other : children)
+	{
+		if (other.widget == item.widget || is_label_widget(other)) continue;
+		const CarCalcTextRun box = {other.nx, other.ny, other.nw, other.nh};
+		for (const CarCalcTextRun& run : runs)
+			if (carcalc_runs_overlap(run, box)) return true;
+	}
+	for (const CarCalcGeometry& other : children)
+	{
+		if (other.widget == item.widget || !other.widget->label() || !*other.widget->label())
+			continue;
+		const std::vector<CarCalcTextRun> other_runs = carcalc_label_runs(other);
+		for (const CarCalcTextRun& run : runs)
+			for (const CarCalcTextRun& other_run : other_runs)
+				if (carcalc_runs_overlap(run, other_run)) return true;
+	}
+	return false;
+}
+
+// Labels can still collide after scaling because translations are longer than
+// English and because the original layout uses zero-height label widgets.
+// Move label-only annotations first, then shrink only the colliding text until
+// the measured runs no longer cover anything else.
+static void carcalc_resolve_text(CarCalcGroupSnapshot& snapshot, double factor)
+{
+	// Several passes let one widget's shrink make room for a neighbouring
+	// label that was processed earlier in the same pass.
+	for (int pass = 0; pass < 4; ++pass)
+	{
+		bool changed = false;
+		for (CarCalcGeometry& item : snapshot.children)
+		{
+			if (!item.widget->label() || !*item.widget->label()) continue;
+
+			std::vector<CarCalcTextRun> runs = carcalc_label_runs(item);
+			int guard = 0;
+			while (carcalc_runs_collide(runs, item, snapshot.children) && guard++ < 160)
+			{
+				bool moved = false;
+				if (is_label_widget(item))
+				{
+					for (int distance = 1; distance <= 160 && !moved; ++distance)
+					{
+						const int deltas[2] = {-distance, distance};
+						for (int delta : deltas)
+						{
+							const int original_y = item.ny;
+							item.ny += delta;
+							const std::vector<CarCalcTextRun> trial = carcalc_label_runs(item);
+							bool inside = !g_scale_window;
+							for (const CarCalcTextRun& run : trial)
+								if (run.y < 0 || run.y + run.h > g_scale_window->h())
+									inside = false;
+							if (inside && !carcalc_runs_collide(trial, item, snapshot.children))
+							{
+								runs = trial;
+								moved = true;
+								break;
+							}
+							item.ny = original_y;
+						}
+					}
+				}
+				if (moved) continue;
+
+				const int size = item.widget->labelsize();
+				const int minimum = scaled_font_size(4, factor);
+				if (size > minimum)
+				{
+					item.widget->labelsize(size - 1);
+					runs = carcalc_label_runs(item);
+					changed = true;
+					continue;
+				}
+				break;
+			}
+		}
+		if (!changed) break;
+	}
+}
+
 static void apply_layout(Fl_Window* window, double factor)
 {
+	// Font sizes are derived from captured (or translated) base sizes on every
+	// pass, so collision-driven shrink adjustments never accumulate across
+	// resizes or language changes.
+	apply_fonts_to_target(factor);
+
 	for (CarCalcGeometry& item : g_window_snapshots)
 	{
-		if (dynamic_cast<Fl_Group*>(item.widget))
-		{
-			const int y = scale_offset(item.y, factor);
-			item.widget->resize(0, y, window->w(), std::max(1, window->h() - y));
-		}
-		else
-		{
-			item.widget->resize(0, scale_offset(item.y, factor), window->w(),
-			                    scale_dim(item.h, factor));
-		}
+		const int y = scale_offset(item.y, factor);
+		const int h = dynamic_cast<Fl_Group*>(item.widget)
+		            ? std::max(1, window->h() - y) : scale_dim(item.h, factor);
+		item.widget->resize(0, y, window->w(), h);
+		item.nx = 0;
+		item.ny = y;
+		item.nw = window->w();
+		item.nh = h;
 	}
 
 	for (CarCalcGroupSnapshot& snapshot : g_group_snapshots)
 	{
 		layout_group(snapshot, factor);
+		carcalc_resolve_text(snapshot, factor);
 		for (CarCalcGeometry& item : snapshot.children)
 			item.widget->resize(item.nx, item.ny, item.nw, item.nh);
 	}
+}
+
+static bool layout_drifted()
+{
+	for (const CarCalcGeometry& item : g_window_snapshots)
+	{
+		if (item.widget->x() != item.nx || item.widget->y() != item.ny ||
+		    item.widget->w() != item.nw || item.widget->h() != item.nh)
+			return true;
+	}
+	for (const CarCalcGroupSnapshot& snapshot : g_group_snapshots)
+	{
+		for (const CarCalcGeometry& item : snapshot.children)
+		{
+			if (item.widget->x() != item.nx || item.widget->y() != item.ny ||
+			    item.widget->w() != item.nw || item.widget->h() != item.nh)
+				return true;
+		}
+	}
+	return false;
 }
 
 static double desired_font_scale(Fl_Window* window)
@@ -1235,13 +1481,13 @@ static void refresh_scale()
 	if (!window) return;
 
 	const double target = desired_font_scale(window);
-	if (std::fabs(target - g_applied_factor) < 0.001) return;
+	// FLTK stretches the window's children whenever the window is resized,
+	// even if the derived scale factor stays the same. Reapply the snapshot
+	// layout in that case so the flat layout is restored immediately.
+	if (!layout_drifted() && std::fabs(target - g_applied_factor) < 0.001) return;
 
-	const double ratio = target / g_applied_factor;
 	g_font_factor = target;
 	apply_layout(window, target);
-	for (int i = 0; i < window->children(); ++i)
-		scale_widget_fonts(window->child(i), ratio);
 	g_applied_factor = target;
 	window->redraw();
 }
@@ -1286,7 +1532,7 @@ void apply_font_scale(Fl_Window* window)
 	for (int step = 20; step >= 10; --step)
 	{
 		const double candidate = step / 20.0;
-		const CarCalcLayoutSize candidate_size = layout_size(window, candidate);
+		const CarCalcLayoutSize candidate_size = actual_layout_size(window, candidate);
 		if (candidate_size.width <= scale_dim(g_base_width, candidate) &&
 		    candidate_size.height <= scale_dim(g_base_height, candidate))
 			smallest_factor = candidate;
@@ -1401,7 +1647,9 @@ static void translate_widget(Fl_Widget *widget)
   if (translated && (!label || std::strcmp(label, translated) != 0))
     widget->copy_label(translated);
   const int size = translation_size(key.c_str());
-  if (size > 0) widget->labelsize(carcalc_scaled_font_size(size));
+  CarCalcGeometry* geometry = carcalc_geometry_of(widget);
+  if (size > 0) set_widget_font_base(widget, size);
+  else if (geometry) set_widget_font_base(widget, geometry->label_original);
 
   Fl_Output *output = dynamic_cast<Fl_Output *>(widget);
   if (output && output->value())
@@ -1416,7 +1664,9 @@ static void translate_menu_item(Fl_Menu_Item *item, const char *english)
   if (!item) return;
   item->label(translate_cstr(english));
   const int size = translation_size(english);
-  if (size > 0) item->labelsize(carcalc_scaled_font_size(size));
+  const auto original = g_menu_font_original.find(item);
+  if (size > 0) set_menu_font_base(item, size);
+  else if (original != g_menu_font_original.end()) set_menu_font_base(item, original->second);
 }
 
 static void translate_widget_group(Fl_Group *group)

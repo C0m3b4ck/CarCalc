@@ -24,8 +24,9 @@ their value displays, so fields such as "Mixed price:" stay aligned and the
 original flat layout is preserved.
 
 - Default (`CARCALC_UI_SCALE` unset or `auto`): factor follows the window size
-  continuously from the smallest fitting window up to the screen size, clamped
-  to `0.5`–`3.0`. It is reduced only when the scaled layout would overflow.
+  continuously from the smallest fitting window up to any screen size (including
+  `1920x1680`); the only lower bound is `0.5`. It is reduced only when the scaled
+  layout would overflow.
 - Override: `CARCALC_UI_SCALE=1.5 ./CarCalc_v2` uses a fixed factor instead.
 
 The original app built by `../compile_app.sh` uses the same resize-aware policy.
