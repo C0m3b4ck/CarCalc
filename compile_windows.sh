@@ -8,6 +8,8 @@
 # Optional overrides:
 #   CXX, CC        - cross compiler (default: x86_64-w64-mingw32-g++/gcc)
 #   FLTK_WIN_DIR   - directory with Windows FLTK 1.3/1.4 (FL/ + lib/libfltk.a)
+#   FLTK_WIN_ZIP   - prebuilt FLTK zip (optional)
+#   SQLITE_AMALGAMATION_DIR - directory containing sqlite3.c and sqlite3.h
 #   CARCALC_DEPS   - where cached dependencies are stored (default: ./.win-deps)
 #
 # SQLite is compiled from the bundled amalgamation in external_libraries/sqlite-3.54.1/
@@ -26,7 +28,8 @@ DEPS="${CARCALC_DEPS:-$PWD/.win-deps}"
 for tool in "$CXX" "$CC" unzip; do
     command -v "$tool" >/dev/null 2>&1 || {
         echo "error: missing tool: $tool" >&2
-        echo "Install with: sudo apt install g++-mingw-w64-x86-64 unzip" >&2
+        echo "Install the MinGW-w64 cross compiler and unzip with your package manager," >&2
+        echo "or set CXX/CC to compatible tools." >&2
         exit 1
     }
 done
@@ -46,14 +49,18 @@ if [[ ! -f "$FLTK_DIR/FL/Fl.H" || ! -f "$FLTK_DIR/lib/libfltk.a" ]]; then
     echo "==> Preparing Windows FLTK 1.3 in $FLTK_DIR"
     mkdir -p "$FLTK_DIR"
 
-    # Prefer the local prebuilt MinGW-w64 bundle if present on this machine.
+    # Prefer an explicitly provided or locally cached prebuilt bundle.
+    zip_candidates=(
+        "${FLTK_WIN_ZIP:-}"
+        "$PWD/external_libraries/fltk-1.3.9-compiled.zip"
+        "$DEPS/fltk-1.3.9-compiled.zip"
+    )
+    if [[ -n "${HOME:-}" ]]; then
+        zip_candidates+=("$HOME/.cache/carcalc/fltk-1.3.9-compiled.zip")
+    fi
+
     fltk_zip=""
-    for candidate in \
-        "${FLTK_WIN_ZIP:-}" \
-        /home/sb3x/Toshiba-dump/fltk-1.3.9-compiled.zip \
-        "$HOME/Toshiba-dump/fltk-1.3.9-compiled.zip" \
-        "$PWD/../Toshiba-dump/fltk-1.3.9-compiled.zip"
-    do
+    for candidate in "${zip_candidates[@]}"; do
         if [[ -n "$candidate" && -f "$candidate" ]]; then
             fltk_zip="$candidate"
             break
@@ -69,8 +76,8 @@ if [[ ! -f "$FLTK_DIR/FL/Fl.H" || ! -f "$FLTK_DIR/lib/libfltk.a" ]]; then
             -d "$DEPS"
     else
         echo "error: no Windows FLTK found." >&2
-        echo "Set FLTK_WIN_DIR to a FLTK 1.3 tree built with MinGW-w64," >&2
-        echo "or FLTK_WIN_ZIP to a prebuilt zip, or place it in ~/Toshiba-dump/." >&2
+        echo "Set FLTK_WIN_DIR to a MinGW-w64 FLTK tree, or FLTK_WIN_ZIP to a prebuilt zip." >&2
+        echo "A cached zip may also be placed in external_libraries/ or $DEPS." >&2
         exit 1
     fi
 fi
@@ -88,9 +95,26 @@ else
         echo "==> Preparing SQLite amalgamation in $SQLITE_DIR"
         mkdir -p "$SQLITE_DIR"
 
-        if [[ -f /home/sb3x/qmark-build/sqlite3.c && -f /home/sb3x/qmark-build/sqlite3.h ]]; then
-            echo "    using local amalgamation"
-            cp /home/sb3x/qmark-build/sqlite3.c /home/sb3x/qmark-build/sqlite3.h "$SQLITE_DIR/"
+        sqlite_candidates=()
+        if [[ -n "${SQLITE_AMALGAMATION_DIR:-}" ]]; then
+            sqlite_candidates+=("$SQLITE_AMALGAMATION_DIR")
+        fi
+        sqlite_candidates+=("$DEPS/sqlite" "$DEPS/sqlite-amalgamation-3540100")
+        if [[ -n "${HOME:-}" ]]; then
+            sqlite_candidates+=("$HOME/.cache/carcalc/sqlite-3.54.1")
+        fi
+
+        found_amalgamation=""
+        for candidate in "${sqlite_candidates[@]}"; do
+            if [[ -f "$candidate/sqlite3.c" && -f "$candidate/sqlite3.h" ]]; then
+                found_amalgamation="$candidate"
+                break
+            fi
+        done
+
+        if [[ -n "$found_amalgamation" ]]; then
+            echo "    using amalgamation from $found_amalgamation"
+            cp "$found_amalgamation/sqlite3.c" "$found_amalgamation/sqlite3.h" "$SQLITE_DIR/"
         else
             url="https://www.sqlite.org/2026/sqlite-amalgamation-3540100.zip"
             zip="$DEPS/sqlite-amalgamation-3540100.zip"

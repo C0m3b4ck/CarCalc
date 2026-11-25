@@ -16,6 +16,7 @@ CO₂ emissions and trip costs.
 - Trip-distance based fuel calculations
 - Localized databases (`cars.db`, `cars_en.db`, `cars_pl.db`)
 - Lightweight native GUI (FLTK) with an embedded SQLite database — no server or runtime install needed
+- Resize-aware scaling: dragging the window scales widget boxes and fonts, keeps gaps pixel-sized, and gives label-only widgets their own wrapped rows; `CARCALC_UI_SCALE=1.5 ./prog` overrides the factor
 
 ## Download
 
@@ -34,6 +35,13 @@ in France, updated quarterly.
 
 The dataset is published under **Licence Ouverte / Open Licence 2.0**; see
 [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md) for attribution details.
+
+- [`DB_QUALITY.md`](DB_QUALITY.md) — data audit and known intentional gaps
+  (for example, electric cars have no fuel-consumption figure).
+- [`OFFLINE_DATA_SOURCES.md`](OFFLINE_DATA_SOURCES.md) — alternative datasets
+  (EPA/FuelEconomy.gov, EEA, ADEME) that can be downloaded once and used locally.
+- [`ui_v2/`](ui_v2/) — isolated redesigned GUI with a compact flat layout and
+  the same resize-aware scaling, built by `ui_v2/compile_ui_v2.sh`.
 
 ## Building
 

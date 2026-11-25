@@ -51,6 +51,8 @@ static void configure_utf8_fonts()
 	Fl::set_font(FL_TIMES_BOLD_ITALIC, serif_bold_italic);
 }
 
+// Implemented in car_calc_ui.fl so FLUID regeneration preserves it.
+void apply_font_scale(Fl_Window* window);
 int main(int argc, char** argv)
 {
 	configure_utf8_fonts();
@@ -59,6 +61,7 @@ int main(int argc, char** argv)
 	set_database_path(database_path_for_current_language());
 
 	Fl_Window* w = make_window();
+	apply_font_scale(w);
 	wake_grp_calculate();
 	hide_all_groups();
 	grp_calculate->show();

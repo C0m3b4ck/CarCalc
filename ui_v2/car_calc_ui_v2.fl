@@ -1,0 +1,1865 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0311
+header_name {.h}
+code_name {.cxx}
+Function {make_window()} {open
+} {
+  Fl_Window {} {
+    label CarCalc open
+    xywh {103 131 490 380} type Double resizable visible
+  } {
+    Fl_Menu_Bar mnu_bar {
+      xywh {0 0 490 20}
+    } {
+      Submenu sbmnu_calculate {
+        label Calculate open
+        xywh {15 15 68 24}
+      } {
+        MenuItem sbmnu_btn_selectcar {
+          label {Select Car}
+          user_data {"group_selectcar"}
+          callback action_cb
+          xywh {15 15 34 24}
+        }
+        MenuItem sbmnu_btn_calculate {
+          label Calculate
+          user_data {"group_calculate"}
+          callback action_cb
+          comment {Switches to calculate group}
+          xywh {15 15 34 24}
+        }
+      }
+      MenuItem mnu_btn_settings {
+        label Settings
+        user_data {"group_settings"}
+        callback action_cb
+        xywh {5 5 34 24}
+      }
+      MenuItem mnu_btn_file {
+        label File
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_help {
+        label Help
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_about {
+        label About
+        xywh {30 30 34 24}
+      }
+      MenuItem mnu_btn_exit {
+        label Exit
+        user_data {"exit"}
+        callback action_cb
+        xywh {30 30 34 24}
+      }
+    }
+    Fl_Group grp_selectcar {
+      xywh {0 19 490 362} hide
+    } {
+      Fl_Text_Display {} {
+        label {Select Car Model}
+        xywh {60 50 50 5} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_models {
+        callback {browser_cb(lst_car_models, 0)}
+        comment {Clicking on it updates DTO, number 0}
+        xywh {5 45 485 60} type Hold
+      }
+      Fl_Text_Display {} {
+        label {Select Car Engine}
+        xywh {60 135 50 10} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_engines {
+        callback {browser_cb(lst_car_engines, 1)}
+        comment {Clicking on it updated DTO, number 1}
+        xywh {0 135 490 60} type Hold
+      }
+      Fl_Input txt_search_car_models {
+        user_data {"search_car_models"}
+        callback action_cb
+        xywh {175 19 245 26}
+        when 1
+      }
+      Fl_Button btn_search_car_models {
+        label SEARCH
+        user_data {"search_car_models"}
+        callback action_cb
+        xywh {420 20 69 25} labelsize 17
+      }
+      Fl_Input txt_search_car_engines {
+        user_data {"search_car_engines"}
+        callback action_cb
+        xywh {175 109 245 26}
+        when 1
+      }
+      Fl_Button btn_search_car_engines {
+        label SEARCH
+        user_data {"search_car_engines"}
+        callback action_cb
+        xywh {420 110 69 25} labelsize 17
+      }
+      Fl_Text_Display {} {
+        label {Select Car Gearbox}
+        xywh {70 220 50 10} labelsize 21 align 513
+      }
+      Fl_Browser lst_car_gearboxes {
+        callback {browser_cb(lst_car_gearboxes, 2)}
+        comment {Clicking on it updates DTO, number 2}
+        xywh {0 220 490 55} type Hold
+      }
+      Fl_Input txt_search_car_gearboxes {
+        user_data {"search_car_gearboxes"}
+        callback action_cb
+        xywh {195 194 225 26}
+        when 1
+      }
+      Fl_Button btn_search_car_gearboxes {
+        label SEARCH
+        user_data {"search_car_gearboxes"}
+        callback action_cb
+        xywh {420 195 69 25} labelsize 17
+      }
+      Fl_Button btn_proceedwithcar {
+        label {Proceed with Car ->}
+        user_data {"proceed_car"}
+        callback action_cb
+        xywh {310 305 180 75} labelsize 18
+      }
+      Fl_Button btn_help_selectcar {
+        label HELP
+        user_data {"help_selectcar"}
+        callback action_cb
+        xywh {140 305 165 75} labelsize 26
+      }
+      Fl_Button btn_clear_car {
+        label {Clear Car}
+        user_data {"clear_car"}
+        callback action_cb
+        xywh {5 305 130 75} labelsize 26
+      }
+      Fl_Choice cbo_class_selectcar {
+        label {Class:}
+        callback {cbobox_cb(cbo_class_selectcar, 0)}
+        comment {Number 0 in cbobox_cb} open
+        xywh {55 280 100 20} down_box BORDER_BOX labelsize 17
+      } {}
+      Fl_Choice cbo_fuel_selectcar {
+        label {Fuel:}
+        callback {cbobox_cb(cbo_fuel_selectcar, 1)}
+        comment {Number 1 in cbobox_cb} open
+        xywh {205 280 100 20} down_box BORDER_BOX labelsize 17
+      } {}
+      Fl_Output lbl_fuel_usage {
+        label {Fuel usage:}
+        xywh {390 277 95 28}
+      }
+    }
+    Fl_Group grp_calculate {open selected
+      xywh {0 20 490 360}
+    } {
+      Fl_Text_Display {} {
+        label {Calculate Fuel-Related}
+        xywh {200 50 115 0} labelsize 21
+        class Fl_Output
+      }
+      Fl_Button btn_select_car {
+        label {<- Select Car}
+        user_data {"group_selectcar"}
+        callback action_cb
+        xywh {0 335 165 45} labelsize 24
+      }
+      Fl_Button btn_help_calculate {
+        label HELP
+        user_data {"help_calculate"}
+        callback action_cb
+        xywh {165 335 165 45} labelsize 23
+      }
+      Fl_Button btn_calculate {
+        label {Calculate!}
+        user_data {"calculate"}
+        callback action_cb
+        comment {Passes DTO, calls calculation functions}
+        xywh {330 335 160 45} labelsize 25
+      }
+      Fl_Input txt_urban_usage {
+        label {Urban:}
+        xywh {55 47 105 28}
+      }
+      Fl_Input txt_exurban_usage {
+        label {Exurban:}
+        xywh {225 47 80 28}
+      }
+      Fl_Input txt_mixed_usage {
+        label {Mixed:}
+        xywh {405 47 80 28}
+      }
+      Fl_Input txt_co2_emission {
+        label {Co2 emission:}
+        xywh {100 77 80 28}
+      }
+      Fl_Input txt_price {
+        label {Price:}
+        xywh {225 77 80 28}
+      }
+      Fl_Input txt_distance_driven {
+        label {Trip distance:}
+        xywh {405 77 80 28}
+      }
+      Fl_Text_Display {} {
+        label {Car Info}
+        xywh {220 140 50 0} labelsize 21
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Model name:}
+        xywh {35 160 50 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Engine:}
+        xywh {5 185 60 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Gearbox:}
+        xywh {10 210 60 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Class:}
+        xywh {0 230 55 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_modelname_calculate {
+        xywh {120 135 365 20}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_engine_calculate {
+        xywh {70 160 415 20}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_gearbox_calculate {
+        xywh {85 185 400 20}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_class_calculate {
+        xywh {55 210 90 20}
+        class Fl_Output
+      }
+      Fl_Choice cbo_units_calculate {
+        label {Units: } open
+        xywh {60 110 120 20} down_box BORDER_BOX labelsize 16
+      } {}
+      Fl_Text_Display {} {
+        label {Gov. fuel price:}
+        xywh {190 110 95 0} labelsize 13 align 513
+        class Fl_Output
+      }
+      Fl_Output lbl_fuel_price_calculate {
+        xywh {290 108 190 22}
+      }
+      Fl_Text_Display {} {
+        label {Fuel type:}
+        xywh {145 230 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_fueltype_calculate {
+        xywh {235 210 85 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Urban:}
+        xywh {0 285 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_urban_calculate {
+        xywh {80 265 80 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Exurban:}
+        xywh {165 285 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_exurban_calculate {
+        xywh {250 265 70 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Mixed:}
+        xywh {330 285 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_mixed_calculate {
+        xywh {405 265 70 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Price:}
+        xywh {165 310 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_average_price_calculate {
+        xywh {235 290 90 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Units:}
+        xywh {330 310 90 0} labelsize 19
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_units_calculate {
+        xywh {405 290 85 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Trip distance:}
+        xywh {270 265 110 0}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_distance_calculate {
+        xywh {375 245 100 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Co2 emission:}
+        xywh {5 310 90 0}
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_co2emission_calculate {
+        xywh {95 290 70 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Trip Info}
+        xywh {200 265 45 0} labelsize 21
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_urban_price_calculate {
+        xywh {85 315 80 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Exurban price:}
+        xywh {170 335 90 0} labelsize 12
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_exurban_price_calculate {
+        xywh {255 315 75 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Mixed price:}
+        xywh {330 335 90 0} labelsize 13
+        class Fl_Output
+      }
+      Fl_Text_Display lbl_mixed_price_calculate {
+        xywh {410 315 80 20}
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Urban price:}
+        xywh {20 330 60 0} labelsize 13
+        class Fl_Output
+      }
+    }
+    Fl_Group grp_settings {
+      xywh {0 20 490 360} hide
+    } {
+      Fl_Text_Display {} {
+        label Settings
+        xywh {200 50 90 0} labelsize 21 align 513
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Language:}
+        xywh {80 105 90 0} labelsize 19 align 513
+        class Fl_Output
+      }
+      Fl_Choice cbo_language_settings {
+        label {Language:} open
+        callback {action_cb(cbo_language_settings, (void*)("language_changed"))}
+        xywh {180 100 190 28} down_box BORDER_BOX labelsize 17
+      } {
+        MenuItem {} {
+          label English
+          xywh {0 0 100 20}
+        }
+        MenuItem {} {
+          label Polski
+          xywh {0 0 100 20}
+        }
+      }
+      Fl_Output lbl_settings_status {
+        xywh {80 150 330 28}
+      }
+      Fl_Text_Display {} {
+        label Data
+        xywh {80 205 60 0} labelsize 21 align 513
+        class Fl_Output
+      }
+      Fl_Button {} {
+        label {Download selected database}
+        user_data {"group_download_data"}
+        callback action_cb
+        xywh {80 235 330 45} labelsize 16
+      }
+      Fl_Button {} {
+        label {Back}
+        user_data {"group_calculate"}
+        callback action_cb
+        xywh {80 305 150 45} labelsize 20
+      }
+    }
+    Fl_Group grp_download_data {
+      xywh {0 20 490 360} hide
+    } {
+      Fl_Text_Display {} {
+        label {Download data}
+        xywh {160 50 170 0} labelsize 21 align 513
+        class Fl_Output
+      }
+      Fl_Text_Display {} {
+        label {Selected file:}
+        xywh {60 105 110 0} labelsize 19 align 513
+        class Fl_Output
+      }
+      Fl_Output lbl_selected_db {
+        xywh {180 102 250 28}
+      }
+      Fl_Button {} {
+        label {Choose destination and download}
+        user_data {"download_db"}
+        callback action_cb
+        xywh {90 165 310 50} labelsize 16
+      }
+      Fl_Output lbl_download_status {
+        xywh {60 240 370 30}
+      }
+      Fl_Button {} {
+        label {Back}
+        user_data {"group_settings"}
+        callback action_cb
+        xywh {90 305 150 45} labelsize 20
+      }
+    }
+  }
+}
+
+decl {\#include "business_layer.h"
+\#include "language.h"
+\#include "sql_layer.h"
+\#include "ui_v2_helpers.h"
+\#include "ui_v2_scale.h"
+\#include <FL/Fl_Browser.H>
+\#include <FL/Fl_Choice.H>
+\#include <FL/Fl_Group.H>
+\#include <FL/Fl_Input_.H>
+\#include <FL/Fl_Menu_.H>
+\#include <FL/Fl_Menu_Bar.H>
+\#include <FL/Fl_Output.H>
+\#include <FL/Fl_Text_Display.H>
+\#include <FL/fl_draw.H>
+\#include <algorithm>
+\#include <cmath>
+\#include <cstdlib>
+\#include <cstring>
+\#include <vector>
+
+// ---------------------------------------------------------------------------
+// Resize-aware layout scaling, kept here (in the .fl decl block) so FLUID
+// regeneration always preserves it.
+//
+// FLTK's proportional child stretching is disabled. The UI is laid out from a
+// snapshot of the original FLUID geometry: widget boxes and fonts scale with
+// the window, positive gaps keep their pixel size, and label-only widgets get
+// their own wrapped rows so they never cover controls or each other.
+// CARCALC_UI_SCALE overrides the derived factor.
+// ---------------------------------------------------------------------------
+namespace ui_v2_scaling {
+
+struct Geometry
+{
+  Fl_Widget *widget;
+  int x;
+  int y;
+  int w;
+  int h;
+  int nx;
+  int ny;
+  int nw;
+  int nh;
+  int index;
+};
+
+struct GroupSnapshot
+{
+  Fl_Widget *container;
+  int y;
+  std::vector<Geometry> children;
+};
+
+struct Row
+{
+  int top;
+  int bottom;
+  std::vector<Geometry *> items;
+};
+
+struct LabelAnchor
+{
+  Geometry *label;
+  Geometry *anchor;
+  int row;
+  int font;
+  int required;
+  int width;
+  int line;
+};
+
+struct BandCluster
+{
+  int start;
+  int end;
+  int band;
+  int top;
+  int line_height;
+};
+
+struct LayoutSize
+{
+  int width;
+  int height;
+};
+
+Fl_Window *scaled_window = nullptr;
+int base_width = 0;
+int base_height = 0;
+double factor = 1.0;
+double applied_factor = 1.0;
+bool poll_started = false;
+std::vector<Geometry> window_snapshots;
+std::vector<GroupSnapshot> group_snapshots;
+
+double clamp_scale(double value)
+{
+  return std::min(3.0, std::max(0.5, value));
+}
+
+bool env_scale(double *result)
+{
+  const char *value = std::getenv("CARCALC_UI_SCALE");
+  if (!value || !*value || std::strcmp(value, "auto") == 0)
+    return false;
+
+  char *end = nullptr;
+  const double parsed = std::strtod(value, &end);
+  if (end == value || *end != '\\0' || parsed <= 0.0)
+    return false;
+
+  *result = clamp_scale(parsed);
+  return true;
+}
+
+int scale_dim(int value, double scale)
+{
+  if (value <= 0) return value;
+  return std::max(1, static_cast<int>(std::lround(value * scale)));
+}
+
+int scale_offset(int value, double scale)
+{
+  return static_cast<int>(std::lround(value * scale));
+}
+
+int scaled_step(int value, double ratio)
+{
+  if (value <= 0) return value;
+  return std::max(1, static_cast<int>(std::lround(value * ratio)));
+}
+
+void scale_menu_items(const Fl_Menu_Item *items, double ratio)
+{
+  for (const Fl_Menu_Item *item = items; item && item->label(); item = item->next())
+  {
+    Fl_Menu_Item *editable = const_cast<Fl_Menu_Item *>(item);
+    const int size = editable->labelsize();
+    if (size > 0) editable->labelsize(scaled_step(size, ratio));
+    if (item->flags & FL_SUBMENU)
+      scale_menu_items(item + 1, ratio);
+    else if (item->flags & FL_SUBMENU_POINTER)
+      scale_menu_items(static_cast<const Fl_Menu_Item *>(item->user_data()), ratio);
+  }
+}
+
+void scale_fonts(Fl_Widget *widget, double ratio)
+{
+  if (!widget) return;
+
+  const int label_size = widget->labelsize();
+  if (label_size > 0) widget->labelsize(scaled_step(label_size, ratio));
+
+  if (Fl_Input_ *input = dynamic_cast<Fl_Input_ *>(widget))
+  {
+    const int text_size = input->textsize();
+    if (text_size > 0) input->textsize(scaled_step(text_size, ratio));
+  }
+  if (Fl_Browser *browser = dynamic_cast<Fl_Browser *>(widget))
+  {
+    const int text_size = browser->textsize();
+    if (text_size > 0) browser->textsize(scaled_step(text_size, ratio));
+  }
+  if (Fl_Text_Display *display = dynamic_cast<Fl_Text_Display *>(widget))
+  {
+    const int text_size = display->textsize();
+    if (text_size > 0) display->textsize(scaled_step(text_size, ratio));
+  }
+  if (Fl_Menu_ *menu = dynamic_cast<Fl_Menu_ *>(widget))
+  {
+    const int text_size = menu->textsize();
+    if (text_size > 0) menu->textsize(scaled_step(text_size, ratio));
+    scale_menu_items(menu->menu(), ratio);
+  }
+
+  if (Fl_Group *group = dynamic_cast<Fl_Group *>(widget))
+  {
+    for (int i = 0; i < group->children(); ++i)
+      scale_fonts(group->child(i), ratio);
+  }
+}
+
+Geometry snapshot_of(Fl_Widget *widget)
+{
+  return {widget, widget->x(), widget->y(), widget->w(), widget->h(),
+          widget->x(), widget->y(), widget->w(), widget->h(), -1};
+}
+
+void freeze_resize(Fl_Group *group)
+{
+  if (!group) return;
+  group->resizable(nullptr);
+  for (int i = 0; i < group->children(); ++i)
+    freeze_resize(dynamic_cast<Fl_Group *>(group->child(i)));
+}
+
+void capture_layout(Fl_Window *window)
+{
+  window_snapshots.clear();
+  group_snapshots.clear();
+
+  for (int i = 0; i < window->children(); ++i)
+  {
+    Fl_Widget *child = window->child(i);
+    Geometry window_item = snapshot_of(child);
+    window_item.index = i;
+    window_snapshots.push_back(window_item);
+
+    if (Fl_Group *group = dynamic_cast<Fl_Group *>(child))
+    {
+      GroupSnapshot group_snapshot;
+      group_snapshot.container = group;
+      group_snapshot.y = child->y();
+      for (int j = 0; j < group->children(); ++j)
+      {
+        Geometry child_item = snapshot_of(group->child(j));
+        child_item.index = j;
+        group_snapshot.children.push_back(child_item);
+      }
+      group_snapshots.push_back(group_snapshot);
+    }
+  }
+}
+
+bool is_label_widget(const Geometry &item)
+{
+  const char *label = item.widget->label();
+  if (!label || !*label) return false;
+
+  if (dynamic_cast<Fl_Text_Display *>(item.widget)) return true;
+  if (Fl_Output *output = dynamic_cast<Fl_Output *>(item.widget))
+    return (!output->value() || !*output->value()) && item.h <= 2;
+  return false;
+}
+
+int measured_label_width(Fl_Widget *widget, int size)
+{
+  const char *label = widget->label();
+  if (!label || !*label) return 0;
+
+  fl_font(widget->labelfont(), size);
+  const double width = fl_width(label, static_cast<int>(std::strlen(label)));
+  return std::max(1, static_cast<int>(std::lround(width)) + 4);
+}
+
+std::vector<Row> build_rows(GroupSnapshot &snapshot)
+{
+  std::vector<Row> rows;
+  for (Geometry &item : snapshot.children)
+  {
+    if (is_label_widget(item)) continue;
+
+    bool placed = false;
+    for (Row &row : rows)
+    {
+      const int overlap = std::min(row.bottom, item.y + item.h) - std::max(row.top, item.y);
+      if (overlap > 0)
+      {
+        row.items.push_back(&item);
+        row.top = std::min(row.top, item.y);
+        row.bottom = std::max(row.bottom, item.y + item.h);
+        placed = true;
+        break;
+      }
+    }
+    if (!placed)
+      rows.push_back({item.y, item.y + item.h, {&item}});
+  }
+
+  for (Row &row : rows)
+  {
+    std::sort(row.items.begin(), row.items.end(),
+              [](const Geometry *a, const Geometry *b) { return a->x < b->x; });
+  }
+  std::sort(rows.begin(), rows.end(),
+            [](const Row &a, const Row &b) { return a.top < b.top; });
+  return rows;
+}
+
+int distance_to_rect(const Geometry &point, const Geometry &rect)
+{
+  const int cx = point.x + point.w / 2;
+  const int cy = point.y + point.h / 2;
+  const int dx = std::max(std::max(rect.x - cx, 0), cx - (rect.x + rect.w));
+  const int dy = std::max(std::max(rect.y - cy, 0), cy - (rect.y + rect.h));
+  return dx + dy;
+}
+
+int unscaled_font(const Geometry &item)
+{
+  const double current = applied_factor > 0.01 ? applied_factor : 1.0;
+  return std::max(1, static_cast<int>(std::lround(item.widget->labelsize() / current)));
+}
+
+int layout_width(const GroupSnapshot &snapshot)
+{
+  if (scaled_window && scaled_window->w() > 0) return scaled_window->w();
+  return snapshot.container ? snapshot.container->w() : 490;
+}
+
+void layout_group(GroupSnapshot &snapshot, double scale)
+{
+  const std::vector<Row> rows = build_rows(snapshot);
+  if (rows.empty()) return;
+
+  std::vector<int> item_row(snapshot.children.size(), -1);
+  for (std::size_t r = 0; r < rows.size(); ++r)
+    for (Geometry *item : rows[r].items)
+      item_row[item->index] = r;
+
+  std::vector<int> base_top(rows.size(), 0);
+  std::vector<int> base_bottom(rows.size(), 0);
+  int next_row_top = scale_offset(rows.front().top, scale);
+  for (std::size_t r = 0; r < rows.size(); ++r)
+  {
+    const Row &row = rows[r];
+    base_top[r] = next_row_top;
+    int bottom = next_row_top;
+    for (Geometry *item : row.items)
+      bottom = std::max(bottom, next_row_top + scale_offset(item->y - row.top, scale) +
+                                scale_dim(item->h, scale));
+    base_bottom[r] = bottom;
+
+    if (r + 1 < rows.size())
+    {
+      int gap = rows[r + 1].top - row.bottom;
+      if (gap < 0) gap = scale_offset(gap, scale);
+      next_row_top = bottom + gap;
+    }
+  }
+
+  std::vector<LabelAnchor> labels;
+  std::vector<int> row_band(rows.size(), 0);
+  std::vector<bool> row_has_label(rows.size(), false);
+
+  for (Geometry &item : snapshot.children)
+  {
+    if (!is_label_widget(item)) continue;
+
+    Geometry *anchor = nullptr;
+    int best = 0;
+    for (Geometry &candidate : snapshot.children)
+    {
+      if (is_label_widget(candidate)) continue;
+      const int distance = distance_to_rect(item, candidate);
+      if (!anchor || distance < best)
+      {
+        anchor = &candidate;
+        best = distance;
+      }
+    }
+    if (!anchor) continue;
+
+    const int row = item_row[anchor->index];
+    if (row < 0) continue;
+
+    const int font = std::max(8, scale_dim(unscaled_font(item), scale));
+    const int required = font + 4;
+    const int width = std::max(scale_dim(item.w, scale), measured_label_width(item.widget, font));
+    const int gap_before = row == 0 ? base_top[0] : base_top[row] - base_bottom[row - 1];
+    row_has_label[row] = true;
+    row_band[row] = std::max(row_band[row], std::max(0, required - gap_before));
+    labels.push_back({&item, anchor, row, font, required, width, 0});
+  }
+
+  std::vector<BandCluster> clusters;
+  std::vector<int> row_cluster(rows.size(), -1);
+  for (std::size_t r = 0; r < rows.size();)
+  {
+    if (!row_has_label[r])
+    {
+      ++r;
+      continue;
+    }
+    BandCluster cluster = {static_cast<int>(r), static_cast<int>(r), 0, 0, 0};
+    while (r < rows.size() && row_has_label[r])
+    {
+      cluster.end = static_cast<int>(r);
+      cluster.band = std::max(cluster.band, row_band[r]);
+      row_cluster[r] = static_cast<int>(clusters.size());
+      ++r;
+    }
+
+    std::vector<std::size_t> cluster_labels;
+    for (std::size_t i = 0; i < labels.size(); ++i)
+    {
+      if (labels[i].row < cluster.start || labels[i].row > cluster.end) continue;
+      cluster.line_height = std::max(cluster.line_height, labels[i].required);
+      cluster_labels.push_back(i);
+    }
+    cluster.line_height = std::max(1, cluster.line_height);
+
+    // Pack labels into lines using the same greedy rule as placement, so the
+    // band is tall enough for every line that will actually be drawn.
+    std::sort(cluster_labels.begin(), cluster_labels.end(),
+              [&labels](std::size_t a, std::size_t b) {
+                return labels[a].anchor->x < labels[b].anchor->x;
+              });
+    const int available = layout_width(snapshot);
+    int line = 0;
+    int cursor = 0;
+    for (std::size_t index : cluster_labels)
+    {
+      if (cursor > 0 && cursor + labels[index].width > available)
+      {
+        ++line;
+        cursor = 0;
+      }
+      labels[index].line = line;
+      cursor += labels[index].width + 6;
+    }
+    cluster.band = std::max(cluster.band, (line + 1) * cluster.line_height);
+    clusters.push_back(cluster);
+  }
+
+  std::vector<int> row_top(rows.size(), 0);
+  int carried = 0;
+  for (std::size_t r = 0; r < rows.size(); ++r)
+  {
+    const Row &row = rows[r];
+    const int cluster = row_cluster[r];
+    if (cluster >= 0 && r == static_cast<std::size_t>(clusters[cluster].start))
+    {
+      // Labels end at the first shifted row's top, inside the band inserted
+      // above the cluster.
+      clusters[cluster].top = base_top[r] + carried + clusters[cluster].band;
+      carried += clusters[cluster].band;
+    }
+    const int top = base_top[r] + carried;
+    row_top[r] = top;
+
+    int cursor_x = scale_offset(row.items.front()->x, scale);
+    for (std::size_t i = 0; i < row.items.size(); ++i)
+    {
+      Geometry &item = *row.items[i];
+      item.nw = scale_dim(item.w, scale);
+      item.nh = scale_dim(item.h, scale);
+      item.nx = cursor_x;
+      item.ny = top + scale_offset(item.y - row.top, scale);
+
+      int gap = 0;
+      if (i + 1 < row.items.size())
+      {
+        gap = row.items[i + 1]->x - (item.x + item.w);
+        if (gap < 0) gap = scale_offset(gap, scale);
+      }
+      cursor_x = item.nx + item.nw + gap;
+    }
+  }
+
+  // Place labels in their cluster's band using the line assignment computed
+  // above, so no label spills outside the band or covers a neighbouring row.
+  std::vector<std::size_t> order(labels.size());
+  for (std::size_t i = 0; i < labels.size(); ++i) order[i] = i;
+  std::sort(order.begin(), order.end(), [&labels](std::size_t a, std::size_t b) {
+    return labels[a].anchor->x < labels[b].anchor->x;
+  });
+
+  std::vector<int> cluster_cursor(clusters.size(), 0);
+  const int available = layout_width(snapshot);
+  for (std::size_t index : order)
+  {
+    LabelAnchor &entry = labels[index];
+    const int cluster = row_cluster[entry.row];
+    if (cluster < 0) continue;
+
+    Geometry &item = *entry.label;
+    item.nw = entry.width;
+    item.nh = entry.required;
+    if (cluster_cursor[cluster] > 0 && cluster_cursor[cluster] + item.nw > available)
+      cluster_cursor[cluster] = 0;
+    item.nx = cluster_cursor[cluster];
+    item.ny = std::max(0, clusters[cluster].top -
+                          (entry.line + 1) * clusters[cluster].line_height);
+    cluster_cursor[cluster] += item.nw + 6;
+  }
+}
+
+void apply_layout(Fl_Window *window, double scale)
+{
+  for (Geometry &item : window_snapshots)
+  {
+    if (dynamic_cast<Fl_Group *>(item.widget))
+    {
+      const int y = scale_offset(item.y, scale);
+      item.widget->resize(0, y, window->w(), std::max(1, window->h() - y));
+    }
+    else
+    {
+      item.widget->resize(0, scale_offset(item.y, scale), window->w(),
+                          scale_dim(item.h, scale));
+    }
+  }
+
+  for (GroupSnapshot &snapshot : group_snapshots)
+  {
+    layout_group(snapshot, scale);
+    for (Geometry &item : snapshot.children)
+      item.widget->resize(item.nx, item.ny, item.nw, item.nh);
+  }
+}
+
+LayoutSize layout_size(Fl_Window *window, double scale)
+{
+  LayoutSize size = {0, 0};
+  for (const Geometry &item : window_snapshots)
+  {
+    size.width = std::max(size.width, item.nx + item.nw);
+    size.height = std::max(size.height, scale_offset(item.y, scale) + scale_dim(item.h, scale));
+  }
+  for (GroupSnapshot &snapshot : group_snapshots)
+  {
+    GroupSnapshot trial = snapshot;
+    layout_group(trial, scale);
+    for (const Geometry &item : trial.children)
+    {
+      size.width = std::max(size.width, item.nx + item.nw);
+      size.height = std::max(size.height,
+                             scale_offset(snapshot.y, scale) + item.ny + item.nh);
+    }
+  }
+  (void)window;
+  return size;
+}
+
+bool layout_fits(Fl_Window *window, double scale)
+{
+  const LayoutSize size = layout_size(window, scale);
+  return size.width <= window->w() && size.height <= window->h();
+}
+
+double fitted_scale(Fl_Window *window, double scale)
+{
+  if (!window || group_snapshots.empty()) return scale;
+  if (layout_fits(window, scale)) return scale;
+
+  const double minimum = clamp_scale(0.5);
+  double low = minimum;
+  double high = scale;
+  if (!layout_fits(window, low)) return low;
+
+  for (int i = 0; i < 24; ++i)
+  {
+    const double mid = (low + high) / 2.0;
+    if (layout_fits(window, mid)) low = mid;
+    else high = mid;
+  }
+  return low;
+}
+
+double desired_scale()
+{
+  double fixed = 1.0;
+  if (env_scale(&fixed)) return fixed;
+  if (!scaled_window || base_width <= 0 || base_height <= 0) return 1.0;
+
+  const double candidate = std::min(static_cast<double>(scaled_window->w()) / base_width,
+                                    static_cast<double>(scaled_window->h()) / base_height);
+  return fitted_scale(scaled_window, clamp_scale(candidate));
+}
+
+void refresh_scale()
+{
+  if (!scaled_window) return;
+
+  const double target = desired_scale();
+  if (std::fabs(target - applied_factor) < 0.001) return;
+
+  const double ratio = target / applied_factor;
+  factor = target;
+  apply_layout(scaled_window, target);
+  for (int i = 0; i < scaled_window->children(); ++i)
+    scale_fonts(scaled_window->child(i), ratio);
+  applied_factor = target;
+  scaled_window->redraw();
+}
+
+void poll_scale(void *)
+{
+  refresh_scale();
+  Fl::repeat_timeout(0.05, poll_scale);
+}
+
+void scale_window(Fl_Window *window)
+{
+  if (!window) return;
+
+  scaled_window = window;
+  factor = 1.0;
+  applied_factor = 1.0;
+
+  capture_layout(window);
+
+  const LayoutSize needed = layout_size(window, 1.0);
+  const int initial_width = std::min(std::max(window->w(), needed.width), Fl::w());
+  const int initial_height = std::min(std::max(window->h(), needed.height), Fl::h());
+  if (initial_width != window->w() || initial_height != window->h())
+    window->size(initial_width, initial_height);
+  base_width = window->w();
+  base_height = window->h();
+
+  for (int i = 0; i < window->children(); ++i)
+    freeze_resize(dynamic_cast<Fl_Group *>(window->child(i)));
+
+  // The initial factor is 1, so refresh_scale() would otherwise consider it
+  // unchanged and skip the first label-band layout.
+  apply_layout(window, 1.0);
+  refresh_scale();
+
+  if (!poll_started)
+  {
+    Fl::add_timeout(0.05, poll_scale);
+    poll_started = true;
+  }
+}
+
+} // namespace ui_v2_scaling
+
+double ui_v2_scale_factor()
+{
+  return ui_v2_scaling::factor;
+}
+
+int ui_v2_scaled_size(int size)
+{
+  return ui_v2_scaling::scaled_step(size, ui_v2_scaling::factor);
+}
+
+void ui_v2_relayout()
+{
+  if (!ui_v2_scaling::scaled_window) return;
+  ui_v2_scaling::apply_layout(ui_v2_scaling::scaled_window, ui_v2_scaling::factor);
+  ui_v2_scaling::scaled_window->redraw();
+}
+
+void ui_v2_scale_window(Fl_Window *window)
+{
+  ui_v2_scaling::scale_window(window);
+}
+\#include <FL/Fl_File_Chooser.H>
+\#include <FL/fl_ask.H>
+\#include <cctype>
+\#include <filesystem>
+\#include <iostream>
+\#include <string>
+
+static std::string ui_to_lower(std::string s)
+{
+  std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+  return s;
+}
+
+static int ui_match_score(const std::string &text, const std::string &query)
+{
+  if (query.empty()) return 0;
+  std::string t = ui_to_lower(text);
+  std::string q = ui_to_lower(query);
+  if (t == q) return 100000;
+  if (t.size() >= q.size() && t.compare(0, q.size(), q) == 0) return 90000 - static_cast<int>(t.size() - q.size());
+  size_t pos = t.find(q);
+  if (pos != std::string::npos) return 80000 - static_cast<int>(pos) * 100 - static_cast<int>(t.size() - q.size());
+
+  // subsequence (fuzzy) match
+  size_t ti = 0, qi = 0, first = std::string::npos, last = 0;
+  while (ti < t.size() && qi < q.size())
+  {
+    if (t[ti] == q[qi])
+    {
+      if (first == std::string::npos) first = ti;
+      last = ti;
+      ++qi;
+    }
+    ++ti;
+  }
+  if (qi == q.size() && first != std::string::npos)
+  {
+    int span = static_cast<int>(last - first + 1);
+    int gaps = span - static_cast<int>(q.size());
+    return 70000 - span * 50 - gaps * 10 - static_cast<int>(first);
+  }
+
+  return 0;
+}
+
+static bool ui_match_better(const std::string &a, const std::string &b, const std::string &query)
+{
+  int sa = ui_match_score(a, query);
+  int sb = ui_match_score(b, query);
+  if (sa != sb) return sa > sb;
+  std::string la = ui_to_lower(a);
+  std::string lb = ui_to_lower(b);
+  if (la != lb) return la < lb;
+  return a < b;
+}
+
+static void replace_all_text(std::string &text, const std::string &from, const std::string &to)
+{
+  if (from.empty()) return;
+  size_t pos = 0;
+  while ((pos = text.find(from, pos)) != std::string::npos)
+  {
+    text.replace(pos, from.size(), to);
+    pos += to.size();
+  }
+}
+
+static std::string localize_price_text(std::string text)
+{
+  const std::string key = canonical_text(text);
+  if (key == "N/A" || key == "N/D")
+  {
+    const char *translated = translate_cstr("N/A");
+    return translated ? std::string(translated) : text;
+  }
+  const char *unit = translate_cstr("PLN/l");
+  replace_all_text(text, "PLN/l", unit ? unit : "PLN/l");
+  replace_all_text(text, "zł/l", unit ? unit : "PLN/l");
+  return text;
+}
+
+static void translate_widget(Fl_Widget *widget)
+{
+  if (!widget) return;
+  const char *label = widget->label();
+  const std::string key = canonical_text(label ? label : "");
+  const char *translated = translate_cstr(key.c_str());
+  if (translated && (!label || std::strcmp(label, translated) != 0))
+    widget->copy_label(translated);
+  const int size = translation_size(key.c_str());
+  if (size > 0) widget->labelsize(ui_v2_scaled_size(size));
+
+  Fl_Output *output = dynamic_cast<Fl_Output *>(widget);
+  if (output && output->value())
+  {
+    const std::string localized = localize_price_text(output->value());
+    if (localized != output->value()) output->value(localized.c_str());
+  }
+}
+
+static void translate_menu_item(Fl_Menu_Item *item, const char *english)
+{
+  if (!item) return;
+  item->label(translate_cstr(english));
+  const int size = translation_size(english);
+  if (size > 0) item->labelsize(ui_v2_scaled_size(size));
+}
+
+static void translate_widget_group(Fl_Group *group)
+{
+  if (!group) return;
+  for (int i = 0; i < group->children(); ++i)
+    translate_widget(group->child(i));
+}
+
+// The DB has no urban/exurban columns, so show the real mixed consumption
+// figure from conso_mixte_min/max. This is called whenever the selection
+// changes, so the original Fuel usage readout is no longer left blank.
+static void ui_v2_refresh_fuel_usage()
+{
+  if (!lbl_fuel_usage) return;
+  const int brand_row = lst_car_models ? lst_car_models->value() : 0;
+  const int model_row = lst_car_engines ? lst_car_engines->value() : 0;
+  if (brand_row <= 0 || model_row <= 0)
+  {
+    lbl_fuel_usage->value("");
+    return;
+  }
+
+  const char *brand_text = lst_car_models->text(brand_row);
+  const char *model_text = lst_car_engines->text(model_row);
+  if (!brand_text || !model_text)
+  {
+    lbl_fuel_usage->value("");
+    return;
+  }
+
+  std::string gearbox;
+  if (lst_car_gearboxes && lst_car_gearboxes->value() > 0)
+  {
+    const char *text = lst_car_gearboxes->text(lst_car_gearboxes->value());
+    if (text) gearbox = text;
+  }
+  std::string energy;
+  if (cbo_fuel_selectcar && cbo_fuel_selectcar->value() >= 0)
+  {
+    const char *text = cbo_fuel_selectcar->text(cbo_fuel_selectcar->value());
+    if (text) energy = text;
+  }
+
+  lbl_fuel_usage->value(ui_v2_fuel_usage_text(brand_text, model_text, gearbox, energy).c_str());
+}
+
+void apply_language_to_ui()
+{
+  translate_menu_item(sbmnu_calculate, "Calculate");
+  translate_menu_item(sbmnu_btn_selectcar, "Select Car");
+  translate_menu_item(sbmnu_btn_calculate, "Calculate");
+  translate_menu_item(mnu_btn_settings, "Settings");
+  translate_menu_item(mnu_btn_file, "File");
+  translate_menu_item(mnu_btn_help, "Help");
+  translate_menu_item(mnu_btn_about, "About");
+  translate_menu_item(mnu_btn_exit, "Exit");
+  mnu_bar->redraw();
+
+  translate_widget_group(grp_selectcar);
+  translate_widget_group(grp_calculate);
+  translate_widget_group(grp_settings);
+  translate_widget_group(grp_download_data);
+  ui_v2_relayout();
+}
+
+void refresh_language_choices()
+{
+  if (!cbo_language_settings) return;
+  cbo_language_settings->clear();
+  for (const LanguageInfo &language : available_languages())
+    cbo_language_settings->add(language.name.c_str());
+  cbo_language_settings->value(current_language_index());
+}
+
+void wake_grp_settings()
+{
+  refresh_language_choices();
+  lbl_settings_status->value(active_translation_status().c_str());
+  apply_language_to_ui();
+}
+
+void wake_grp_download_data()
+{
+  lbl_selected_db->value(database_path_for_current_language().c_str());
+  lbl_download_status->value(translate_cstr("Ready"));
+  apply_language_to_ui();
+}
+
+void language_changed()
+{
+  int choice = cbo_language_settings ? cbo_language_settings->value() : 0;
+  set_language_by_index(choice);
+  set_database_path(database_path_for_current_language());
+  update_model_name("");
+  update_engine_name("");
+  update_gearbox_name("");
+  update_vehicle_class("");
+  update_fuel_type("");
+  wake_grp_selectcar();
+  wake_grp_settings();
+  wake_grp_download_data();
+  apply_language_to_ui();
+}
+
+void download_selected_database()
+{
+  const std::string source = database_path_for_current_language();
+  if (!std::filesystem::exists(source))
+  {
+    const std::string message = std::string(translate_cstr("Database file not found: ")) + source;
+    lbl_download_status->value(message.c_str());
+    fl_alert("%s", message.c_str());
+    return;
+  }
+
+  Fl_File_Chooser chooser(".", "*.db", Fl_File_Chooser::SINGLE | Fl_File_Chooser::CREATE,
+                         translate_cstr("Choose where to save the database"));
+  chooser.show();
+  while (chooser.shown()) Fl::wait();
+  const char *chosen = chooser.value();
+  if (!chosen || !*chosen)
+  {
+    lbl_download_status->value(translate_cstr("Download cancelled"));
+    return;
+  }
+
+  const std::string destination = chosen;
+  if (std::filesystem::absolute(source) == std::filesystem::absolute(destination))
+  {
+    lbl_download_status->value(translate_cstr("The database is already in that location"));
+    return;
+  }
+
+  try
+  {
+    std::filesystem::copy_file(source, destination, std::filesystem::copy_options::overwrite_existing);
+    const std::string message = std::string(translate_cstr("Saved: ")) + destination;
+    lbl_download_status->value(message.c_str());
+  }
+  catch (const std::exception &error)
+  {
+    const std::string message = std::string(translate_cstr("Download failed: ")) + error.what();
+    lbl_download_status->value(message.c_str());
+    fl_alert("%s", message.c_str());
+  }
+}} {
+  comment {Includes all necessary headers for the entire program} private global
+}
+
+Function {action_cb(Fl_Widget*, void *data)} {
+  comment {Button callback, calls functions based on the userdata it gets (which button was pressed)} open
+} {
+  code {const char *action = static_cast<const char*>(data); // get to a useable format (char)
+  
+  // based on what action is, call different function
+  
+  // switch group to grp_calc
+  if (std::strcmp(action, "group_calculate") == 0)
+  {
+  	// prepare calculate group
+  	apply_language_to_ui();
+  	wake_grp_calculate();
+  	// hide all other groups
+  	hide_all_groups();
+  	// switch group to grp_calculate
+  	grp_calculate->show();
+  }
+  else if (std::strcmp(action, "group_selectcar") == 0)
+  {
+  	// prepare select function
+  	apply_language_to_ui();
+  	wake_grp_selectcar();
+  	// hide all other groups
+  	hide_all_groups();
+  	// switch group to grp_selectcar
+  	grp_selectcar->show();
+  }
+  else if (std::strcmp(action, "group_settings") == 0)
+  {
+  	wake_grp_settings();
+  	hide_all_groups();
+  	grp_settings->show();
+  }
+  else if (std::strcmp(action, "group_download_data") == 0)
+  {
+  	wake_grp_download_data();
+  	hide_all_groups();
+  	grp_download_data->show();
+  }
+  else if (std::strcmp(action, "language_changed") == 0)
+  {
+  	language_changed();
+  }
+  else if (std::strcmp(action, "download_db") == 0)
+  {
+  	download_selected_database();
+  }
+  else if (std::strcmp(action, "calculate") == 0) // calculate button pressed
+  {
+  	// call calculate function
+  	calculate();
+  }
+  else if (std::strcmp(action, "proceed_car") == 0) // call proceed_car func
+  {
+  	proceed_car();
+  }
+  else if (std::strcmp(action, "search_car_models") == 0)
+  {
+  	search_car_models();
+  }
+  else if (std::strcmp(action, "search_car_engines") == 0)
+  {
+  	search_car_engines();
+  }
+  else if (std::strcmp(action, "search_car_gearboxes") == 0)
+  {
+  	search_car_gearboxes();
+  }
+  else if (std::strcmp(action, "clear_car") == 0)
+  {
+  	lst_car_models->value(0);
+  	lst_car_engines->value(0);
+  	lst_car_gearboxes->value(0);
+  	ui_v2_refresh_fuel_usage();
+  	wake_grp_selectcar();
+  }
+  else if (std::strcmp(action, "help_selectcar") == 0 ||
+           std::strcmp(action, "help_calculate") == 0)
+  {
+  	fl_message("%s", translate_cstr("Pick a brand, model and gearbox, then choose class and fuel. Fuel usage shows the DB mixed figure in L/100 km."));
+  }
+  else if (std::strcmp(action, "exit") == 0)
+  {
+  	// ask if user wants to exit
+  	int choice = fl_choice("%s",
+  	                       translate_cstr("Leave"), translate_cstr("Stay"), NULL,
+  	                       translate_cstr("Do you want to leave CarCalc?"));
+  	// if yes - actually close app
+  	if (choice == 0)
+  	{
+  		std::cout << "Bye from CarCalc! \\n";
+  		if (Fl::first_window()) Fl::first_window()->hide();
+  	}
+  }} {}
+}
+
+Function {hide_all_groups()} {
+  comment {Hides all groups} open
+} {
+  code {grp_selectcar->hide();
+grp_calculate->hide();
+ grp_settings->hide();
+ grp_download_data->hide();} {}
+}
+
+Function {get_dto_selectcar()} {
+  comment {Gets values from user, then passes them into DTO in business layer} open
+} {
+  code {// in select car
+	// checks if everything is selected will be before this func, if they succeed - this func is called
+	short idx = lst_car_models->value();
+	std::string car_model = ""; std::string car_engine = ""; std::string car_gearbox = "";
+	std::string car_class = ""; std::string car_fuel = "";
+	// get car model
+	if (idx > 0) //0 means argument not selected
+	{
+		car_model = lst_car_models->text(idx);
+	}
+	// get car engine
+	idx = lst_car_engines->value();
+	if (idx > 0) //0 means argument not selected
+	{
+		car_engine = lst_car_engines->text(idx);
+	}
+	// select car gearbox
+	idx = lst_car_gearboxes->value();
+	if (idx > 0) // 0 means nothing selected
+	{
+		car_gearbox = lst_car_gearboxes->text(idx);
+	}
+	// get class and fuel from cboBoxes
+	idx = cbo_class_selectcar->value();
+	if (idx >= 0) // -1 is nothing selected 
+	{
+		car_class = cbo_class_selectcar->text(idx);
+	}
+	idx = cbo_fuel_selectcar->value();
+	if (idx >= 0) // -1 means nothing selected
+	{
+		car_fuel = cbo_fuel_selectcar->text(idx);	
+	}
+	std::cout << "Car info being passed to DTO: " << car_model << " " << car_engine << " " << car_gearbox << " " << car_class << " " << car_fuel << "\\n"; //make it actually output the data
+	// call function from business layer
+	receive_car_info(car_model, car_engine, car_gearbox, car_class, car_fuel);} {}
+}
+
+Function {calculate()} {open
+} {
+  code {// pass DTO to business layer
+  std::string urban_str = txt_urban_usage->value();
+  std::string exurban_str = txt_exurban_usage->value();
+  std::string mixed_str = txt_mixed_usage->value();
+  std::string co2_emission_str = txt_co2_emission->value();
+  std::string price_str = txt_price->value();
+  std::string distance_str = txt_distance_driven->value();
+  // call calculation function
+  business_calculate(urban_str, exurban_str, mixed_str, co2_emission_str, price_str, distance_str);
+  // get calculated data (converted back to strings)
+  std::vector<std::string> calculated_values = business_return_calculate();
+  // show them in GUI
+  // clear first so that no overlapping text is visible
+  std::string tmp = "";
+  lbl_urban_calculate->copy_label(tmp.c_str());
+  lbl_exurban_calculate->copy_label(tmp.c_str());
+  lbl_mixed_calculate->copy_label(tmp.c_str());
+  lbl_co2emission_calculate->copy_label(tmp.c_str());
+  lbl_average_price_calculate->copy_label(tmp.c_str());
+  lbl_urban_price_calculate->copy_label(tmp.c_str());
+  lbl_exurban_price_calculate->copy_label(tmp.c_str());
+  lbl_mixed_price_calculate->copy_label(tmp.c_str());
+  lbl_distance_calculate->copy_label(tmp.c_str());
+  lbl_fuel_price_calculate->copy_label(tmp.c_str());
+  //printf("label ptr: %p, parent: %p, window shown: %d\\n", (void*)lbl_urban_calculate, (void*)lbl_urban_calculate->parent(), lbl_urban_calculate->window() ? lbl_urban_calculate->window()->shown() : -1);
+  // redraw them
+    lbl_urban_calculate->redraw();
+    lbl_exurban_calculate->redraw();
+    lbl_mixed_calculate->redraw();
+    lbl_co2emission_calculate->redraw();
+    lbl_average_price_calculate->redraw();
+    lbl_urban_price_calculate->redraw();
+    lbl_exurban_price_calculate->redraw();
+    lbl_mixed_price_calculate->redraw();
+    lbl_distance_calculate->redraw();
+    lbl_fuel_price_calculate->redraw();
+  // fill with new values
+  tmp = calculated_values[0];
+  lbl_urban_calculate->value(tmp.c_str());
+  tmp = calculated_values[1];
+  lbl_exurban_calculate->value(tmp.c_str());
+  tmp = calculated_values[2];
+  lbl_mixed_calculate->value(tmp.c_str());
+  tmp = calculated_values[3];
+  lbl_co2emission_calculate->value(tmp.c_str());
+  tmp = calculated_values[4];
+  lbl_average_price_calculate->value(tmp.c_str());
+  // 6, 7, 8 are urban, exurban and mixed prices
+  tmp = calculated_values[5];
+  lbl_urban_price_calculate->value(tmp.c_str());
+  tmp = calculated_values[6];
+  lbl_exurban_price_calculate->value(tmp.c_str());
+  tmp = calculated_values[7];
+  lbl_mixed_price_calculate->value(tmp.c_str());
+  tmp = calculated_values[8]; 
+  lbl_distance_calculate->value(tmp.c_str());
+  // 9 is the government fuel price, or N/A until it is available
+  tmp = localize_price_text(calculated_values[9]);
+  lbl_fuel_price_calculate->value(tmp.c_str());} {}
+}
+
+Function {proceed_car()} {
+  comment {Checks if all selected, if not - warns user, then passes DTO if user confirms} open
+} {
+  code {if (lst_car_models->value() == 0 || lst_car_engines->value() == 0 || lst_car_gearboxes->value() == 0 || cbo_class_selectcar->value() == -1 || cbo_fuel_selectcar->value() == -1)
+{ // if any option is not selected
+	// ask user if they want to proceed anyway
+	int c = fl_choice("%s",
+	translate_cstr("This is fine"), // button 0
+	translate_cstr("Go back and select"), // button 1 (default selection)
+	NULL,
+	translate_cstr("Some options are not selected. Do you want to continue anyway?"));
+	if (c == 0) // this is fine button pressed
+	{
+		// if yes, pass DTO and show grp_calculate
+		get_dto_selectcar(); // should resolve fuel usage if not already
+		wake_grp_calculate(); // clearing txtboxes, filling info etc.
+		hide_all_groups();
+		grp_calculate->show();
+	}
+}
+else // if all are selected - just do it
+{
+		get_dto_selectcar(); // should resolve fuel usage if not alread
+		wake_grp_calculate(); // clearing txtboxes, filling info etc.
+		hide_all_groups();
+		grp_calculate->show();
+}} {}
+}
+
+Function {wake_grp_calculate()} {
+  comment {Prepare grp_calculate for being shown to user} open
+} {
+  code {// clear text fields, labels and cboboxes
+txt_urban_usage->value("");
+txt_exurban_usage->value("");
+txt_mixed_usage->value("");
+txt_co2_emission->value("");
+txt_price->value("");
+txt_distance_driven->value("");
+
+  // pointer debug
+  /*
+  fprintf(stderr, "ptr = %p\\n", (void *) lbl_modelname_calculate);
+  if (!lbl_modelname_calculate) {fprintf(stderr, "NULL\\n"); return; }
+  fprintf(stderr, "windows = %p\\n", (void*)lbl_modelname_calculate->window());
+  fprintf(stderr, "buffer = %p\\n", (void*)lbl_modelname_calculate->buffer());
+  */
+  
+lbl_modelname_calculate->value("");
+lbl_engine_calculate->value("");
+lbl_gearbox_calculate->value("");
+lbl_class_calculate->value("");
+lbl_fueltype_calculate->value("");
+lbl_urban_calculate->value("");
+lbl_exurban_calculate->value("");
+lbl_mixed_calculate->value("");
+lbl_average_price_calculate->value("");
+lbl_urban_price_calculate->value("");
+lbl_exurban_price_calculate->value("");
+lbl_mixed_price_calculate->value("");
+lbl_units_calculate->value("");
+lbl_distance_calculate->value("");
+lbl_co2emission_calculate->value("");
+const std::string fuel_price_display = localize_price_text(business_get_government_fuel_price_display());
+lbl_fuel_price_calculate->value(fuel_price_display.c_str());
+
+// populate text fields such as car info
+cbo_units_calculate->add("SI");
+cbo_units_calculate->add("Imperial");
+// get_from_dto, then set
+fill_from_dto_calculate();} {}
+}
+
+Function {wake_grp_selectcar()} {
+  comment {Prepare select car group for being shown to user} open
+} {
+  code {// clear lst, txt and cboboxes
+  lst_car_models->clear();
+  lst_car_engines->clear();
+  lst_car_gearboxes->clear();
+  
+  cbo_class_selectcar->clear();
+  cbo_fuel_selectcar->clear();
+  
+  txt_search_car_models->value("");
+  txt_search_car_engines->value("");
+  txt_search_car_gearboxes->value("");
+  
+  // load car values from DTO if there are any
+  // = get_from_dto(char which_dto, std::string what_to_get)
+  // populate lists from database
+  populate_car_models();} {}
+}
+
+Function {populate_car_models()} {open
+} {
+  code {lst_car_models->clear();
+  std::vector<std::string> brands = business_get_all_brands();
+  const char *q = txt_search_car_models ? txt_search_car_models->value() : "";
+  if (q && *q)
+  {
+    std::string qs = q;
+    std::stable_sort(brands.begin(), brands.end(), [&](const std::string &a, const std::string &b) { return ui_match_better(a, b, qs); });
+  }
+  for (size_t i = 0; i < brands.size(); i++)
+  {
+    lst_car_models->add(brands[i].c_str());
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {populate_car_engines()} {open
+} {
+  code {lst_car_engines->clear();
+  short idx = lst_car_models->value();
+  if (idx > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::vector<std::string> models = business_get_models_by_brand(brand);
+    const char *q = txt_search_car_engines ? txt_search_car_engines->value() : "";
+    if (q && *q)
+    {
+      std::string qs = q;
+      std::stable_sort(models.begin(), models.end(), [&](const std::string &a, const std::string &b) { return ui_match_better(a, b, qs); });
+    }
+    for (size_t i = 0; i < models.size(); i++)
+    {
+      lst_car_engines->add(models[i].c_str());
+    }
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {populate_car_gearboxes()} {open
+} {
+  code {lst_car_gearboxes->clear();
+  short idx = lst_car_models->value();
+  short idx2 = lst_car_engines->value();
+  if (idx > 0 && idx2 > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> gearboxes = business_get_gearboxes_by_brand_model(brand, model);
+    const char *q = txt_search_car_gearboxes ? txt_search_car_gearboxes->value() : "";
+    if (q && *q)
+    {
+      std::string qs = q;
+      std::stable_sort(gearboxes.begin(), gearboxes.end(), [&](const std::string &a, const std::string &b) { return ui_match_better(a, b, qs); });
+    }
+    for (size_t i = 0; i < gearboxes.size(); i++)
+    {
+      lst_car_gearboxes->add(gearboxes[i].c_str());
+    }
+  }
+  // populate cboBoxes - search is done
+populate_cboboxes_selectcar();} {}
+}
+
+Function {search_car_models()} {open
+} {
+  code {// return car models based on user search, sorted by match quality
+populate_car_models();} {}
+}
+
+Function {search_car_engines()} {open
+} {
+  code {// return car engines based on user search, sorted by match quality
+populate_car_engines();} {}
+}
+
+Function {search_car_gearboxes()} {open
+} {
+  code {// return car gearboxes based on user search, sorted by match quality
+populate_car_gearboxes();} {}
+}
+
+Function {browser_cb(Fl_Widget *w, short browser_type)} {
+  comment {Callback for listboxes to get selected element} open
+} {
+  code {Fl_Browser *b = (Fl_Browser *)w;
+int index = b->value(); // 0 is none
+if (index > 0)
+{
+	const char *s = b->text(index);
+	printf("Selected element from listbox with text: %s\\n", s);
+	// decide which value (model, gearbox, engine) to update
+	if (browser_type == 0) // model browser
+	{
+		update_model_name(s); // updated car model in struct in BL
+		populate_car_engines(); // refresh for QoL
+	}
+	else if (browser_type == 1) // engine browser
+	{
+		update_engine_name(s);	
+		populate_car_gearboxes(); // refresh for QoL
+	}
+	else if (browser_type == 2) // gearbox browser
+	{
+		update_gearbox_name(s);	
+		populate_cboboxes_selectcar(); // refresh for QoL
+	}
+}} {}
+}
+
+Function {populate_cboboxes_selectcar()} {
+  comment {Populate fuel type, class and fuel usage} open
+} {
+  code {cbo_fuel_selectcar->clear();
+cbo_class_selectcar->clear();
+  // set indexes to 0 to indicate change
+  cbo_fuel_selectcar->value(0);
+  cbo_class_selectcar->value(0);
+  // fill fuel type first
+  short idx = lst_car_models->value();
+  short idx2 = lst_car_engines->value();
+  if (idx > 0 && idx2 > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> fuel_types = business_get_fuel_types_by_brand_model(brand, model);
+    for (size_t i = 0; i < fuel_types.size(); i++)
+    {
+    	cbo_fuel_selectcar->add(fuel_types[i].c_str());
+    }
+  }
+  // then fill vehicle class
+  if (idx > 0 && idx2 > 0)
+  {
+    std::string brand = lst_car_models->text(idx);
+    std::string model = lst_car_engines->text(idx2);
+    std::vector<std::string> vehicle_classes = business_get_vehicle_classes_by_brand_model(brand, model);
+    for (size_t i = 0; i < vehicle_classes.size(); i++)
+    {
+    	cbo_class_selectcar->add(vehicle_classes[i].c_str());
+    }
+   }
+   ui_v2_refresh_fuel_usage();} {}
+}
+
+Function {cbobox_cb(Fl_Widget *o, short which_cbobox)} {
+  comment {Callback for cboBoxes (needs cboBox name and cboBox number as args)} open
+} {
+  code {Fl_Choice *c = (Fl_Choice*)o;
+int idx = c->value();
+if (idx > 0)
+{
+	std::string selected_str = c->text(idx);
+	// update DTO data based on which cboBox this is
+	if (which_cbobox == 0) // vehicle class
+	{
+		update_vehicle_class(selected_str);
+	}
+	else if (which_cbobox == 1) // fuel type
+	{
+		update_fuel_type(selected_str);
+	}
+ }
+ ui_v2_refresh_fuel_usage();} {}
+}
+
+Function {fill_from_dto_calculate()} {
+  comment {Fill car info from DTO in calculate group} open
+} {
+  code {// get DTO info
+  std::vector<std::string> car_info_vec = business_return_info();
+  // set output lbls to received info
+  // clear first so that no overlapping text is visible
+  std::string tmp = "";
+  lbl_modelname_calculate->copy_label(tmp.c_str());
+  lbl_engine_calculate->copy_label(tmp.c_str());
+  lbl_gearbox_calculate->copy_label(tmp.c_str());
+  lbl_class_calculate->copy_label(tmp.c_str());
+  lbl_fueltype_calculate->copy_label(tmp.c_str());
+  txt_urban_usage->value(tmp.c_str());
+  txt_exurban_usage->value(tmp.c_str());
+  txt_mixed_usage->value(tmp.c_str());
+  txt_co2_emission->value(tmp.c_str());
+  // redraw them
+  lbl_modelname_calculate->redraw();
+  lbl_engine_calculate->redraw();
+  lbl_gearbox_calculate->redraw();
+  lbl_class_calculate->redraw();
+  lbl_fueltype_calculate->redraw();
+  txt_urban_usage->redraw();
+  txt_exurban_usage->redraw();
+  txt_mixed_usage->redraw();
+  txt_co2_emission->redraw();
+  // fill with new values
+  tmp = car_info_vec[0];
+  lbl_modelname_calculate->value(tmp.c_str());
+  tmp = car_info_vec[1];
+  lbl_engine_calculate->value(tmp.c_str());
+  tmp = car_info_vec[2];
+  lbl_gearbox_calculate->value(tmp.c_str());
+  tmp = car_info_vec[3];
+  lbl_class_calculate->value(tmp.c_str());
+  tmp = car_info_vec[4];
+  lbl_fueltype_calculate->value(tmp.c_str());
+  // fill text fields with values
+  std::vector<std::string> car_value_vec = business_return_values();
+  tmp = car_value_vec[0];
+  txt_urban_usage->value(tmp.c_str());
+  tmp = car_value_vec[1];
+  txt_exurban_usage->value(tmp.c_str());
+  tmp = car_value_vec[2];
+  txt_mixed_usage->value(tmp.c_str());
+  tmp = car_value_vec[3];
+  txt_co2_emission->value(tmp.c_str());} {}
+}

@@ -5,3 +5,11 @@ prog_asan
 *.exe
 .win-deps/
 .build-full/
+
+# Generated v2 build outputs and runtime data copies
+ui_v2/CarCalc_v2
+ui_v2/CarCalc_v2.exe
+ui_v2/cars.db
+ui_v2/cars_en.db
+ui_v2/cars_pl.db
+ui_v2/translations/

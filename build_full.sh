@@ -8,7 +8,7 @@
 # Usage:
 #   ./build_full.sh                 # rebuilds dependencies and produces ./prog
 #   OUT=~/CarCalc ./build_full.sh   # custom output path
-#   BUILD_DIR=/tmp/cc-build ./build_full.sh
+#   BUILD_DIR=./custom-build ./build_full.sh
 #   CLEAN=0 ./build_full.sh         # reuse an existing dependency build tree
 #   JOBS=2 ./build_full.sh          # limit parallel compilation
 
