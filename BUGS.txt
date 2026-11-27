@@ -1,1 +1,1 @@
-* safe compile reveals memory leak
+No known open bugs (as of Release 1.0.0).

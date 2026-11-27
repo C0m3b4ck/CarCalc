@@ -6,16 +6,24 @@
 #        ./compile_asan.sh --build  build only
 #
 # The plain, non-ASan binary stays untouched in ./prog (see compile_app.sh).
+# FLTK 1.4.5 from the bundled build tree is used - system FLTK 1.3.x produces
+# corrupted widget geometry with the FLUID 1.4.5 generated UI.
 
 set -euo pipefail
 cd "$(dirname "$0")"
+source ./build_env.sh
+
+build_env_ensure_deps
 
 OUT=prog_asan
 
-g++ -o "$OUT" main.cpp business_layer.cpp io_layer.cpp sql_layer.cpp language.cpp government_prices.cpp car_calc_ui.cxx \
-    -lsqlite3 -lcurl \
-    $(fltk-config --cxxflags) $(fltk-config --ldflags) \
-    -fsanitize=address -fno-omit-frame-pointer -g -O1
+CXX="${CXX:-g++}"
+"$CXX" -o "$OUT" \
+    "${SQLITE_CFLAGS[@]}" "${FLTK_CXXFLAGS[@]}" "${CURL_CFLAGS[@]}" \
+    main.cpp business_layer.cpp io_layer.cpp sql_layer.cpp language.cpp \
+    government_prices.cpp car_calc_ui.cxx \
+    "${SQLITE_LIBS[@]}" "${FLTK_LDFLAGS[@]}" "${CURL_LIBS[@]}" \
+    -fsanitize=address -fno-omit-frame-pointer -g -O1 -std=c++17
 
 echo "Built ./$OUT (AddressSanitizer + LeakSanitizer)"
 

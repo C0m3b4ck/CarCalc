@@ -24,6 +24,7 @@ bool start_telemetry()
             }
         }
     }
+    return telemetry_file.is_open();
 }
 
 std::string get_neat_timestamp()

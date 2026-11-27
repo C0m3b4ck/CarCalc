@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <cctype>
-#include <mutex>
 #include <optional>
 #include <regex>
 #include <string>
@@ -13,6 +12,7 @@
 #include <winhttp.h>
 #else
 #include <curl/curl.h>
+#include <mutex>
 #endif
 
 namespace {

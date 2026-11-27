@@ -2,7 +2,7 @@
 
 [![Latest release](https://img.shields.io/github/v/release/C0m3b4ck/CarCalc?style=flat-square)](https://github.com/C0m3b4ck/CarCalc/releases/latest)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20x64%20%7C%20Linux-lightgrey?style=flat-square)](#building)
+[![Platform](https://img.shields.io/badge/platform-Windows%20x64%20%7C%20Windows%20x86%20legacy%20%7C%20Linux-lightgrey?style=flat-square)](#building)
 
 A small, power-conscious car calculator built with FLTK and SQLite.
 Pick a car from an official French vehicle dataset and calculate fuel usage,
@@ -61,18 +61,19 @@ This needs a C++17 compiler, CMake, X11 headers and libcurl headers, but **no
 system FLTK or SQLite package**. Dependencies are built into the ignored
 `.build-full/` directory.
 
-**Build against system libraries.** For a quick incremental build:
+**Quick incremental and sanitizer builds.** `compile_app.sh`,
+`compile_app_safe.sh` and `compile_asan.sh` reuse the bundled FLTK 1.4.5 tree in
+`.build-full/` (creating it with `build_full.sh` if needed). They deliberately do
+**not** use the system `fltk-config`: FLTK 1.3.x renders the FLUID 1.4.5 layout
+incorrectly, with misplaced widgets and overlapping labels.
 
 ```bash
-./compile_app.sh
-# or:
-g++ -O2 -std=c++17 -o prog \
-  main.cpp business_layer.cpp io_layer.cpp sql_layer.cpp language.cpp \
-  government_prices.cpp car_calc_ui.cxx \
-  -lsqlite3 -lcurl $(fltk-config --cxxflags) $(fltk-config --ldflags)
+./compile_app.sh            # normal optimized ./prog
+./compile_app_safe.sh       # ASan build as ./prog
+./compile_asan.sh --build   # ASan build as ./prog_asan (no GUI launch)
 ```
 
-This variant requires FLTK development headers and SQLite3 development files.
+Only libcurl headers are required from the system.
 
 ### Windows x64 (cross-compile from Linux)
 
@@ -81,22 +82,43 @@ This variant requires FLTK development headers and SQLite3 development files.
 ```
 
 Produces a standalone `CarCalc.exe` (PE32+ GUI, statically linked — no FLTK or
-SQLite DLLs needed; only standard Windows system DLLs are used). The script
-caches dependencies in `.win-deps/` and copies `cars.db` next to the `.exe`.
+SQLite DLLs needed; only standard Windows system DLLs are used). FLTK 1.4.5 is
+cross-built from the bundled source into `.win-deps/fltk-1.4.5/`, matching the
+FLUID 1.4.5 generated UI. The script copies `cars.db` and the translations next
+to the `.exe`.
 
-Requirements: `g++-mingw-w64-x86-64` (`x86_64-w64-mingw32-g++`) and `unzip`.
+Requirements: `g++-mingw-w64-x86-64` (`x86_64-w64-mingw32-g++`) and CMake.
 
 Useful overrides:
 
 ```bash
 OUT=~/Downloads/CarCalc.exe ./compile_windows.sh   # custom output path
-FLTK_WIN_DIR=/path/to/fltk ./compile_windows.sh    # custom Windows FLTK build
+FLTK_WIN_DIR=/path/to/fltk-1.4.5 ./compile_windows.sh  # custom matching tree
 ```
 
-The bundled helper uses a prebuilt MinGW-w64 FLTK 1.3.9 static library when
-available; SQLite is compiled from the bundled amalgamation in
-[`external_libraries/sqlite-3.54.1/`](external_libraries/sqlite-3.54.1/). To build FLTK from source too,
-use the checked-in upstream sources (or fetch the same releases):
+### Windows x86 legacy (Windows 2000+)
+
+```bash
+./compile_windows_legacy.sh
+```
+
+Produces `CarCalc-legacy.exe`: a 32-bit PE32 GUI executable with subsystem
+version 5.00, aimed at Windows 2000 and newer. The script builds its own
+32-bit FLTK 1.4.5 static library in the ignored `.win-legacy-build/` directory
+and leaves the modern Windows (`.win-deps/`) and Linux (`.build-full/`) build
+trees untouched. FLTK is built without GDI+, OpenGL and printing; SQLite is
+single-threaded and uses small Win2000 shims for `GetTickCount64` and
+libstdc++ condition variables. Requirements are `gcc-mingw-w64-i686`,
+`g++-mingw-w64-i686` and CMake.
+
+```bash
+OUT=~/Downloads/CarCalc-legacy.exe ./compile_windows_legacy.sh
+CLEAN=1 ./compile_windows_legacy.sh     # rebuild the legacy FLTK tree
+```
+
+Both Windows scripts compile SQLite from the bundled amalgamation in
+[`external_libraries/sqlite-3.54.1/`](external_libraries/sqlite-3.54.1/) and use
+FLTK 1.4.5 from the checked-in source tree:
 
 | Dependency | Version | Bundled source | Upstream | License |
 |---|---|---|---|---|
@@ -104,10 +126,9 @@ use the checked-in upstream sources (or fetch the same releases):
 | SQLite | 3.54.1 | [`external_libraries/sqlite-3.54.1/`](external_libraries/sqlite-3.54.1/) | [sqlite.org](https://www.sqlite.org/download.html) | Public domain |
 | GNU Wget | 1.25.0 | [`external_libraries/wget-1.25.0/`](external_libraries/wget-1.25.0/) | [GNU FTP](https://ftp.gnu.org/gnu/wget/wget-1.25.0.tar.gz) | GPL v3 or later (source only, not linked) |
 
-Cross-compile FLTK with `x86_64-w64-mingw32-g++ --host=x86_64-w64-mingw32`,
-build statically, then point `FLTK_WIN_DIR` at that tree. SQLite's
-`sqlite3.c`/`sqlite3.h` are compiled directly into the executable by the script.
-See [`external_libraries/README.md`](external_libraries/README.md) for checksums and rebuild details.
+SQLite's `sqlite3.c`/`sqlite3.h` are compiled directly into each executable by
+the scripts. See [`external_libraries/README.md`](external_libraries/README.md)
+for checksums and rebuild details.
 
 ## Licenses
 

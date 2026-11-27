@@ -14,12 +14,13 @@
 
 set -euo pipefail
 cd "$(dirname "$0")"
+source ./build_env.sh
 
-ROOT="$PWD"
+ROOT="$CARCALC_ROOT"
 OUT="${OUT:-$ROOT/prog}"
-BUILD_DIR="${BUILD_DIR:-$ROOT/.build-full}"
-FLTK_SRC="$ROOT/external_libraries/fltk-1.4.5"
-SQLITE_SRC="$ROOT/external_libraries/sqlite-3.54.1"
+BUILD_DIR="$CARCALC_BUILD_DIR"
+FLTK_SRC="$CARCALC_FLTK_SRC"
+SQLITE_SRC="$CARCALC_SQLITE_SRC"
 JOBS="${JOBS:-$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 2)}"
 CLEAN="${CLEAN:-1}"
 
@@ -78,15 +79,11 @@ echo "==> Compiling SQLite $SQLITE_VERSION amalgamation"
     -I"$SQLITE_SRC" -c "$SQLITE_SRC/sqlite3.c" -o "$BUILD_DIR/sqlite/sqlite3.o"
 "$AR" rcs "$BUILD_DIR/sqlite/libsqlite3.a" "$BUILD_DIR/sqlite/sqlite3.o"
 
-FLTK_CONFIG="$BUILD_DIR/fltk/fltk-config"
-read -r -a FLTK_CXXFLAGS <<<"$(bash "$FLTK_CONFIG" --cxxflags)"
-read -r -a FLTK_LDFLAGS <<<"$(bash "$FLTK_CONFIG" --ldflags)"
+build_env_read_flags
 
-CURL_CFLAGS=()
-CURL_LIBS=(-lcurl)
-if command -v pkg-config >/dev/null 2>&1 && pkg-config --exists libcurl; then
-    read -r -a CURL_CFLAGS <<<"$(pkg-config --cflags libcurl)"
-    read -r -a CURL_LIBS <<<"$(pkg-config --libs libcurl)"
+if [[ "${DEPS_ONLY:-0}" == "1" ]]; then
+    echo "Done: bundled dependency tree at $BUILD_DIR"
+    exit 0
 fi
 
 SOURCES=(

@@ -1,5 +1,5 @@
-* add wget src to project
-* move numbers to right edge of textboxes
+* implement government prices for Poland
+* implement government prices for other countries
+* allow for finding fuel data near the user
 * add urban and exurban fuel data (different DB?)
 * make sure variables are cleared between uses
--> add labels to lbl outputs (no standalone labels)

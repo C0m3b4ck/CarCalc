@@ -7,15 +7,14 @@
 #
 # Optional overrides:
 #   CXX, CC        - cross compiler (default: x86_64-w64-mingw32-g++/gcc)
-#   FLTK_WIN_DIR   - directory with Windows FLTK 1.3/1.4 (FL/ + lib/libfltk.a)
-#   FLTK_WIN_ZIP   - prebuilt FLTK zip (optional)
+#   FLTK_WIN_DIR   - directory with a matching Windows FLTK 1.4.5 tree
 #   SQLITE_AMALGAMATION_DIR - directory containing sqlite3.c and sqlite3.h
 #   CARCALC_DEPS   - where cached dependencies are stored (default: ./.win-deps)
 #
 # SQLite is compiled from the bundled amalgamation in external_libraries/sqlite-3.54.1/
-# when available; FLTK uses a prebuilt MinGW-w64 static library (see below).
+# when available; FLTK 1.4.5 is cross-built from the bundled source into .win-deps/.
 #
-# Requires: x86_64-w64-mingw32-g++, unzip, and curl/wget (only if deps are missing).
+# Requires: x86_64-w64-mingw32-g++ and CMake.
 
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -25,11 +24,10 @@ CC="${CC:-x86_64-w64-mingw32-gcc}"
 OUT="${OUT:-$PWD/CarCalc.exe}"
 DEPS="${CARCALC_DEPS:-$PWD/.win-deps}"
 
-for tool in "$CXX" "$CC" unzip; do
+for tool in "$CXX" "$CC" cmake; do
     command -v "$tool" >/dev/null 2>&1 || {
         echo "error: missing tool: $tool" >&2
-        echo "Install the MinGW-w64 cross compiler and unzip with your package manager," >&2
-        echo "or set CXX/CC to compatible tools." >&2
+        echo "Install the MinGW-w64 cross compiler and CMake, or set CXX/CC to compatible tools." >&2
         exit 1
     }
 done
@@ -37,48 +35,59 @@ done
 mkdir -p "$DEPS"
 
 # ---------------------------------------------------------------------------
-# 1. Windows FLTK 1.3 static library + headers
+# 1. Windows FLTK 1.4.5 static library + headers
+#    The UI is generated with FLUID 1.4.5, so the runtime library must match.
 # ---------------------------------------------------------------------------
+FLTK_SOURCE="$PWD/external_libraries/fltk-1.4.5"
+FLTK_INCLUDES=()
+
 if [[ -n "${FLTK_WIN_DIR:-}" ]]; then
     FLTK_DIR="$FLTK_WIN_DIR"
+    FLTK_INCLUDES=(-I"$FLTK_DIR")
+    if [[ ! -f "$FLTK_DIR/FL/Fl.H" || ! -f "$FLTK_DIR/lib/libfltk.a" ]]; then
+        echo "error: FLTK_WIN_DIR is missing FL/Fl.H or lib/libfltk.a: $FLTK_DIR" >&2
+        exit 1
+    fi
 else
-    FLTK_DIR="$DEPS/fltk-1.3.9"
-fi
-
-if [[ ! -f "$FLTK_DIR/FL/Fl.H" || ! -f "$FLTK_DIR/lib/libfltk.a" ]]; then
-    echo "==> Preparing Windows FLTK 1.3 in $FLTK_DIR"
-    mkdir -p "$FLTK_DIR"
-
-    # Prefer an explicitly provided or locally cached prebuilt bundle.
-    zip_candidates=(
-        "${FLTK_WIN_ZIP:-}"
-        "$PWD/external_libraries/fltk-1.3.9-compiled.zip"
-        "$DEPS/fltk-1.3.9-compiled.zip"
-    )
-    if [[ -n "${HOME:-}" ]]; then
-        zip_candidates+=("$HOME/.cache/carcalc/fltk-1.3.9-compiled.zip")
+    FLTK_DIR="$DEPS/fltk-1.4.5"
+    FLTK_INCLUDES=(-I"$FLTK_DIR" -I"$FLTK_SOURCE")
+    if [[ ! -f "$FLTK_SOURCE/CMakeLists.txt" || ! -f "$FLTK_SOURCE/FL/Fl.H" ]]; then
+        echo "error: missing bundled FLTK source: $FLTK_SOURCE" >&2
+        exit 1
     fi
 
-    fltk_zip=""
-    for candidate in "${zip_candidates[@]}"; do
-        if [[ -n "$candidate" && -f "$candidate" ]]; then
-            fltk_zip="$candidate"
-            break
-        fi
-    done
-
-    if [[ -n "$fltk_zip" ]]; then
-        echo "    using prebuilt bundle: $fltk_zip"
-        unzip -o -q "$fltk_zip" \
-            'fltk-1.3.9/FL/*' \
-            'fltk-1.3.9/config.h' \
-            'fltk-1.3.9/lib/libfltk.a' \
-            -d "$DEPS"
-    else
-        echo "error: no Windows FLTK found." >&2
-        echo "Set FLTK_WIN_DIR to a MinGW-w64 FLTK tree, or FLTK_WIN_ZIP to a prebuilt zip." >&2
-        echo "A cached zip may also be placed in external_libraries/ or $DEPS." >&2
-        exit 1
+    if [[ ! -f "$FLTK_DIR/lib/libfltk.a" ]]; then
+        echo "==> Building bundled FLTK 1.4.5 for x86_64-w64-mingw32"
+        mkdir -p "$DEPS"
+        cat > "$DEPS/toolchain-x86_64.cmake" <<'EOF'
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+set(CMAKE_C_COMPILER x86_64-w64-mingw32-gcc)
+set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
+set(CMAKE_RC_COMPILER x86_64-w64-mingw32-windres)
+set(CMAKE_FIND_ROOT_PATH /usr/x86_64-w64-mingw32)
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+EOF
+        cmake -S "$FLTK_SOURCE" -B "$FLTK_DIR" \
+            -DCMAKE_TOOLCHAIN_FILE="$DEPS/toolchain-x86_64.cmake" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS=-D_WIN32_WINNT=0x0600 \
+            -DCMAKE_CXX_FLAGS=-D_WIN32_WINNT=0x0600 \
+            -DFLTK_BUILD_SHARED_LIBS=OFF \
+            -DFLTK_BUILD_FLUID=OFF \
+            -DFLTK_BUILD_TEST=OFF \
+            -DFLTK_BUILD_EXAMPLES=OFF \
+            -DFLTK_BUILD_FLTK_OPTIONS=OFF \
+            -DFLTK_BUILD_FORMS=OFF \
+            -DFLTK_BUILD_GL=OFF \
+            -DFLTK_GRAPHICS_GDIPLUS=OFF \
+            -DFLTK_OPTION_PRINT_SUPPORT=OFF \
+            -DFLTK_USE_SYSTEM_LIBJPEG=OFF \
+            -DFLTK_USE_SYSTEM_LIBPNG=OFF \
+            -DFLTK_USE_SYSTEM_ZLIB=OFF
+        cmake --build "$FLTK_DIR" --parallel "${JOBS:-4}" --target fltk
     fi
 fi
 
@@ -143,13 +152,14 @@ echo "==> Compiling sqlite3.c"
     -I"$SQLITE_DIR" -c "$SQLITE_DIR/sqlite3.c" -o "$DEPS/sqlite3.o"
 
 echo "==> Linking $OUT"
-"$CXX" -O2 -std=c++17 -static -mwindows \
-    -I"$FLTK_DIR" -I"$SQLITE_DIR" \
-    -DWIN32 -DUSE_OPENGL32 \
+"$CXX" -O2 -std=c++17 -static -static-libgcc -static-libstdc++ -mwindows \
+    "${FLTK_INCLUDES[@]}" -I"$SQLITE_DIR" \
+    -D_WIN32_WINNT=0x0600 -DWIN32 -DUSE_OPENGL32 \
     -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 \
     main.cpp business_layer.cpp io_layer.cpp sql_layer.cpp language.cpp government_prices.cpp car_calc_ui.cxx \
     "$DEPS/sqlite3.o" "$FLTK_DIR/lib/libfltk.a" \
-    -lole32 -luuid -lcomctl32 -lwinhttp \
+    -lole32 -luuid -lcomctl32 -lws2_32 -lwinspool \
+    -lgdi32 -luser32 -lkernel32 -lshell32 -lwinhttp \
     -o "$OUT"
 
 OUT_DIR="$(dirname "$OUT")"

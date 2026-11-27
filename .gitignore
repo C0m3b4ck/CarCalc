@@ -4,6 +4,8 @@ prog
 prog_asan
 *.exe
 .win-deps/
+.win-legacy-deps/
+.win-legacy-build/
 .build-full/
 
 # Generated v2 build outputs and runtime data copies
