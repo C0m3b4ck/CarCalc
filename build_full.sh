@@ -105,8 +105,6 @@ echo "==> Linking $OUT"
     "${SOURCES[@]}" \
     -L"$BUILD_DIR/sqlite" -lsqlite3 \
     "${FLTK_LDFLAGS[@]}" "${CURL_LIBS[@]}" \
-    -lwinhttp \
-    -lcurl \
-    -o "$OUT"   
+    -o "$OUT"
 
 echo "Done: $OUT"

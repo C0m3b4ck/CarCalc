@@ -35,7 +35,8 @@ std::vector<std::string> get_gearboxes_by_brand_model(const std::string &brand, 
 std::vector<std::string> get_fuel_types_by_brand_model(const std::string &brand, const std::string &model);
 std::vector<std::string> get_vehicle_classes_by_brand_model(const std::string &brand, const std::string &model);
 
-// Get consumption/emission data for specific car
+// Get consumption/emission data for specific car. Usage values are returned in
+// litres per kilometre (L/km); the DB's L/100 km figures are converted here.
 bool get_car_consumption_data(const std::string &brand, const std::string &model, 
                                const std::string &engine_desc, const std::string &gearbox,
                                float &urban_usage, float &exurban_usage, float &mixed_usage,

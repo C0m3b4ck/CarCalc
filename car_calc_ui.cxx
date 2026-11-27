@@ -68,7 +68,7 @@ static void cb_cbo_fuel_selectcar(Fl_Choice*, void*) {
   cbobox_cb(cbo_fuel_selectcar, 1);
 }
 
-Fl_Output *lbl_fuel_usage=(Fl_Output *)0;
+RightAlignedOutput *lbl_fuel_usage=(RightAlignedOutput *)0;
 
 Fl_Group *grp_calculate=(Fl_Group *)0;
 
@@ -78,17 +78,17 @@ Fl_Button *btn_help_calculate=(Fl_Button *)0;
 
 Fl_Button *btn_calculate=(Fl_Button *)0;
 
-Fl_Input *txt_urban_usage=(Fl_Input *)0;
+RightAlignedInput *txt_urban_usage=(RightAlignedInput *)0;
 
-Fl_Input *txt_exurban_usage=(Fl_Input *)0;
+RightAlignedInput *txt_exurban_usage=(RightAlignedInput *)0;
 
-Fl_Input *txt_mixed_usage=(Fl_Input *)0;
+RightAlignedInput *txt_mixed_usage=(RightAlignedInput *)0;
 
-Fl_Input *txt_co2_emission=(Fl_Input *)0;
+RightAlignedInput *txt_co2_emission=(RightAlignedInput *)0;
 
-Fl_Input *txt_price=(Fl_Input *)0;
+RightAlignedInput *txt_price=(RightAlignedInput *)0;
 
-Fl_Input *txt_distance_driven=(Fl_Input *)0;
+RightAlignedInput *txt_distance_driven=(RightAlignedInput *)0;
 
 Fl_Output *lbl_modelname_calculate=(Fl_Output *)0;
 
@@ -230,18 +230,29 @@ Fl_Double_Window* make_window() {
         cbo_fuel_selectcar->labelsize(17);
         cbo_fuel_selectcar->callback((Fl_Callback*)cb_cbo_fuel_selectcar);
       } // Fl_Choice* cbo_fuel_selectcar
-      { lbl_fuel_usage = new Fl_Output(390, 277, 95, 28, "Fuel usage:");
-      } // Fl_Output* lbl_fuel_usage
+      { lbl_fuel_usage = new RightAlignedOutput(390, 277, 95, 28, "Fuel usage:");
+        lbl_fuel_usage->tooltip("Fuel usage is shown in litres per kilometre (L/km). The database stores it pe"
+"r 100 km, so the displayed value is divided by 100.");
+        lbl_fuel_usage->box(FL_DOWN_BOX);
+        lbl_fuel_usage->color(FL_BACKGROUND2_COLOR);
+        lbl_fuel_usage->selection_color(FL_SELECTION_COLOR);
+        lbl_fuel_usage->labeltype(FL_NORMAL_LABEL);
+        lbl_fuel_usage->labelfont(0);
+        lbl_fuel_usage->labelsize(14);
+        lbl_fuel_usage->labelcolor(FL_FOREGROUND_COLOR);
+        lbl_fuel_usage->align(Fl_Align(FL_ALIGN_LEFT));
+        lbl_fuel_usage->when(FL_WHEN_RELEASE);
+      } // RightAlignedOutput* lbl_fuel_usage
       grp_selectcar->end();
     } // Fl_Group* grp_selectcar
     { grp_calculate = new Fl_Group(-8, 20, 498, 361);
-      { Fl_Output* o = new Fl_Output(145, 51, 205, 0, "Calculate Fuel-Related");
+      { Fl_Output* o = new Fl_Output(145, 38, 205, 0, "Calculate Fuel-Related");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(21);
+        o->labelsize(18);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -259,25 +270,82 @@ Fl_Double_Window* make_window() {
         btn_calculate->labelsize(25);
         btn_calculate->callback((Fl_Callback*)action_cb, (void*)("calculate"));
       } // Fl_Button* btn_calculate
-      { txt_urban_usage = new Fl_Input(55, 47, 105, 28, "Urban:");
-      } // Fl_Input* txt_urban_usage
-      { txt_exurban_usage = new Fl_Input(225, 47, 80, 28, "Exurban:");
-      } // Fl_Input* txt_exurban_usage
-      { txt_mixed_usage = new Fl_Input(405, 47, 80, 28, "Mixed:");
-      } // Fl_Input* txt_mixed_usage
-      { txt_co2_emission = new Fl_Input(100, 77, 80, 28, "Co2 emission:");
-      } // Fl_Input* txt_co2_emission
-      { txt_price = new Fl_Input(225, 77, 80, 28, "Price:");
-      } // Fl_Input* txt_price
-      { txt_distance_driven = new Fl_Input(405, 77, 80, 28, "Trip distance:");
-      } // Fl_Input* txt_distance_driven
-      { Fl_Output* o = new Fl_Output(130, 135, 241, 1, "Car Info");
+      { txt_urban_usage = new RightAlignedInput(55, 47, 105, 28, "Urban:");
+        txt_urban_usage->tooltip("Fuel usage in litres per kilometre (L/km); the database stores it per 100 km.");
+        txt_urban_usage->box(FL_DOWN_BOX);
+        txt_urban_usage->color(FL_BACKGROUND2_COLOR);
+        txt_urban_usage->selection_color(FL_SELECTION_COLOR);
+        txt_urban_usage->labeltype(FL_NORMAL_LABEL);
+        txt_urban_usage->labelfont(0);
+        txt_urban_usage->labelsize(14);
+        txt_urban_usage->labelcolor(FL_FOREGROUND_COLOR);
+        txt_urban_usage->align(Fl_Align(FL_ALIGN_LEFT));
+        txt_urban_usage->when(FL_WHEN_RELEASE);
+      } // RightAlignedInput* txt_urban_usage
+      { txt_exurban_usage = new RightAlignedInput(225, 47, 80, 28, "Exurban:");
+        txt_exurban_usage->tooltip("Fuel usage in litres per kilometre (L/km); the database stores it per 100 km.");
+        txt_exurban_usage->box(FL_DOWN_BOX);
+        txt_exurban_usage->color(FL_BACKGROUND2_COLOR);
+        txt_exurban_usage->selection_color(FL_SELECTION_COLOR);
+        txt_exurban_usage->labeltype(FL_NORMAL_LABEL);
+        txt_exurban_usage->labelfont(0);
+        txt_exurban_usage->labelsize(14);
+        txt_exurban_usage->labelcolor(FL_FOREGROUND_COLOR);
+        txt_exurban_usage->align(Fl_Align(FL_ALIGN_LEFT));
+        txt_exurban_usage->when(FL_WHEN_RELEASE);
+      } // RightAlignedInput* txt_exurban_usage
+      { txt_mixed_usage = new RightAlignedInput(405, 47, 80, 28, "Mixed:");
+        txt_mixed_usage->tooltip("Fuel usage in litres per kilometre (L/km); the database stores it per 100 km.");
+        txt_mixed_usage->box(FL_DOWN_BOX);
+        txt_mixed_usage->color(FL_BACKGROUND2_COLOR);
+        txt_mixed_usage->selection_color(FL_SELECTION_COLOR);
+        txt_mixed_usage->labeltype(FL_NORMAL_LABEL);
+        txt_mixed_usage->labelfont(0);
+        txt_mixed_usage->labelsize(14);
+        txt_mixed_usage->labelcolor(FL_FOREGROUND_COLOR);
+        txt_mixed_usage->align(Fl_Align(FL_ALIGN_LEFT));
+        txt_mixed_usage->when(FL_WHEN_RELEASE);
+      } // RightAlignedInput* txt_mixed_usage
+      { txt_co2_emission = new RightAlignedInput(100, 77, 80, 28, "Co2 emission:");
+        txt_co2_emission->box(FL_DOWN_BOX);
+        txt_co2_emission->color(FL_BACKGROUND2_COLOR);
+        txt_co2_emission->selection_color(FL_SELECTION_COLOR);
+        txt_co2_emission->labeltype(FL_NORMAL_LABEL);
+        txt_co2_emission->labelfont(0);
+        txt_co2_emission->labelsize(14);
+        txt_co2_emission->labelcolor(FL_FOREGROUND_COLOR);
+        txt_co2_emission->align(Fl_Align(FL_ALIGN_LEFT));
+        txt_co2_emission->when(FL_WHEN_RELEASE);
+      } // RightAlignedInput* txt_co2_emission
+      { txt_price = new RightAlignedInput(225, 77, 80, 28, "Price:");
+        txt_price->box(FL_DOWN_BOX);
+        txt_price->color(FL_BACKGROUND2_COLOR);
+        txt_price->selection_color(FL_SELECTION_COLOR);
+        txt_price->labeltype(FL_NORMAL_LABEL);
+        txt_price->labelfont(0);
+        txt_price->labelsize(14);
+        txt_price->labelcolor(FL_FOREGROUND_COLOR);
+        txt_price->align(Fl_Align(FL_ALIGN_LEFT));
+        txt_price->when(FL_WHEN_RELEASE);
+      } // RightAlignedInput* txt_price
+      { txt_distance_driven = new RightAlignedInput(405, 77, 80, 28, "Trip distance:");
+        txt_distance_driven->box(FL_DOWN_BOX);
+        txt_distance_driven->color(FL_BACKGROUND2_COLOR);
+        txt_distance_driven->selection_color(FL_SELECTION_COLOR);
+        txt_distance_driven->labeltype(FL_NORMAL_LABEL);
+        txt_distance_driven->labelfont(0);
+        txt_distance_driven->labelsize(14);
+        txt_distance_driven->labelcolor(FL_FOREGROUND_COLOR);
+        txt_distance_driven->align(Fl_Align(FL_ALIGN_LEFT));
+        txt_distance_driven->when(FL_WHEN_RELEASE);
+      } // RightAlignedInput* txt_distance_driven
+      { Fl_Output* o = new Fl_Output(170, 124, 190, 1, "Car Info");
         o->box(FL_DOWN_FRAME);
         o->color(FL_BACKGROUND2_COLOR);
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(21);
+        o->labelsize(18);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -288,9 +356,9 @@ Fl_Double_Window* make_window() {
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(19);
+        o->labelsize(17);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { Fl_Output* o = new Fl_Output(-8, 180, 84, 0, "Engine:");
@@ -299,9 +367,9 @@ Fl_Double_Window* make_window() {
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(19);
+        o->labelsize(17);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { Fl_Output* o = new Fl_Output(0, 205, 96, 0, "Gearbox:");
@@ -310,9 +378,9 @@ Fl_Double_Window* make_window() {
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(19);
+        o->labelsize(17);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { Fl_Output* o = new Fl_Output(1, 230, 50, 0, "Class:");
@@ -323,7 +391,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(17);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_modelname_calculate = new Fl_Output(120, 135, 365, 20);
@@ -382,7 +450,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(13);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(513));
+        o->align(Fl_Align(517));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_fuel_price_calculate = new Fl_Output(425, 23, 60, 20);
@@ -395,7 +463,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(16);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_fueltype_calculate = new Fl_Output(400, 210, 85, 20);
@@ -417,7 +485,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_urban_calculate = new Fl_Output(70, 265, 101, 20);
@@ -439,7 +507,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_exurban_calculate = new Fl_Output(240, 265, 90, 20);
@@ -461,7 +529,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_mixed_calculate = new Fl_Output(390, 265, 100, 20);
@@ -483,7 +551,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_average_price_calculate = new Fl_Output(225, 290, 100, 20);
@@ -505,7 +573,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(15);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_units_calculate = new Fl_Output(394, 290, 96, 20);
@@ -527,7 +595,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_distance_calculate = new Fl_Output(390, 245, 100, 20);
@@ -549,7 +617,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_co2emission_calculate = new Fl_Output(95, 290, 75, 20);
@@ -569,7 +637,7 @@ Fl_Double_Window* make_window() {
         o->selection_color(FL_SELECTION_COLOR);
         o->labeltype(FL_NORMAL_LABEL);
         o->labelfont(0);
-        o->labelsize(21);
+        o->labelsize(18);
         o->labelcolor(FL_FOREGROUND_COLOR);
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
@@ -593,7 +661,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(12);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_exurban_price_calculate = new Fl_Output(255, 315, 75, 20);
@@ -615,7 +683,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(13);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       { lbl_mixed_price_calculate = new Fl_Output(410, 315, 80, 20);
@@ -637,7 +705,7 @@ Fl_Double_Window* make_window() {
         o->labelfont(0);
         o->labelsize(13);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->align(Fl_Align(FL_ALIGN_TOP));
+        o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
       grp_calculate->end();
@@ -772,7 +840,8 @@ extern int carcalc_scaled_font_size(int size);
 extern void carcalc_relayout();
 // Fuel usage is read only from the selected database. The schema has no
 // urban/exurban columns, so the exact mixed figure is averaged from
-// conso_mixte_min/max by the data layer.
+// conso_mixte_min/max by the data layer, which also converts the DB's
+// L/100 km figure to L/km (usage per kilometre).
 static void refresh_fuel_usage()
 {
 	if (!lbl_fuel_usage) return;
@@ -817,14 +886,15 @@ static void refresh_fuel_usage()
 	}
 
 	std::ostringstream out;
-	out << std::fixed << std::setprecision(2) << mixed << " L/100 km";
+	out << std::fixed << std::setprecision(4) << mixed << " L/km";
 	lbl_fuel_usage->value(out.str().c_str());
 }
 
 // Window resizing policy: FLTK's proportional child stretching is disabled,
 // then the UI is laid out from a snapshot of the original FLUID geometry.
-// Widget boxes and fonts scale with the window. Gaps keep their pixel size from
-// 1x upward and shrink below 1x. CARCALC_UI_SCALE overrides the derived factor.
+// Every position, size, gap and font is multiplied by one shared factor, so
+// nothing outgrows anything else. Labels are never moved or shrunk
+// independently. CARCALC_UI_SCALE overrides the derived factor.
 //
 // Every widget declared in this .fl file is captured by capture_layout(), so
 // new label-only widgets added here scale automatically. Keep manual label
@@ -1116,47 +1186,6 @@ static std::vector<CarCalcRow> build_rows(CarCalcGroupSnapshot& snapshot)
 	return rows;
 }
 
-static int distance_to_rect(const CarCalcGeometry& point, const CarCalcGeometry& rect)
-{
-	const int cx = point.x + point.w / 2;
-	const int cy = point.y + point.h / 2;
-	const int dx = std::max(std::max(rect.x - cx, 0), cx - (rect.x + rect.w));
-	const int dy = std::max(std::max(rect.y - cy, 0), cy - (rect.y + rect.h));
-	return dx + dy;
-}
-
-struct CarCalcLabelAnchor
-{
-	CarCalcGeometry* label;
-	CarCalcGeometry* anchor;
-	int row;
-	int font;
-	int required;
-	int width;
-	int line;
-};
-
-struct CarCalcBandCluster
-{
-	int start;
-	int end;
-	int band;
-	int top;
-	int line_height;
-};
-
-static int unscaled_font(const CarCalcGeometry& item)
-{
-	const double current = g_applied_factor > 0.01 ? g_applied_factor : 1.0;
-	return std::max(1, static_cast<int>(std::lround(item.widget->labelsize() / current)));
-}
-
-static int layout_width(const CarCalcGroupSnapshot& snapshot)
-{
-	if (g_scale_window && g_scale_window->w() > 0) return g_scale_window->w();
-	return snapshot.container ? snapshot.container->w() : 490;
-}
-
 static void layout_group(CarCalcGroupSnapshot& snapshot, double factor)
 {
 	const std::vector<CarCalcRow> rows = build_rows(snapshot);
@@ -1182,25 +1211,21 @@ static void layout_group(CarCalcGroupSnapshot& snapshot, double factor)
 			int gap = 0;
 			if (i + 1 < row.items.size())
 			{
-				gap = row.items[i + 1]->x - (item.x + item.w);
-				// Positive gaps are spacing and stay fixed at 1x and above.
-				// Below 1x they shrink with the widgets so small windows still
-				// fit. Negative gaps are intentional overlaps and always scale.
-				if (gap < 0 || factor < 1.0) gap = scale_offset(gap, factor);
+				// Spacing and overlaps use the same percentage as the widgets.
+				gap = scale_offset(row.items[i + 1]->x - (item.x + item.w), factor);
 			}
 			cursor_x = item.nx + item.nw + gap;
 		}
 
 		if (r + 1 < rows.size())
 		{
-			int gap = rows[r + 1].top - row.bottom;
-			if (gap < 0 || factor < 1.0) gap = scale_offset(gap, factor);
+			const int gap = scale_offset(rows[r + 1].top - row.bottom, factor);
 			next_row_top = bottom + gap;
 		}
 	}
 
 	// Label-only widgets are annotations for a nearby value widget. Follow
-	// that value's laid-out position, otherwise fixed gaps move the value but
+	// that value's laid-out position, otherwise scaled gaps move the value but
 	// not its label and fields such as "Mixed price:" drift out of alignment.
 	for (CarCalcGeometry& label : snapshot.children)
 	{
@@ -1270,8 +1295,9 @@ static CarCalcLayoutSize layout_size(Fl_Window* window, double factor)
 		for (const CarCalcGeometry& item : trial.children)
 		{
 			size.width = std::max(size.width, item.nx + item.nw);
-			size.height = std::max(size.height,
-			                       scale_offset(snapshot.y, factor) + item.ny + item.nh);
+			// Child coordinates are already window-relative; adding the
+			// group's Y again would inflate the required window height.
+			size.height = std::max(size.height, item.ny + item.nh);
 		}
 	}
 	(void)window;
@@ -1294,8 +1320,7 @@ static CarCalcLayoutSize actual_layout_size(Fl_Window* window, double factor)
 		for (const CarCalcGeometry& item : snapshot.children)
 		{
 			size.width = std::max(size.width, item.widget->x() + item.widget->w());
-			size.height = std::max(size.height,
-			                       snapshot.container->y() + item.widget->y() + item.widget->h());
+			size.height = std::max(size.height, item.widget->y() + item.widget->h());
 		}
 	}
 	return size;
@@ -1328,182 +1353,30 @@ static double fitted_scale(Fl_Window* window, double factor)
 	return low;
 }
 
-struct CarCalcTextRun
-{
-	int x;
-	int y;
-	int w;
-	int h;
-};
-
-static std::vector<CarCalcTextRun>* g_text_runs = nullptr;
-
-// FLTK positions and wraps label text inside a widget box. Use its own draw
-// callback to measure the resulting runs instead of guessing from fl_width().
-static void carcalc_measure_run(const char* text, int length, int x, int y)
-{
-	if (!g_text_runs) return;
-	int dx = 0;
-	int dy = 0;
-	int w = 0;
-	int h = 0;
-	fl_text_extents(text, length, dx, dy, w, h);
-	if (w > 0 && h > 0)
-		g_text_runs->push_back({x + dx, y + dy, w, h});
-}
-
-static std::vector<CarCalcTextRun> carcalc_label_runs(const CarCalcGeometry& item)
-{
-	std::vector<CarCalcTextRun> runs;
-	const char* text = item.widget->label();
-	if (!text || !*text) return runs;
-
-	const Fl_Boxtype box = item.widget->box();
-	int x = item.nx + Fl::box_dx(box);
-	int y = item.ny + Fl::box_dy(box);
-	int w = item.nw - Fl::box_dw(box);
-	int h = item.nh - Fl::box_dh(box);
-
-	const Fl_Align align = item.widget->align();
-	if (w > 11 && (align & (FL_ALIGN_LEFT | FL_ALIGN_RIGHT)))
-	{
-		x += 3;
-		w -= 6;
-	}
-
-	fl_font(item.widget->labelfont(), item.widget->labelsize());
-	g_text_runs = &runs;
-	fl_draw(text, x, y, w, h, align, carcalc_measure_run, nullptr, 0);
-	g_text_runs = nullptr;
-	return runs;
-}
-
-static bool carcalc_runs_overlap(const CarCalcTextRun& a, const CarCalcTextRun& b)
-{
-	const int dx = std::min(a.x + a.w, b.x + b.w) - std::max(a.x, b.x);
-	const int dy = std::min(a.y + a.h, b.y + b.h) - std::max(a.y, b.y);
-	return dx > 1 && dy > 1;
-}
-
-static bool carcalc_runs_collide(const std::vector<CarCalcTextRun>& runs,
-                                 const CarCalcGeometry& item,
-                                 const std::vector<CarCalcGeometry>& children)
-{
-	for (const CarCalcGeometry& other : children)
-	{
-		if (other.widget == item.widget || is_label_widget(other)) continue;
-		const CarCalcTextRun box = {other.nx, other.ny, other.nw, other.nh};
-		for (const CarCalcTextRun& run : runs)
-			if (carcalc_runs_overlap(run, box)) return true;
-	}
-	for (const CarCalcGeometry& other : children)
-	{
-		if (other.widget == item.widget || !other.widget->label() || !*other.widget->label())
-			continue;
-		const std::vector<CarCalcTextRun> other_runs = carcalc_label_runs(other);
-		for (const CarCalcTextRun& run : runs)
-			for (const CarCalcTextRun& other_run : other_runs)
-				if (carcalc_runs_overlap(run, other_run)) return true;
-	}
-	return false;
-}
-
-// Labels can still collide after scaling because translations are longer than
-// English and because the original layout uses zero-height label widgets.
-// Move label-only annotations first, then shrink only the colliding text until
-// the measured runs no longer cover anything else.
-static void carcalc_resolve_text(CarCalcGroupSnapshot& snapshot, double factor)
-{
-	// Several passes let one widget's shrink make room for a neighbouring
-	// label that was processed earlier in the same pass.
-	for (int pass = 0; pass < 4; ++pass)
-	{
-		bool changed = false;
-		for (CarCalcGeometry& item : snapshot.children)
-		{
-			if (!item.widget->label() || !*item.widget->label()) continue;
-
-			std::vector<CarCalcTextRun> runs = carcalc_label_runs(item);
-			int guard = 0;
-			while (carcalc_runs_collide(runs, item, snapshot.children) && guard++ < 160)
-			{
-				bool moved = false;
-				if (is_label_widget(item))
-				{
-					// Search in laid-out pixels: row spacing grows with the
-					// window, so a fixed 160px search cannot escape a scaled
-					// value box at large sizes.
-					const int move_limit = std::max(160, scaled_font_size(160, factor));
-					for (int distance = 1; distance <= move_limit && !moved; ++distance)
-					{
-						const int deltas[2] = {-distance, distance};
-						for (int delta : deltas)
-						{
-							const int original_y = item.ny;
-							item.ny += delta;
-							const std::vector<CarCalcTextRun> trial = carcalc_label_runs(item);
-							bool inside = true;
-							if (g_scale_window)
-							{
-								const int group_y = snapshot.container ? snapshot.container->y() : 0;
-								const int absolute_y = group_y + item.ny;
-								if (absolute_y < 0 || absolute_y + item.nh > g_scale_window->h())
-									inside = false;
-								for (const CarCalcTextRun& run : trial)
-									if (run.y < 0 || run.y + run.h > g_scale_window->h())
-										inside = false;
-							}
-							if (inside && !carcalc_runs_collide(trial, item, snapshot.children))
-							{
-								runs = trial;
-								moved = true;
-								break;
-							}
-							item.ny = original_y;
-						}
-					}
-				}
-				if (moved) continue;
-
-				const int size = item.widget->labelsize();
-				const int minimum = scaled_font_size(4, factor);
-				if (size > minimum)
-				{
-					item.widget->labelsize(size - 1);
-					runs = carcalc_label_runs(item);
-					changed = true;
-					continue;
-				}
-				break;
-			}
-		}
-		if (!changed) break;
-	}
-}
-
 static void apply_layout(Fl_Window* window, double factor)
 {
-	// Font sizes are derived from captured (or translated) base sizes on every
-	// pass, so collision-driven shrink adjustments never accumulate across
-	// resizes or language changes.
+	(void)window;
+	// Font sizes always come from the captured (or translated) base sizes.
+	// The snapshot geometry from the .fl file is authoritative: labels are not
+	// moved or shrunk here, so the designed layout survives at every scale.
 	apply_fonts_to_target(factor);
 
 	for (CarCalcGeometry& item : g_window_snapshots)
 	{
+		const int x = scale_offset(item.x, factor);
 		const int y = scale_offset(item.y, factor);
-		const int h = dynamic_cast<Fl_Group*>(item.widget)
-		            ? std::max(1, window->h() - y) : scale_dim(item.h, factor);
-		item.widget->resize(0, y, window->w(), h);
-		item.nx = 0;
+		const int w = scale_dim(item.w, factor);
+		const int h = scale_dim(item.h, factor);
+		item.widget->resize(x, y, w, h);
+		item.nx = x;
 		item.ny = y;
-		item.nw = window->w();
+		item.nw = w;
 		item.nh = h;
 	}
 
 	for (CarCalcGroupSnapshot& snapshot : g_group_snapshots)
 	{
 		layout_group(snapshot, factor);
-		carcalc_resolve_text(snapshot, factor);
 		for (CarCalcGeometry& item : snapshot.children)
 			item.widget->resize(item.nx, item.ny, item.nw, item.nh);
 	}
@@ -1550,9 +1423,8 @@ static void refresh_scale()
 	if (!window) return;
 
 	const double target = desired_font_scale(window);
-	// FLTK stretches the window's children whenever the window is resized,
-	// even if the derived scale factor stays the same. Reapply the snapshot
-	// layout in that case so the flat layout is restored immediately.
+	// Reapply the snapshot layout whenever the window size changes the derived
+	// factor; geometry is never stretched by FLTK because resizable is off.
 	if (!layout_drifted() && std::fabs(target - g_applied_factor) < 0.001) return;
 
 	g_font_factor = target;
@@ -1585,6 +1457,11 @@ void apply_font_scale(Fl_Window* window)
 
 	capture_layout(window);
 
+	// FLUID emits resizable(o) on the top window. That makes FLTK stretch the
+	// children on every WM resize before the 50 ms poll can restore the
+	// snapshot layout, so disable it; the window itself can still be resized.
+	window->resizable(nullptr);
+
 	// Keep the original FLUID window size unless the scaled flat layout needs
 	// more room.
 	const CarCalcLayoutSize needed = layout_size(window, 1.0);
@@ -1615,9 +1492,8 @@ void apply_font_scale(Fl_Window* window)
 	else
 		window->size_range(min_width, min_height);
 
-	// Keep the window itself resizable by the window manager. Only the nested
-	// groups are frozen so FLTK cannot stretch their children; refresh_scale()
-	// relayouts them from the snapshot after each resize.
+	// Also freeze nested groups so FLTK cannot stretch their children;
+	// refresh_scale() relayouts everything from the snapshot after a resize.
 	for (int i = 0; i < window->children(); ++i)
 		freeze_resize(dynamic_cast<Fl_Group*>(window->child(i)));
 
@@ -1927,7 +1803,7 @@ void action_cb(Fl_Widget*, void *data) {
     else if (std::strcmp(action, "help_selectcar") == 0 ||
              std::strcmp(action, "help_calculate") == 0)
     {
-    	fl_message("%s", translate_cstr("Pick a brand, model and gearbox, then choose class and fuel. Fuel usage shows the DB mixed figure in L/100 km."));
+    	fl_message("%s", translate_cstr("Pick a brand, model and gearbox, then choose class and fuel. Fuel usage shows the DB mixed figure per kilometre (L/km)."));
     }
     else if (std::strcmp(action, "exit") == 0)
     {

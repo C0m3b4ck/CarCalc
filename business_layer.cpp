@@ -237,11 +237,13 @@ void business_calculate(const std::string &urban_str, const std::string &exurban
 	car_calculated.average_price_paid = (car_calculated.urban_burned + car_calculated.exurban_burned + car_calculated.mixed_burned) / 3.0f * fuel_price_val;
 	if (car_calculated.average_price_paid == 0 && mixed_usage_val > 0)
 	{
-		car_calculated.average_price_paid = mixed_usage_val * trip_distance_val / 100.0f * fuel_price_val;
+		// Usage is already in L/km, so distance is applied only once.
+		car_calculated.average_price_paid = mixed_usage_val * trip_distance_val * fuel_price_val;
 	}
-	car_calculated.urban_price_paid = car_calculated.urban_burned * fuel_price_val * trip_distance_val;
-	car_calculated.exurban_price_paid = car_calculated.exurban_burned * fuel_price_val * trip_distance_val;
-	car_calculated.mixed_price_paid = car_calculated.mixed_burned * fuel_price_val * trip_distance_val;
+	// *_burned already includes the trip distance (L/km * km = L).
+	car_calculated.urban_price_paid = car_calculated.urban_burned * fuel_price_val;
+	car_calculated.exurban_price_paid = car_calculated.exurban_burned * fuel_price_val;
+	car_calculated.mixed_price_paid = car_calculated.mixed_burned * fuel_price_val;
 	car_calculated.distance_driven = trip_distance_val;
 }
 

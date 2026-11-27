@@ -12,7 +12,8 @@ CO₂ emissions and trip costs.
 
 - Browse/filter vehicles by **class**, **fuel type**, model, engine and gearbox
 - Search-by-prefix filtering with live sorted results
-- Urban, extra-urban and mixed fuel consumption, CO₂ emissions and price
+- Urban, extra-urban and mixed fuel consumption in **L/km** (litres per kilometre;
+  the ADEME database stores L/100 km, so values are converted), CO₂ emissions and price
 - Trip-distance based fuel calculations
 - Localized databases (`cars.db`, `cars_en.db`, `cars_pl.db`)
 - Lightweight native GUI (FLTK) with an embedded SQLite database — no server or runtime install needed
@@ -101,6 +102,7 @@ use the checked-in upstream sources (or fetch the same releases):
 |---|---|---|---|---|
 | FLTK | 1.4.5 | [`external_libraries/fltk-1.4.5/`](external_libraries/fltk-1.4.5/) | [fltk.org](https://www.fltk.org/software.php?VERSION=1.4.5) · [GitHub tag](https://github.com/fltk/fltk/releases/tag/release-1.4.5) | LGPL v2 + FLTK exceptions |
 | SQLite | 3.54.1 | [`external_libraries/sqlite-3.54.1/`](external_libraries/sqlite-3.54.1/) | [sqlite.org](https://www.sqlite.org/download.html) | Public domain |
+| GNU Wget | 1.25.0 | [`external_libraries/wget-1.25.0/`](external_libraries/wget-1.25.0/) | [GNU FTP](https://ftp.gnu.org/gnu/wget/wget-1.25.0.tar.gz) | GPL v3 or later (source only, not linked) |
 
 Cross-compile FLTK with `x86_64-w64-mingw32-g++ --host=x86_64-w64-mingw32`,
 build statically, then point `FLTK_WIN_DIR` at that tree. SQLite's

@@ -3,6 +3,36 @@
 #ifndef car_calc_ui_h
 #define car_calc_ui_h
 #include <FL/Fl.H>
+#include <FL/Fl_Input.H>
+#include <FL/Fl_Output.H>
+#include <FL/fl_draw.H>
+#include <algorithm>
+
+// Fl_Input_ has no alignment flag for its value, so numeric fields use a
+// subclass that draws the text against the right edge of the box.
+namespace carcalc_ui {
+template <class Base>
+class RightAlignedField : public Base {
+public:
+  RightAlignedField(int X, int Y, int W, int H, const char* L = nullptr)
+    : Base(X, Y, W, H, L) {}
+  void draw() override {
+    if (this->input_type() == FL_HIDDEN_INPUT) return;
+    const Fl_Boxtype b = this->box();
+    if (this->damage() & FL_DAMAGE_ALL) this->draw_box(b, this->color());
+    const int px = this->x() + Fl::box_dx(b) + 2;
+    const int py = this->y() + Fl::box_dy(b);
+    const int pw = this->w() - Fl::box_dw(b) - 4;
+    const int ph = this->h() - Fl::box_dh(b);
+    fl_font(this->textfont(), this->textsize());
+    const int text_width = this->value() ? static_cast<int>(fl_width(this->value())) : 0;
+    const int shift = std::max(0, pw - text_width);
+    this->drawtext(px + shift, py, pw - shift, ph);
+  }
+};
+} // namespace carcalc_ui
+using RightAlignedInput = carcalc_ui::RightAlignedField<Fl_Input>;
+using RightAlignedOutput = carcalc_ui::RightAlignedField<Fl_Output>;
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Menu_Bar.H>
 extern Fl_Menu_Bar *mnu_bar;
@@ -27,23 +57,23 @@ extern Fl_Button *btn_clear_car;
 #include <FL/Fl_Choice.H>
 extern Fl_Choice *cbo_class_selectcar;
 extern Fl_Choice *cbo_fuel_selectcar;
-#include <FL/Fl_Output.H>
-extern Fl_Output *lbl_fuel_usage;
+extern RightAlignedOutput *lbl_fuel_usage;
 extern Fl_Group *grp_calculate;
 extern Fl_Button *btn_select_car;
 extern Fl_Button *btn_help_calculate;
 extern Fl_Button *btn_calculate;
-extern Fl_Input *txt_urban_usage;
-extern Fl_Input *txt_exurban_usage;
-extern Fl_Input *txt_mixed_usage;
-extern Fl_Input *txt_co2_emission;
-extern Fl_Input *txt_price;
-extern Fl_Input *txt_distance_driven;
+extern RightAlignedInput *txt_urban_usage;
+extern RightAlignedInput *txt_exurban_usage;
+extern RightAlignedInput *txt_mixed_usage;
+extern RightAlignedInput *txt_co2_emission;
+extern RightAlignedInput *txt_price;
+extern RightAlignedInput *txt_distance_driven;
 extern Fl_Output *lbl_modelname_calculate;
 extern Fl_Output *lbl_engine_calculate;
 extern Fl_Output *lbl_gearbox_calculate;
 extern Fl_Output *lbl_class_calculate;
 extern Fl_Choice *cbo_units_calculate;
+#include <FL/Fl_Output.H>
 extern Fl_Output *lbl_fuel_price_calculate;
 extern Fl_Output *lbl_fueltype_calculate;
 extern Fl_Output *lbl_urban_calculate;

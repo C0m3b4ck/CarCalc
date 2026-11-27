@@ -201,6 +201,8 @@ bool get_car_consumption_data(const std::string &brand, const std::string &model
         sqlite3_close(db);
         return false;
     }
+    // The ADEME columns conso_mixte_min/max are L/100 km. Callers work in
+    // L/km (usage per kilometre), so divide the DB figures by 100 here.
     // Try to get mixed consumption and CO2 - approximate urban/exurban from mixed if not available
     const char *sql = "SELECT conso_mixte_min, conso_mixte_max, co2_mixte_min, co2_mixte_max FROM cars WHERE marque = ? AND description_commerciale = ? ORDER BY id LIMIT 1";
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK)
@@ -216,6 +218,7 @@ bool get_car_consumption_data(const std::string &brand, const std::string &model
             mixed_usage = (conso_mixte_min + conso_mixte_max) / 2.0f;
             if (mixed_usage == 0.0f && conso_mixte_min != 0.0f) mixed_usage = conso_mixte_min;
             if (mixed_usage == 0.0f && conso_mixte_max != 0.0f) mixed_usage = conso_mixte_max;
+            mixed_usage /= 100.0f; // DB stores L/100 km; expose L/km
             co2_emission = (co2_mixte_min + co2_mixte_max) / 2.0f;
             if (co2_emission == 0.0f && co2_mixte_min != 0.0f) co2_emission = co2_mixte_min;
             if (co2_emission == 0.0f && co2_mixte_max != 0.0f) co2_emission = co2_mixte_max;
