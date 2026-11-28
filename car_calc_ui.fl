@@ -6,7 +6,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {103 131 491 382} type Double resizable visible
+    xywh {103 131 491 382} type Double hide resizable
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -152,7 +152,7 @@ Function {make_window()} {open
         xywh {390 277 95 28}
       }
     }
-    Fl_Group grp_calculate {open selected
+    Fl_Group grp_calculate {
       xywh {-8 20 498 361}
     } {
       Fl_Text_Display {} {
@@ -1548,7 +1548,7 @@ void download_selected_database()
     fl_alert("%s", message.c_str());
   }
 }} {
-  comment {Includes all necessary headers for the entire program} private global
+  comment {Includes all necessary headers for the entire program} selected private global
 }
 
 Function {action_cb(Fl_Widget*, void *data)} {
