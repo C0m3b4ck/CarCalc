@@ -7,7 +7,7 @@ where applicable, are in [`licenses/`](licenses/).
 
 | Component | Version | Used for | License | License text / notice |
 |---|---|---|---|---|
-| [FLTK](https://www.fltk.org/) | 1.4.5 (bundled in `external_libraries/fltk-1.4.5/`; Windows cross-build script still uses a prebuilt 1.3.9 static lib) | GUI toolkit | LGPL v2 **with FLTK exceptions** (static linking allowed) | [`licenses/FLTK-LICENSE.txt`](licenses/FLTK-LICENSE.txt) · [`external_libraries/fltk-1.4.5/COPYING`](external_libraries/fltk-1.4.5/COPYING) |
+| [FLTK](https://www.fltk.org/) | 1.4.5 (bundled in `external_libraries/fltk-1.4.5/` and compiled into every build) | GUI toolkit | LGPL v2 **with FLTK exceptions** (static linking allowed) | [`licenses/FLTK-LICENSE.txt`](licenses/FLTK-LICENSE.txt) · [`external_libraries/fltk-1.4.5/COPYING`](external_libraries/fltk-1.4.5/COPYING) |
 | [SQLite](https://www.sqlite.org/) | 3.54.1 amalgamation (bundled in `external_libraries/sqlite-3.54.1/`) | Embedded car database | Public domain | [`licenses/SQLITE-PUBLIC-DOMAIN.txt`](licenses/SQLITE-PUBLIC-DOMAIN.txt) |
 | [GNU Wget](https://www.gnu.org/software/wget/) | 1.25.0 source (bundled in `external_libraries/wget-1.25.0/`; source only, not linked into CarCalc) | Bundled downloader source | GPL v3 or later | [`licenses/GPL-3.0.txt`](licenses/GPL-3.0.txt) · [`external_libraries/wget-1.25.0/COPYING`](external_libraries/wget-1.25.0/COPYING) |
 | [ADEME Car Labelling dataset](https://www.data.gouv.fr/datasets/ademe-car-labelling/) | quarterly updates | `cars*.db` data | Licence Ouverte / Open Licence 2.0 | [`licenses/ADEME-OPEN-LICENCE-2.0.md`](licenses/ADEME-OPEN-LICENCE-2.0.md) |
@@ -27,3 +27,22 @@ SQLite from those checked-in sources rather than using system libraries.
   attribution and the date of the last update. The dataset page and its
   Open Licence 2.0 text are linked above; see the licence file for details.
 - **SQLite**: public domain, no attribution required.
+
+## Shipped with each binary
+
+`stage_release.sh` copies these into every target folder (and into the matching
+archive), because they apply to the distributed binary or its data:
+
+- `LICENSE` — CarCalc's Apache License 2.0.
+- `THIRD_PARTY_LICENSES.md` and `licenses/` — the FLTK license and required
+  attribution, the SQLite public-domain notice, the MinGW-w64/GCC runtime
+  notice for Windows binaries, the ADEME Open Licence 2.0 for the bundled
+  `cars*.db`, and the GPL-3.0 notice for the bundled Wget source.
+- `cars*.db` and `translations/` — data and translations covered by the ADEME
+  attribution above.
+
+GNU Wget is bundled as source only and is not linked into CarCalc, so its GPL
+obligations apply to redistribution of that source, not to these binaries.
+Linux binaries link libcurl and the X11/font libraries dynamically from the
+host system, so those components' licenses stay with the operating system;
+Windows binaries use the OS-provided `winhttp` library.

@@ -74,7 +74,7 @@ stage_assets() {
     local name
 
     mkdir -p "$dir"
-    for name in cars.db cars_en.db cars_pl.db THIRD_PARTY_LICENSES.md; do
+    for name in LICENSE cars.db cars_en.db cars_pl.db THIRD_PARTY_LICENSES.md; do
         [[ -f "$name" ]] || die "missing release asset: $name"
         cp -f "$name" "$dir/$name"
     done
@@ -82,6 +82,37 @@ stage_assets() {
     rm -rf "$dir/translations" "$dir/licenses"
     [[ ! -d translations ]] || cp -a translations "$dir/translations"
     [[ ! -d licenses ]] || cp -a licenses "$dir/licenses"
+}
+
+archive_target() {
+    local target="$1"
+    local dir="$RELEASE_DIR/$target"
+    local archive
+
+    # Archives live beside the target folders, never inside them, so an
+    # archive can never include itself.
+    case "$target" in
+        windows-*)
+            if command -v zip >/dev/null 2>&1; then
+                archive="$RELEASE_DIR/$target.zip"
+                rm -f "$archive"
+                (cd "$dir" && zip -q -r "$archive" .)
+            else
+                echo "==> zip not found; using tar.gz for $target" >&2
+                archive="$RELEASE_DIR/$target.tar.gz"
+                rm -f "$archive"
+                tar -czf "$archive" -C "$dir" .
+            fi
+            ;;
+        *)
+            archive="$RELEASE_DIR/$target.tar.gz"
+            rm -f "$archive"
+            tar -czf "$archive" -C "$dir" .
+            ;;
+    esac
+
+    [[ -s "$archive" ]] || die "failed to create archive for $target"
+    echo "==> archived $archive"
 }
 
 stage_target() {
@@ -106,6 +137,7 @@ stage_target() {
         *) chmod +x "$dest" ;;
     esac
     stage_assets "$dir"
+    archive_target "$target"
     echo "==> staged $dest"
 }
 
