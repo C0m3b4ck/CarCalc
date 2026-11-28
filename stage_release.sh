@@ -18,6 +18,7 @@
 #   macos-x64-legacy    legacy x86_64 macOS (deployment target 10.9 by default)
 #   linux-arm           Linux ARM; defaults to AArch64 (see LINUX_ARM_* below)
 #   windows-arm64       Windows ARM64 PE32+
+#   windows-mobile-arm  legacy Windows Mobile/CE PE32 ARM (subsystem 4.20)
 #
 # A target whose cross toolchain is not installed is skipped with a clear
 # message; the remaining targets are still built. Supply a matching toolchain
@@ -27,7 +28,7 @@
 #   RELEASE_DIR, STAGE_BUILD_ROOT, STAGE_CLEAN
 #   LINUX_X86_CC/CXX/AR, LINUX_ARM_TRIPLE/CC/CXX/AR/PROCESSOR
 #   MACOS_X64_CC/CXX/AR, MACOS_DEPLOYMENT_TARGET, MACOS_SDKROOT
-#   WINDOWS_ARM64_TRIPLE
+#   WINDOWS_ARM64_TRIPLE, WINDOWS_MOBILE_TRIPLE, SFX_STUB
 #
 # Cross targets need matching MinGW/macOS/ARM toolchains and cross libraries.
 # For curl on cross targets, set PKG_CONFIG_LIBDIR or CARCALC_EXTRA_CXXFLAGS /
@@ -87,32 +88,62 @@ stage_assets() {
 archive_target() {
     local target="$1"
     local dir="$RELEASE_DIR/$target"
-    local archive
+    local archive sfx_stub=""
+    local made=0
 
     # Archives live beside the target folders, never inside them, so an
-    # archive can never include itself.
+    # archive can never include itself. Windows targets get ZIP for broad
+    # compatibility, 7z for better compression, and a self-extracting EXE
+    # when a Windows SFX module is available.
     case "$target" in
         windows-*)
             if command -v zip >/dev/null 2>&1; then
                 archive="$RELEASE_DIR/$target.zip"
                 rm -f "$archive"
                 (cd "$dir" && zip -q -r "$archive" .)
+                [[ -s "$archive" ]] || die "failed to create archive for $target"
+                echo "==> archived $archive"
+                made=1
+            fi
+            if command -v 7z >/dev/null 2>&1; then
+                archive="$RELEASE_DIR/$target.7z"
+                rm -f "$archive"
+                (cd "$dir" && 7z a -bso0 -bsp0 "$archive" . >/dev/null)
+                [[ -s "$archive" ]] || die "failed to create archive for $target"
+                echo "==> archived $archive"
+                made=1
+            fi
+            sfx_stub="${SFX_STUB:-}"
+            if [[ -z "$sfx_stub" && -f /usr/lib/7zip/7z.sfx ]]; then
+                sfx_stub=/usr/lib/7zip/7z.sfx
+            fi
+            if command -v 7z >/dev/null 2>&1 && [[ -n "$sfx_stub" && -f "$sfx_stub" ]]; then
+                archive="$RELEASE_DIR/$target.exe"
+                rm -f "$archive"
+                (cd "$dir" && 7z a -bso0 -bsp0 "-sfx$sfx_stub" "$archive" . >/dev/null)
+                [[ -s "$archive" ]] || die "failed to create archive for $target"
+                echo "==> archived $archive"
+                made=1
             else
-                echo "==> zip not found; using tar.gz for $target" >&2
+                echo "==> no Windows SFX module for $target; set SFX_STUB to a 7-Zip 7z.sfx file to build $target.exe" >&2
+            fi
+            if [[ "$made" -eq 0 ]]; then
+                echo "==> zip and 7z not found; using tar.gz for $target" >&2
                 archive="$RELEASE_DIR/$target.tar.gz"
                 rm -f "$archive"
                 tar -czf "$archive" -C "$dir" .
+                [[ -s "$archive" ]] || die "failed to create archive for $target"
+                echo "==> archived $archive"
             fi
             ;;
         *)
             archive="$RELEASE_DIR/$target.tar.gz"
             rm -f "$archive"
             tar -czf "$archive" -C "$dir" .
+            [[ -s "$archive" ]] || die "failed to create archive for $target"
+            echo "==> archived $archive"
             ;;
     esac
-
-    [[ -s "$archive" ]] || die "failed to create archive for $target"
-    echo "==> archived $archive"
 }
 
 stage_target() {
@@ -255,6 +286,22 @@ build_windows_arm64() {
     OUT="$dest" ./compile_windows.sh
 }
 
+build_windows_mobile_arm() {
+    local dest="$1"
+    local triple="${WINDOWS_MOBILE_TRIPLE:-armv7-w64-mingw32}"
+    local cxx="${CXX:-${triple}-g++}"
+    local cc="${CC:-${triple}-gcc}"
+    local windres="${WINDRES:-${triple}-windres}"
+
+    require_tools "$cxx" "$cc" "$windres" cmake || return $?
+    CARCALC_DEPS="$BUILD_ROOT/windows-mobile-arm-deps" \
+    WINDOWS_TRIPLE="$triple" \
+    WINDOWS_PROCESSOR=ARM \
+    WINDOWS_WINNT=0x0500 \
+    WINDOWS_SUBSYSTEM_MAJOR=4 WINDOWS_SUBSYSTEM_MINOR=20 \
+    OUT="$dest" ./compile_windows.sh
+}
+
 build_macos_x64_legacy() {
     local dest="$1"
     local cc="${MACOS_X64_CC:-x86_64-apple-darwin-clang}"
@@ -304,6 +351,7 @@ stage_target windows-x64-legacy CarCalc-x64-legacy.exe build_windows_x64_legacy
 stage_target macos-x64-legacy CarCalc build_macos_x64_legacy
 stage_target linux-arm CarCalc build_linux_arm
 stage_target windows-arm64 CarCalc.exe build_windows_arm64
+stage_target windows-mobile-arm CarCalc-mobile.exe build_windows_mobile_arm
 
 echo
 if [[ "${#SKIPPED[@]}" -gt 0 ]]; then
