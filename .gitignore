@@ -7,6 +7,8 @@ prog_asan
 .win-legacy-deps/
 .win-legacy-build/
 .build-full/
+release/
+.stage-build/
 
 # Generated v2 build outputs and runtime data copies
 ui_v2/CarCalc_v2
