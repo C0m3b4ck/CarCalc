@@ -1,5 +1,7 @@
 prog
 *.py
+!make_cab.py
+__pycache__/
 *.tok
 prog_asan
 *.exe

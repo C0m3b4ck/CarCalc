@@ -51,9 +51,12 @@ The dataset is published under **Licence Ouverte / Open Licence 2.0**; see
 `./stage_release.sh` builds each target from source into `release/<target>/`,
 then writes an archive beside each folder: `.tar.gz` for Linux/macOS, and
 `.zip`, `.7z`, plus a self-extracting `.exe` (when a Windows SFX module is
-available) for Windows targets. Targets whose toolchain is missing are listed
-as skipped; the rest still build. The script never commits, tags or uploads
-anything.
+available) for Windows targets. The two ARM Windows targets also get a `.cab`:
+`windows-mobile-arm.cab` is a Windows CE/Mobile installer package (MSCE
+control file, installs into `\Program Files\CarCalc` and adds a Start Menu
+link), while `windows-arm64.cab` is a plain CAB archive of the desktop ARM64
+release. Targets whose toolchain is missing are listed as skipped; the rest
+still build. The script never commits, tags or uploads anything.
 
 Install the Linux cross compilers first:
 

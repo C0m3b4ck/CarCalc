@@ -7,7 +7,8 @@
 #   STAGE_CLEAN=1 ./stage_release.sh
 #
 # Every target is compiled from source. The script never uses git/GitHub,
-# never commits or tags, and never uploads or publishes anything.
+# never commits or tags, and never uploads or publishes anything. Windows
+# ARM targets additionally get a .cab package beside the staged directory.
 #
 # Targets staged (one subdirectory each):
 #   linux-x86           32-bit x86 Linux ELF
@@ -17,8 +18,9 @@
 #   windows-x64-legacy  legacy x86_64 Windows PE32+ (subsystem 5.02 / XP x64)
 #   macos-x64-legacy    legacy x86_64 macOS (deployment target 10.15 by default)
 #   linux-arm           Linux ARM; defaults to AArch64 (see LINUX_ARM_* below)
-#   windows-arm64       Windows ARM64 PE32+
-#   windows-mobile-arm  legacy Windows Mobile/CE PE32 ARM (subsystem 4.20)
+#   windows-arm64       Windows ARM64 PE32+ (CAB archive)
+#   windows-mobile-arm  legacy Windows Mobile/CE PE32 ARM (subsystem 4.20,
+#                       installable CAB with MSCE control file)
 #
 # A target whose cross toolchain is not installed is skipped with a clear
 # message; the remaining targets are still built. Supply a matching toolchain
@@ -139,6 +141,10 @@ archive_target() {
                 [[ -s "$archive" ]] || die "failed to create archive for $target"
                 echo "==> archived $archive"
             fi
+            case "$target" in
+                windows-arm64)      cabinet_target "$target" arm64 ;;
+                windows-mobile-arm) cabinet_target "$target" mobile ;;
+            esac
             ;;
         *)
             archive="$RELEASE_DIR/$target.tar.gz"
@@ -148,6 +154,23 @@ archive_target() {
             echo "==> archived $archive"
             ;;
     esac
+}
+
+cabinet_target() {
+    local target="$1"
+    local mode="$2"
+    local archive="$RELEASE_DIR/$target.cab"
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo "==> python3 not found; skipped CAB for $target" >&2
+        return 0
+    fi
+    rm -f "$archive"
+    python3 "$ROOT/make_cab.py" --mode "$mode" \
+        --source "$RELEASE_DIR/$target" --output "$archive" \
+        || die "failed to create CAB for $target"
+    [[ -s "$archive" ]] || die "failed to create CAB for $target"
+    echo "==> archived $archive"
 }
 
 stage_target() {
