@@ -10,6 +10,9 @@ prog_asan
 release/
 .stage-build/
 
+# Local Windows CE / Windows Mobile emulator workspace (large downloads and images)
+.wince-emulator/
+
 # Optional local cross-toolchain downloads (staging setup uses /tmp/opencode by default)
 .cross-tools/
 osxcross/
