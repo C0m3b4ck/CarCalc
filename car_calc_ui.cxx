@@ -148,7 +148,7 @@ Fl_Output *lbl_download_status=(Fl_Output *)0;
 
 Fl_Double_Window* make_window() {
   Fl_Double_Window* w;
-  { Fl_Double_Window* o = new Fl_Double_Window(562, 436, "CarCalc");
+  { Fl_Double_Window* o = new Fl_Double_Window(491, 382, "CarCalc");
     w = o; (void)w;
     { mnu_bar = new Fl_Menu_Bar(0, 0, 490, 20);
       mnu_bar->menu(menu_mnu_bar);
@@ -464,8 +464,6 @@ Fl_Double_Window* make_window() {
         o->align(Fl_Align(FL_ALIGN_TOP));
         o->when(FL_WHEN_RELEASE);
       } // Fl_Output* o
-      { new Fl_Button(221, 208, 64, 22, "WHAAT");
-      } // Fl_Button* o
       { lbl_mixed_calculate = new Fl_Output(390, 265, 100, 20);
         lbl_mixed_calculate->box(FL_DOWN_FRAME);
         lbl_mixed_calculate->color(FL_BACKGROUND2_COLOR);

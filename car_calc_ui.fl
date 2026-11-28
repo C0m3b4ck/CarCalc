@@ -6,7 +6,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {103 131 562 436} type Double resizable visible
+    xywh {103 131 491 382} type Double resizable visible
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -287,10 +287,6 @@ Function {make_window()} {open
         label {Mixed:}
         xywh {325 285 81 0}
         class Fl_Output
-      }
-      Fl_Button {} {
-        label WHAAT
-        xywh {221 208 64 22}
       }
       Fl_Text_Display lbl_mixed_calculate {
         xywh {390 265 100 20}
