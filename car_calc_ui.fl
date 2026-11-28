@@ -1,12 +1,12 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0311
+version 1.0405
 header_name {.h}
 code_name {.cxx}
 Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {103 131 490 380} type Double resizable visible
+    xywh {103 131 562 436} type Double resizable visible
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -78,8 +78,7 @@ Function {make_window()} {open
       Fl_Input txt_search_car_models {
         user_data {"search_car_models"}
         callback action_cb
-        xywh {175 19 245 26}
-        when 1
+        xywh {175 19 245 26} when 1
       }
       Fl_Button btn_search_car_models {
         label SEARCH
@@ -90,8 +89,7 @@ Function {make_window()} {open
       Fl_Input txt_search_car_engines {
         user_data {"search_car_engines"}
         callback action_cb
-        xywh {175 109 245 26}
-        when 1
+        xywh {175 109 245 26} when 1
       }
       Fl_Button btn_search_car_engines {
         label SEARCH
@@ -111,8 +109,7 @@ Function {make_window()} {open
       Fl_Input txt_search_car_gearboxes {
         user_data {"search_car_gearboxes"}
         callback action_cb
-        xywh {195 194 225 26}
-        when 1
+        xywh {195 194 225 26} when 1
       }
       Fl_Button btn_search_car_gearboxes {
         label SEARCH
@@ -128,14 +125,14 @@ Function {make_window()} {open
       }
       Fl_Button btn_help_selectcar {
         label HELP
-        callback action_cb
         user_data {"help_selectcar"}
+        callback action_cb
         xywh {140 305 165 75} labelsize 26
       }
       Fl_Button btn_clear_car {
         label {Clear Car}
-        callback action_cb
         user_data {"clear_car"}
+        callback action_cb
         xywh {5 305 130 75} labelsize 26
       }
       Fl_Choice cbo_class_selectcar {
@@ -156,31 +153,31 @@ Function {make_window()} {open
       }
     }
     Fl_Group grp_calculate {open selected
-      xywh {0 20 490 360}
+      xywh {-8 20 498 361}
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
-        xywh {145 25 200 0} labelsize 21 align 1
+        xywh {145 51 205 0} labelsize 21
         class Fl_Output
       }
       Fl_Button btn_select_car {
         label {<- Select Car}
         user_data {"group_selectcar"}
         callback action_cb
-        xywh {0 335 165 45} labelsize 24
+        xywh {0 335 165 46} labelsize 24
       }
       Fl_Button btn_help_calculate {
         label HELP
-        callback action_cb
         user_data {"help_calculate"}
-        xywh {165 335 165 45} labelsize 23
+        callback action_cb
+        xywh {165 335 165 46} labelsize 23
       }
       Fl_Button btn_calculate {
         label {Calculate!}
         user_data {"calculate"}
         callback action_cb
         comment {Passes DTO, calls calculation functions}
-        xywh {330 335 160 45} labelsize 25
+        xywh {330 335 160 46} labelsize 25
       }
       Fl_Input txt_urban_usage {
         label {Urban:}
@@ -208,27 +205,27 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Car Info}
-        xywh {130 112 240 0} labelsize 21 align 1
+        xywh {130 135 241 1} labelsize 21
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Model name:}
-        xywh {0 135 115 0} labelsize 19 align 1
+        xywh {1 157 115 0} labelsize 19
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Engine:}
-        xywh {0 160 85 0} labelsize 19 align 1
+        xywh {-8 180 84 0} labelsize 19
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Gearbox:}
-        xywh {0 185 95 0} labelsize 19 align 1
+        xywh {0 205 96 0} labelsize 19
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Class:}
-        xywh {0 210 50 0} labelsize 17 align 1
+        xywh {1 230 50 0} labelsize 17
         class Fl_Output
       }
       Fl_Text_Display lbl_modelname_calculate {
@@ -249,91 +246,95 @@ Function {make_window()} {open
       }
       Fl_Choice cbo_units_calculate {
         label {Units: } open
-        xywh {60 110 120 20} down_box BORDER_BOX labelsize 16
+        xywh {60 110 100 20} down_box BORDER_BOX labelsize 16
       } {}
       Fl_Text_Display {} {
-        label {Gov. fuel price:}
-        xywh {190 110 95 0} labelsize 13 align 513
+        label {Gov. price:}
+        xywh {345 43 95 0} labelsize 13 align 513
         class Fl_Output
       }
       Fl_Output lbl_fuel_price_calculate {
-        xywh {290 108 190 22}
+        xywh {425 23 60 20}
       }
       Fl_Text_Display {} {
         label {Fuel type:}
-        xywh {145 210 85 0} labelsize 19 align 1
+        xywh {315 230 85 0} labelsize 16
         class Fl_Output
       }
       Fl_Text_Display lbl_fueltype_calculate {
-        xywh {235 210 85 20}
+        xywh {400 210 85 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Urban:}
-        xywh {0 265 75 0} labelsize 14 align 1
+        xywh {5 285 75 0}
         class Fl_Output
       }
       Fl_Text_Display lbl_urban_calculate {
-        xywh {80 265 80 20}
+        xywh {70 265 101 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Exurban:}
-        xywh {155 265 90 0} labelsize 14 align 1
+        xywh {160 285 90 0}
         class Fl_Output
       }
       Fl_Text_Display lbl_exurban_calculate {
-        xywh {250 265 70 20}
+        xywh {240 265 90 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Mixed:}
-        xywh {315 265 85 0} labelsize 14 align 1
+        xywh {325 285 81 0}
         class Fl_Output
       }
+      Fl_Button {} {
+        label WHAAT
+        xywh {221 208 64 22}
+      }
       Fl_Text_Display lbl_mixed_calculate {
-        xywh {405 265 70 20}
+        xywh {390 265 100 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Price:}
-        xywh {135 290 95 0} labelsize 14 align 1
+        xywh {175 308 55 0}
         class Fl_Output
       }
       Fl_Text_Display lbl_average_price_calculate {
-        xywh {235 290 90 20}
+        xywh {225 290 100 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Units:}
-        xywh {315 290 85 0} labelsize 19 align 1
+        xywh {334 315 71 0} labelsize 15
         class Fl_Output
       }
       Fl_Text_Display lbl_units_calculate {
-        xywh {405 290 85 20}
+        xywh {394 290 96 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Trip distance:}
-        xywh {260 245 110 0} labelsize 14 align 1
+        xywh {289 265 110 0}
         class Fl_Output
       }
       Fl_Text_Display lbl_distance_calculate {
-        xywh {375 245 100 20}
+        xywh {390 245 100 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Co2 emission:}
-        xywh {0 290 90 0} labelsize 14 align 1
+        xywh {0 310 90 0}
         class Fl_Output
       }
       Fl_Text_Display lbl_co2emission_calculate {
-        xywh {95 290 70 20}
+        xywh {95 290 75 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Trip Info}
-        xywh {150 230 200 0} labelsize 21 align 1
+        xywh {150 257 200 0} labelsize 21
         class Fl_Output
       }
       Fl_Text_Display lbl_urban_price_calculate {
@@ -342,7 +343,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Exurban price:}
-        xywh {150 315 100 0} labelsize 12 align 1
+        xywh {165 335 100 0} labelsize 12
         class Fl_Output
       }
       Fl_Text_Display lbl_exurban_price_calculate {
@@ -351,7 +352,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Mixed price:}
-        xywh {320 315 85 0} labelsize 13 align 1
+        xywh {324 335 92 0} labelsize 13
         class Fl_Output
       }
       Fl_Text_Display lbl_mixed_price_calculate {
@@ -360,7 +361,7 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Urban price:}
-        xywh {0 315 80 0} labelsize 13 align 1
+        xywh {0 335 80 0} labelsize 13
         class Fl_Output
       }
     }
@@ -378,8 +379,8 @@ Function {make_window()} {open
         class Fl_Output
       }
       Fl_Choice cbo_language_settings {
-        label {Language:} open
-        callback {action_cb(cbo_language_settings, (void*)("language_changed"))}
+        label {Language:}
+        callback {action_cb(cbo_language_settings, (void*)("language_changed"))} open
         xywh {180 100 190 28} down_box BORDER_BOX labelsize 17
       } {
         MenuItem {} {
@@ -406,7 +407,7 @@ Function {make_window()} {open
         xywh {80 235 330 45} labelsize 16
       }
       Fl_Button {} {
-        label {Back}
+        label Back
         user_data {"group_calculate"}
         callback action_cb
         xywh {80 305 150 45} labelsize 20
@@ -438,7 +439,7 @@ Function {make_window()} {open
         xywh {60 240 370 30}
       }
       Fl_Button {} {
-        label {Back}
+        label Back
         user_data {"group_settings"}
         callback action_cb
         xywh {90 305 150 45} labelsize 20
@@ -2002,8 +2003,7 @@ cbo_class_selectcar->clear();
     	cbo_class_selectcar->add(vehicle_classes[i].c_str());
     }
   }
-  refresh_fuel_usage();
-} {}
+  refresh_fuel_usage();} {}
 }
 
 Function {cbobox_cb(Fl_Widget *o, short which_cbobox)} {

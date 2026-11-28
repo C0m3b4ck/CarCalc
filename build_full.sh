@@ -8,7 +8,7 @@
 # Usage:
 #   ./build_full.sh                 # rebuilds dependencies and produces ./prog
 #   OUT=~/CarCalc ./build_full.sh   # custom output path
-#   BUILD_DIR=./custom-build ./build_full.sh
+#   BUILD_DIR=/tmp/cc-build ./build_full.sh
 #   CLEAN=0 ./build_full.sh         # reuse an existing dependency build tree
 #   JOBS=2 ./build_full.sh          # limit parallel compilation
 
@@ -57,6 +57,7 @@ mkdir -p "$BUILD_DIR/fltk" "$BUILD_DIR/sqlite"
 
 echo "==> Configuring FLTK $FLTK_VERSION from $FLTK_SRC"
 cmake -S "$FLTK_SRC" -B "$BUILD_DIR/fltk" \
+    -G "Unix Makefiles" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_COMPILER="$CC" \
     -DCMAKE_CXX_COMPILER="$CXX" \
@@ -104,6 +105,8 @@ echo "==> Linking $OUT"
     "${SOURCES[@]}" \
     -L"$BUILD_DIR/sqlite" -lsqlite3 \
     "${FLTK_LDFLAGS[@]}" "${CURL_LIBS[@]}" \
-    -o "$OUT"
+    -lwinhttp \
+    -lcurl \
+    -o "$OUT"   
 
 echo "Done: $OUT"

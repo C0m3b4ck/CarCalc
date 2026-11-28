@@ -1,7 +1,5 @@
-* finish search functionality (searches all available ones and select the closest one, sorts the other ones based on search term matching)
-* make exit function
+* add wget src to project
 * move numbers to right edge of textboxes
 * add urban and exurban fuel data (different DB?)
 * make sure variables are cleared between uses
-* finish resizing (add grids)
 -> add labels to lbl outputs (no standalone labels)
