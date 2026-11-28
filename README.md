@@ -64,7 +64,7 @@ sudo apt-get install -y gcc-i686-linux-gnu g++-i686-linux-gnu binutils-i686-linu
 One-line setup for the macOS, Windows ARM and SFX prerequisites:
 
 ```bash
-mkdir -p /tmp/opencode/carcalc-tools && cd /tmp/opencode/carcalc-tools && sudo apt-get install -y clang lzma-dev libxml2-dev libssl-dev zlib1g-dev && git clone -q https://github.com/tpoechtrager/osxcross.git osxcross && mkdir -p osxcross/tarballs && wget -qcO llvm-mingw.tar.xz https://github.com/mstorsjo/llvm-mingw/releases/download/20261117/llvm-mingw-20261117-ucrt-ubuntu-22.04-x86_64.tar.xz && mkdir -p llvm-mingw && tar -xf llvm-mingw.tar.xz -C llvm-mingw --strip-components=1 && wget -qcO 7z-extra.7z https://www.7-zip.org/a/7z2600-extra.7z && mkdir -p 7z-extra && 7z x -y -o7z-extra 7z-extra.7z 7z.sfx && echo 'Copy MacOSX*.sdk.tar.xz into osxcross/tarballs/ and run: (cd osxcross && UNATTENDED=1 ./build.sh)'
+mkdir -p /tmp/opencode/carcalc-tools && cd /tmp/opencode/carcalc-tools && sudo apt-get install -y clang liblzma-dev libxml2-dev libssl-dev zlib1g-dev && git clone -q https://github.com/tpoechtrager/osxcross.git osxcross && mkdir -p osxcross/tarballs && wget -qcO llvm-mingw.tar.xz https://github.com/mstorsjo/llvm-mingw/releases/download/20261117/llvm-mingw-20261117-ucrt-ubuntu-22.04-x86_64.tar.xz && mkdir -p llvm-mingw && tar -xf llvm-mingw.tar.xz -C llvm-mingw --strip-components=1 && wget -qcO 7z-extra.7z https://www.7-zip.org/a/7z2600-extra.7z && mkdir -p 7z-extra && 7z x -y -o7z-extra 7z-extra.7z 7z.sfx && echo 'Copy MacOSX*.sdk.tar.xz into osxcross/tarballs/ and run: (cd osxcross && UNATTENDED=1 ./build.sh)'
 ```
 
 osxcross needs an Apple SDK tarball that cannot be downloaded automatically;
