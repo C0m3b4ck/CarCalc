@@ -7,9 +7,24 @@
 #include <FL/Fl_Output.H>
 #include <FL/fl_draw.H>
 #include <algorithm>
+#include <cmath>
 
 // Fl_Input_ has no alignment flag for its value, so numeric fields use a
-// subclass that draws the text against the right edge of the box.
+// subclass that draws the text against the right edge of the box.  FLTK's
+// own drawtext() handles the cursor, selection and horizontal scrolling, so
+// the text is drawn through it with the full inner width and only its X
+// origin is moved right.  A shorter width made FLTK scroll to the cursor
+// and leave the field almost empty at every resolution.  The X origin is
+// moved directly instead of with fl_translate() because FLTK's Windows GDI
+// text driver ignores matrix translations.  Long values are fitted by
+// reducing the text size to half the scaled size, using a width ratio so
+// repeated redraws do not create a new font descriptor for every pixel size.
+//
+// drawtext() uses minimal updates while the user types: it only redraws from
+// the last change to the end of the value.  The box must therefore only be
+// erased when the whole value is about to be redrawn.  When the value width
+// or fitted font size changes, the whole value moves, so a full redraw is
+// forced for that frame; otherwise the unchanged prefix is left intact.
 namespace carcalc_ui {
 template <class Base>
 class RightAlignedField : public Base {
@@ -19,16 +34,63 @@ public:
   void draw() override {
     if (this->input_type() == FL_HIDDEN_INPUT) return;
     const Fl_Boxtype b = this->box();
-    if (this->damage() & FL_DAMAGE_ALL) this->draw_box(b, this->color());
-    const int px = this->x() + Fl::box_dx(b) + 2;
+
+    const int px = this->x() + Fl::box_dx(b) + 1;
     const int py = this->y() + Fl::box_dy(b);
-    const int pw = this->w() - Fl::box_dw(b) - 4;
+    const int pw = this->w() - Fl::box_dw(b) - 2;
     const int ph = this->h() - Fl::box_dh(b);
-    fl_font(this->textfont(), this->textsize());
-    const int text_width = this->value() ? static_cast<int>(fl_width(this->value())) : 0;
+    if (pw <= 0 || ph <= 0) return;
+
+    const Fl_Font font = this->textfont();
+    const int original_size = this->textsize();
+    const int minimum_size = std::max(6, original_size / 2);
+    const char* value = this->value();
+    int size = original_size;
+    int text_width = 0;
+
+    fl_font(font, size);
+    if (value && *value) {
+      const double natural_width = fl_width(value);
+      if (natural_width > pw && original_size > minimum_size) {
+        const double ratio = static_cast<double>(pw) / natural_width;
+        int candidate = static_cast<int>(std::floor(original_size * ratio));
+        candidate = std::max(minimum_size, std::min(original_size - 1, candidate));
+        if (candidate < original_size) {
+          size = candidate;
+          fl_font(font, size);
+          if (std::ceil(fl_width(value)) > pw && size > minimum_size) {
+            --size;
+            fl_font(font, size);
+          }
+        }
+      }
+      text_width = static_cast<int>(std::ceil(fl_width(value)));
+    }
+
     const int shift = std::max(0, pw - text_width);
-    this->drawtext(px + shift, py, pw - shift, ph);
+    const bool full_redraw = (this->damage() & FL_DAMAGE_ALL) ||
+                             size != last_size_ || shift != last_shift_;
+    if (full_redraw) {
+      this->draw_box(b, this->color());
+      // drawtext() decides between full and minimal drawing from the damage
+      // flags.  The box was just erased, so force a full value redraw.
+      this->clear_damage(FL_DAMAGE_ALL);
+    }
+    last_size_ = size;
+    last_shift_ = shift;
+
+    if (size != original_size) this->textsize(size);
+
+    fl_push_clip(this->x(), this->y(), this->w(), this->h());
+    this->drawtext(px + shift, py, pw, ph, Fl::focus() == this);
+    fl_pop_clip();
+
+    if (size != original_size) this->textsize(original_size);
   }
+
+private:
+  int last_shift_ = -1;
+  int last_size_ = -1;
 };
 } // namespace carcalc_ui
 using RightAlignedInput = carcalc_ui::RightAlignedField<Fl_Input>;

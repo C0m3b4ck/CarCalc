@@ -28,6 +28,21 @@ CC="${CC:-gcc}"
 CXX="${CXX:-g++}"
 AR="${AR:-ar}"
 
+# Optional cross-build support. Stage scripts can point these at a toolchain
+# file and extra flags without changing the normal host build.
+CMAKE_TOOLCHAIN_ARGS=()
+if [[ -n "${CARCALC_CMAKE_TOOLCHAIN_FILE:-}" ]]; then
+    CMAKE_TOOLCHAIN_ARGS=(-DCMAKE_TOOLCHAIN_FILE="$CARCALC_CMAKE_TOOLCHAIN_FILE")
+fi
+EXTRA_CXXFLAGS=()
+if [[ -n "${CARCALC_EXTRA_CXXFLAGS:-}" ]]; then
+    read -r -a EXTRA_CXXFLAGS <<<"$CARCALC_EXTRA_CXXFLAGS"
+fi
+EXTRA_LDFLAGS=()
+if [[ -n "${CARCALC_EXTRA_LDFLAGS:-}" ]]; then
+    read -r -a EXTRA_LDFLAGS <<<"$CARCALC_EXTRA_LDFLAGS"
+fi
+
 for tool in cmake "$CC" "$CXX" "$AR"; do
     command -v "$tool" >/dev/null 2>&1 || {
         echo "error: missing tool: $tool" >&2
@@ -59,6 +74,7 @@ mkdir -p "$BUILD_DIR/fltk" "$BUILD_DIR/sqlite"
 echo "==> Configuring FLTK $FLTK_VERSION from $FLTK_SRC"
 cmake -S "$FLTK_SRC" -B "$BUILD_DIR/fltk" \
     -G "Unix Makefiles" \
+    "${CMAKE_TOOLCHAIN_ARGS[@]}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_COMPILER="$CC" \
     -DCMAKE_CXX_COMPILER="$CXX" \
@@ -97,11 +113,11 @@ SOURCES=(
 )
 
 echo "==> Linking $OUT"
-"$CXX" -O2 -std=c++17 \
+"$CXX" -O2 -std=c++17 "${EXTRA_CXXFLAGS[@]}" \
     -I"$SQLITE_SRC" "${FLTK_CXXFLAGS[@]}" "${CURL_CFLAGS[@]}" \
     "${SOURCES[@]}" \
     -L"$BUILD_DIR/sqlite" -lsqlite3 \
-    "${FLTK_LDFLAGS[@]}" "${CURL_LIBS[@]}" \
+    "${FLTK_LDFLAGS[@]}" "${CURL_LIBS[@]}" "${EXTRA_LDFLAGS[@]}" \
     -o "$OUT"
 
 echo "Done: $OUT"

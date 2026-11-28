@@ -6,9 +6,24 @@ decl {\#include <FL/Fl_Input.H>
 \#include <FL/Fl_Output.H>
 \#include <FL/fl_draw.H>
 \#include <algorithm>
+\#include <cmath>
 
 // Fl_Input_ has no alignment flag for its value, so numeric fields use a
-// subclass that draws the text against the right edge of the box.
+// subclass that draws the text against the right edge of the box.  FLTK's
+// own drawtext() handles the cursor, selection and horizontal scrolling, so
+// the text is drawn through it with the full inner width and only its X
+// origin is moved right.  A shorter width made FLTK scroll to the cursor
+// and leave the field almost empty at every resolution.  The X origin is
+// moved directly instead of with fl_translate() because FLTK's Windows GDI
+// text driver ignores matrix translations.  Long values are fitted by
+// reducing the text size to half the scaled size, using a width ratio so
+// repeated redraws do not create a new font descriptor for every pixel size.
+//
+// drawtext() uses minimal updates while the user types: it only redraws from
+// the last change to the end of the value.  The box must therefore only be
+// erased when the whole value is about to be redrawn.  When the value width
+// or fitted font size changes, the whole value moves, so a full redraw is
+// forced for that frame; otherwise the unchanged prefix is left intact.
 namespace carcalc_ui {
 template <class Base>
 class RightAlignedField : public Base {
@@ -18,16 +33,63 @@ public:
   void draw() override {
     if (this->input_type() == FL_HIDDEN_INPUT) return;
     const Fl_Boxtype b = this->box();
-    if (this->damage() & FL_DAMAGE_ALL) this->draw_box(b, this->color());
-    const int px = this->x() + Fl::box_dx(b) + 2;
+
+    const int px = this->x() + Fl::box_dx(b) + 1;
     const int py = this->y() + Fl::box_dy(b);
-    const int pw = this->w() - Fl::box_dw(b) - 4;
+    const int pw = this->w() - Fl::box_dw(b) - 2;
     const int ph = this->h() - Fl::box_dh(b);
-    fl_font(this->textfont(), this->textsize());
-    const int text_width = this->value() ? static_cast<int>(fl_width(this->value())) : 0;
+    if (pw <= 0 || ph <= 0) return;
+
+    const Fl_Font font = this->textfont();
+    const int original_size = this->textsize();
+    const int minimum_size = std::max(6, original_size / 2);
+    const char* value = this->value();
+    int size = original_size;
+    int text_width = 0;
+
+    fl_font(font, size);
+    if (value && *value) {
+      const double natural_width = fl_width(value);
+      if (natural_width > pw && original_size > minimum_size) {
+        const double ratio = static_cast<double>(pw) / natural_width;
+        int candidate = static_cast<int>(std::floor(original_size * ratio));
+        candidate = std::max(minimum_size, std::min(original_size - 1, candidate));
+        if (candidate < original_size) {
+          size = candidate;
+          fl_font(font, size);
+          if (std::ceil(fl_width(value)) > pw && size > minimum_size) {
+            --size;
+            fl_font(font, size);
+          }
+        }
+      }
+      text_width = static_cast<int>(std::ceil(fl_width(value)));
+    }
+
     const int shift = std::max(0, pw - text_width);
-    this->drawtext(px + shift, py, pw - shift, ph);
+    const bool full_redraw = (this->damage() & FL_DAMAGE_ALL) ||
+                             size != last_size_ || shift != last_shift_;
+    if (full_redraw) {
+      this->draw_box(b, this->color());
+      // drawtext() decides between full and minimal drawing from the damage
+      // flags.  The box was just erased, so force a full value redraw.
+      this->clear_damage(FL_DAMAGE_ALL);
+    }
+    last_size_ = size;
+    last_shift_ = shift;
+
+    if (size != original_size) this->textsize(size);
+
+    fl_push_clip(this->x(), this->y(), this->w(), this->h());
+    this->drawtext(px + shift, py, pw, ph, Fl::focus() == this);
+    fl_pop_clip();
+
+    if (size != original_size) this->textsize(original_size);
   }
+
+private:
+  int last_shift_ = -1;
+  int last_size_ = -1;
 };
 } // namespace carcalc_ui
 using RightAlignedInput = carcalc_ui::RightAlignedField<Fl_Input>;
@@ -38,7 +100,7 @@ Function {make_window()} {open
 } {
   Fl_Window {} {
     label CarCalc open
-    xywh {103 131 491 426} type Double hide resizable
+    xywh {103 131 491 382} type Double hide resizable
   } {
     Fl_Menu_Bar mnu_bar {
       xywh {0 0 490 20}
@@ -87,7 +149,7 @@ Function {make_window()} {open
       }
     }
     Fl_Group grp_selectcar {
-      xywh {0 19 490 406} hide
+      xywh {0 19 490 362} hide
     } {
       Fl_Text_Display {} {
         label {Select Car Model}
@@ -186,58 +248,58 @@ Function {make_window()} {open
       }
     }
     Fl_Group grp_calculate {
-      xywh {-8 20 498 405}
+      xywh {-8 20 498 361}
     } {
       Fl_Text_Display {} {
         label {Calculate Fuel-Related}
-        xywh {145 25 205 0} labelsize 18
+        xywh {145 38 205 0} labelsize 18
         class Fl_Output
       }
       Fl_Button btn_select_car {
         label {<- Select Car}
         user_data {"group_selectcar"}
         callback action_cb
-        xywh {0 370 165 46} labelsize 24
+        xywh {0 335 165 46} labelsize 24
       }
       Fl_Button btn_help_calculate {
         label HELP
         user_data {"help_calculate"}
         callback action_cb
-        xywh {165 370 165 46} labelsize 23
+        xywh {165 335 165 46} labelsize 23
       }
       Fl_Button btn_calculate {
         label {Calculate!}
         user_data {"calculate"}
         callback action_cb
         comment {Passes DTO, calls calculation functions}
-        xywh {330 370 160 46} labelsize 25
+        xywh {330 335 160 46} labelsize 25
       }
       Fl_Input txt_urban_usage {
         label {Urban:}
         tooltip {Fuel usage in litres per kilometre (L/km); the database stores it per 100 km.}
-        xywh {55 47 105 28} labelsize 12 class RightAlignedInput
+        xywh {55 47 105 28} class RightAlignedInput
       }
       Fl_Input txt_exurban_usage {
         label {Exurban:}
         tooltip {Fuel usage in litres per kilometre (L/km); the database stores it per 100 km.}
-        xywh {225 47 80 28} labelsize 12 class RightAlignedInput
+        xywh {225 47 80 28} class RightAlignedInput
       }
       Fl_Input txt_mixed_usage {
         label {Mixed:}
         tooltip {Fuel usage in litres per kilometre (L/km); the database stores it per 100 km.}
-        xywh {405 47 80 28} labelsize 12 class RightAlignedInput
+        xywh {405 47 80 28} class RightAlignedInput
       }
       Fl_Input txt_co2_emission {
         label {Co2 emission:}
-        xywh {100 77 80 28} labelsize 12 class RightAlignedInput
+        xywh {100 77 80 28} class RightAlignedInput
       }
       Fl_Input txt_price {
         label {Price:}
-        xywh {225 77 80 28} labelsize 12 class RightAlignedInput
+        xywh {225 77 80 28} class RightAlignedInput
       }
       Fl_Input txt_distance_driven {
         label {Trip distance:}
-        xywh {405 77 80 28} labelsize 12 class RightAlignedInput
+        xywh {405 77 80 28} class RightAlignedInput
       }
       Fl_Text_Display {} {
         label {Car Info}
@@ -246,12 +308,12 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Model name:}
-        xywh {1 145 115 0} labelsize 17 align 5
+        xywh {1 157 115 0} labelsize 17 align 5
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Engine:}
-        xywh {5 175 84 0} labelsize 17 align 5
+        xywh {-8 180 84 0} labelsize 17 align 5
         class Fl_Output
       }
       Fl_Text_Display {} {
@@ -261,23 +323,23 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Class:}
-        xywh {1 235 50 0} labelsize 17 align 5
+        xywh {1 230 50 0} labelsize 17 align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_modelname_calculate {
-        xywh {120 145 365 20}
+        xywh {120 135 365 20}
         class Fl_Output
       }
       Fl_Text_Display lbl_engine_calculate {
-        xywh {70 175 415 20}
+        xywh {70 160 415 20}
         class Fl_Output
       }
       Fl_Text_Display lbl_gearbox_calculate {
-        xywh {85 205 400 20}
+        xywh {85 185 400 20}
         class Fl_Output
       }
       Fl_Text_Display lbl_class_calculate {
-        xywh {55 235 90 20}
+        xywh {55 210 90 20}
         class Fl_Output
       }
       Fl_Choice cbo_units_calculate {
@@ -286,7 +348,7 @@ Function {make_window()} {open
       } {}
       Fl_Text_Display {} {
         label {Gov. price:}
-        xywh {340 23 95 0} labelsize 13 align 517
+        xywh {345 43 95 0} labelsize 13 align 517
         class Fl_Output
       }
       Fl_Output lbl_fuel_price_calculate {
@@ -294,111 +356,111 @@ Function {make_window()} {open
       }
       Fl_Text_Display {} {
         label {Fuel type:}
-        xywh {310 235 85 0} labelsize 16 align 5
+        xywh {315 230 85 0} labelsize 16 align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_fueltype_calculate {
-        xywh {400 235 85 20}
+        xywh {400 210 85 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Urban:}
-        xywh {10 255 75 0} labelsize 12 align 5
+        xywh {5 285 75 0} align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_urban_calculate {
-        xywh {10 267 105 20}
+        xywh {70 265 101 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Exurban:}
-        xywh {130 255 90 0} labelsize 12 align 5
+        xywh {160 285 90 0} align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_exurban_calculate {
-        xywh {130 267 105 20}
+        xywh {240 265 90 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Mixed:}
-        xywh {250 255 81 0} labelsize 12 align 5
+        xywh {325 285 81 0} align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_mixed_calculate {
-        xywh {250 267 105 20}
+        xywh {390 265 100 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Price:}
-        xywh {130 290 55 0} labelsize 12 align 5
+        xywh {175 308 55 0} align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_average_price_calculate {
-        xywh {130 302 120 20}
+        xywh {225 290 100 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Units:}
-        xywh {370 290 71 0} labelsize 12 align 5
+        xywh {334 315 71 0} labelsize 15 align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_units_calculate {
-        xywh {370 302 110 20}
+        xywh {394 290 96 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Trip distance:}
-        xywh {370 255 110 0} labelsize 12 align 5
+        xywh {289 265 110 0} align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_distance_calculate {
-        xywh {370 267 110 20}
+        xywh {390 245 100 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Co2 emission:}
-        xywh {10 290 90 0} labelsize 12 align 5
+        xywh {0 310 90 0} align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_co2emission_calculate {
-        xywh {10 302 90 20}
+        xywh {95 290 75 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Trip Info}
-        xywh {150 235 200 0} labelsize 18
+        xywh {150 257 200 0} labelsize 18
         class Fl_Output
       }
       Fl_Text_Display lbl_urban_price_calculate {
-        xywh {10 337 105 20}
+        xywh {85 315 80 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Exurban price:}
-        xywh {130 325 100 0} labelsize 12 align 5
+        xywh {165 335 100 0} labelsize 12 align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_exurban_price_calculate {
-        xywh {130 337 130 20}
+        xywh {255 315 75 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Mixed price:}
-        xywh {280 325 92 0} labelsize 12 align 5
+        xywh {324 335 92 0} labelsize 13 align 5
         class Fl_Output
       }
       Fl_Text_Display lbl_mixed_price_calculate {
-        xywh {280 337 130 20}
+        xywh {410 315 80 20}
         class Fl_Output
       }
       Fl_Text_Display {} {
         label {Urban price:}
-        xywh {10 325 80 0} labelsize 12 align 5
+        xywh {0 335 80 0} labelsize 13 align 5
         class Fl_Output
       }
     }
     Fl_Group grp_settings {
-      xywh {0 20 490 405} hide
+      xywh {0 20 490 360} hide
     } {
       Fl_Text_Display {} {
         label Settings
@@ -446,7 +508,7 @@ Function {make_window()} {open
       }
     }
     Fl_Group grp_download_data {
-      xywh {0 20 490 405} hide
+      xywh {0 20 490 360} hide
     } {
       Fl_Text_Display {} {
         label {Download data}
