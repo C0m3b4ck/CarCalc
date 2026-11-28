@@ -10,6 +10,14 @@ prog_asan
 release/
 .stage-build/
 
+# Optional local cross-toolchain downloads (staging setup uses /tmp/opencode by default)
+.cross-tools/
+osxcross/
+llvm-mingw/
+7z-extra/
+*.sdk.tar.xz
+*.sfx
+
 # Generated v2 build outputs and runtime data copies
 ui_v2/CarCalc_v2
 ui_v2/CarCalc_v2.exe
