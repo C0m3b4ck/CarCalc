@@ -284,12 +284,12 @@ if(UNIX)
     pkg_check_modules(WLDCURSOR IMPORTED_TARGET wayland-cursor)
     pkg_check_modules(WLDPROTO IMPORTED_TARGET wayland-protocols>=1.15)
     pkg_check_modules(XKBCOMMON IMPORTED_TARGET xkbcommon)
-    if(NOT(WLDCLIENT_FOUND AND WLDCURSOR_FOUND AND WLDPROTO_FOUND AND XKBCOMMON_FOUND))
+    if(NOT (WLDCLIENT_FOUND AND WLDCURSOR_FOUND AND WLDPROTO_FOUND AND XKBCOMMON_FOUND))
       message(STATUS "Not all software modules 'wayland-client>=1.18 wayland-cursor wayland-protocols>=1.15 xkbcommon' are present")
       message(STATUS "Consequently, FLTK_BACKEND_WAYLAND is turned off.")
       unset(FLTK_BACKEND_WAYLAND CACHE)
       set(FLTK_BACKEND_WAYLAND 0)
-    endif(NOT(WLDCLIENT_FOUND AND WLDCURSOR_FOUND AND WLDPROTO_FOUND AND XKBCOMMON_FOUND))
+    endif(NOT (WLDCLIENT_FOUND AND WLDCURSOR_FOUND AND WLDPROTO_FOUND AND XKBCOMMON_FOUND))
   endif(FLTK_BACKEND_WAYLAND)
 
   if(FLTK_BACKEND_WAYLAND)
@@ -410,9 +410,9 @@ if((NOT APPLE OR FLTK_BACKEND_X11) AND NOT WIN32 AND NOT FLTK_BACKEND_WAYLAND)
 endif()
 
 if(APPLE AND FLTK_BACKEND_X11)
-  if(NOT(${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0)) # a.k.a. macOS version ≥ 10.13
+  if(NOT (${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0)) # a.k.a. macOS version ≥ 10.13
     list(APPEND FLTK_CFLAGS "-D_LIBCPP_HAS_THREAD_API_PTHREAD")
-  endif(NOT(${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0))
+  endif(NOT (${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0))
   # FIXME: include_directories(!)
   # FIXME: how can we implement "AFTER SYSTEM" ?
   include_directories(AFTER SYSTEM /opt/X11/include/freetype2)

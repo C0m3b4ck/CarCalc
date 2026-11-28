@@ -23,13 +23,29 @@ build_env_read_flags() {
     read -r -a FLTK_CXXFLAGS <<<"$(bash "$CARCALC_FLTK_CONFIG" --cxxflags)"
     read -r -a FLTK_LDFLAGS <<<"$(bash "$CARCALC_FLTK_CONFIG" --ldflags)"
 
+    # fltk-config adds -I/usr/include from its install prefix. That is harmless
+    # for native builds but leaks Linux headers into cross builds (notably
+    # osxcross), so drop it here; /usr/include is already a default search path.
+    local filtered=()
+    for flag in "${FLTK_CXXFLAGS[@]}"; do
+        [[ "$flag" == -I/usr/include || "$flag" == -I/usr/include/* ]] && continue
+        filtered+=("$flag")
+    done
+    FLTK_CXXFLAGS=("${filtered[@]}")
+
     SQLITE_CFLAGS=(-I"$CARCALC_SQLITE_SRC")
     SQLITE_LIBS=(-L"$CARCALC_BUILD_DIR/sqlite" -lsqlite3)
 
     CURL_CFLAGS=()
     CURL_LIBS=(-lcurl)
-    if command -v pkg-config >/dev/null 2>&1 && pkg-config --exists libcurl; then
+    if [[ -n "${CARCALC_CURL_CFLAGS+x}" ]]; then
+        read -r -a CURL_CFLAGS <<<"$CARCALC_CURL_CFLAGS"
+    elif command -v pkg-config >/dev/null 2>&1 && pkg-config --exists libcurl; then
         read -r -a CURL_CFLAGS <<<"$(pkg-config --cflags libcurl)"
+    fi
+    if [[ -n "${CARCALC_CURL_LIBS+x}" ]]; then
+        read -r -a CURL_LIBS <<<"$CARCALC_CURL_LIBS"
+    elif command -v pkg-config >/dev/null 2>&1 && pkg-config --exists libcurl; then
         read -r -a CURL_LIBS <<<"$(pkg-config --libs libcurl)"
     fi
 }

@@ -36,7 +36,11 @@ cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 # define the FLTK project and version
 #######################################################################
 
-project(FLTK VERSION 1.4.5)
+if(CARCALC_DARWIN OR CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  project(FLTK VERSION 1.4.5 LANGUAGES C CXX OBJCXX)
+else()
+  project(FLTK VERSION 1.4.5)
+endif()
 
 #######################################################################
 # include macro and function definitions for general usage

@@ -61,31 +61,43 @@ Install the Linux cross compilers first:
 sudo apt-get install -y gcc-i686-linux-gnu g++-i686-linux-gnu binutils-i686-linux-gnu libc6-dev-i386-cross gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu libc6-dev-arm64-cross
 ```
 
-One-line setup for the macOS, Windows ARM and SFX prerequisites:
+One-line setup for the macOS SDK/toolchain, Windows ARM toolchain and Windows
+SFX module:
 
 ```bash
-mkdir -p /tmp/opencode/carcalc-tools && cd /tmp/opencode/carcalc-tools && sudo apt-get install -y clang liblzma-dev libxml2-dev libssl-dev zlib1g-dev && git clone -q https://github.com/tpoechtrager/osxcross.git osxcross && mkdir -p osxcross/tarballs && wget -qcO llvm-mingw.tar.xz https://github.com/mstorsjo/llvm-mingw/releases/download/20261117/llvm-mingw-20261117-ucrt-ubuntu-22.04-x86_64.tar.xz && mkdir -p llvm-mingw && tar -xf llvm-mingw.tar.xz -C llvm-mingw --strip-components=1 && wget -qcO 7z-extra.7z https://www.7-zip.org/a/7z2600-extra.7z && mkdir -p 7z-extra && 7z x -y -o7z-extra 7z-extra.7z 7z.sfx && echo 'Copy MacOSX*.sdk.tar.xz into osxcross/tarballs/ and run: (cd osxcross && UNATTENDED=1 ./build.sh)'
+mkdir -p /tmp/opencode/carcalc-tools && cd /tmp/opencode/carcalc-tools && sudo apt-get install -y clang liblzma-dev libxml2-dev libssl-dev zlib1g-dev && git clone -q https://github.com/tpoechtrager/osxcross.git osxcross && mkdir -p osxcross/tarballs && wget -qcO osxcross/tarballs/MacOSX11.3.sdk.tar.xz https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX11.3.sdk.tar.xz && (cd osxcross && UNATTENDED=1 ./build.sh) && wget -qcO llvm-mingw.tar.xz https://github.com/mstorsjo/llvm-mingw/releases/download/20261117/llvm-mingw-20261117-ucrt-ubuntu-22.04-x86_64.tar.xz && mkdir -p llvm-mingw && tar -xf llvm-mingw.tar.xz -C llvm-mingw --strip-components=1 && wget -qcO 7z2606.exe https://github.com/ip7z/7zip/releases/download/26.06/7z2606.exe && mkdir -p 7z-extra && 7z x -y -o7z-extra 7z2606.exe 7z.sfx >/dev/null && echo 'Cross toolchains ready.'
 ```
 
-osxcross needs an Apple SDK tarball that cannot be downloaded automatically;
-place it in `osxcross/tarballs/` and run the printed build command before
-setting the environment below. Then, from the CarCalc checkout:
+Then, from the CarCalc checkout:
 
 ```bash
-export PATH="/tmp/opencode/carcalc-tools/llvm-mingw/bin:$PATH"
-export MACOS_X64_CC=/tmp/opencode/carcalc-tools/osxcross/target/bin/x86_64-apple-darwin-clang
-export MACOS_X64_CXX=/tmp/opencode/carcalc-tools/osxcross/target/bin/x86_64-apple-darwin-clang++
-export MACOS_X64_AR=/tmp/opencode/carcalc-tools/osxcross/target/bin/x86_64-apple-darwin-ar
-export WINDOWS_ARM64_TRIPLE=aarch64-w64-mingw32
-export WINDOWS_MOBILE_TRIPLE=armv7-w64-mingw32
+export PATH="/tmp/opencode/carcalc-tools/osxcross/target/bin:$PATH"
+export MACOS_X64_CC=/tmp/opencode/carcalc-tools/osxcross/target/bin/x86_64-apple-darwin20.4-clang
+export MACOS_X64_CXX=/tmp/opencode/carcalc-tools/osxcross/target/bin/x86_64-apple-darwin20.4-clang++
+export MACOS_X64_AR=/tmp/opencode/carcalc-tools/osxcross/target/bin/x86_64-apple-darwin20.4-ar
+export MACOS_STDLIB=libc++
+export WINDOWS_ARM64_CXX=/tmp/opencode/carcalc-tools/llvm-mingw/bin/aarch64-w64-mingw32-g++
+export WINDOWS_ARM64_CC=/tmp/opencode/carcalc-tools/llvm-mingw/bin/aarch64-w64-mingw32-gcc
+export WINDOWS_ARM64_WINDRES=/tmp/opencode/carcalc-tools/llvm-mingw/bin/aarch64-w64-mingw32-windres
+export WINDOWS_MOBILE_CXX=/tmp/opencode/carcalc-tools/llvm-mingw/bin/armv7-w64-mingw32-g++
+export WINDOWS_MOBILE_CC=/tmp/opencode/carcalc-tools/llvm-mingw/bin/armv7-w64-mingw32-gcc
+export WINDOWS_MOBILE_WINDRES=/tmp/opencode/carcalc-tools/llvm-mingw/bin/armv7-w64-mingw32-windres
 export SFX_STUB=/tmp/opencode/carcalc-tools/7z-extra/7z.sfx
+export CARCALC_LINUX_X11_ROOT=/tmp/opencode/carcalc-tools/linux-x11-sysroot
 ./stage_release.sh
 ```
 
-`SFX_STUB` is optional; without it the self-extracting Windows archives are
-skipped while ZIP and 7z are still produced. The Windows Mobile target emits
-PE32 ARM with subsystem 4.20; full Windows CE runtime compatibility needs a
-CE SDK.
+`CARCALC_LINUX_X11_ROOT` should contain target-architecture X11/curl headers
+and libraries under `usr/include/` and `usr/lib/<target-triple>/`. `linux-arm`
+also needs target-architecture `libssl.so` and `libcrypto.so`; if they are
+missing, that target is reported as skipped instead of aborting the run.
+
+The Windows ARM compilers are set per target instead of prepending
+`llvm-mingw/bin` to `PATH`, so the system x86/x64 MinGW builds keep using the
+matching `libgcc`. `SFX_STUB` is optional; without it the self-extracting
+Windows archives are skipped while ZIP and 7z are still produced. The Windows
+Mobile target emits PE32 ARM with subsystem 4.20; full Windows CE runtime
+compatibility needs a CE SDK.
 
 ### Native (Linux)
 
